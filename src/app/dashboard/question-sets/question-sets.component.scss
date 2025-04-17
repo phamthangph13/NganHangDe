@@ -630,4 +630,39 @@
       margin-top: 15px;
     }
   }
+}
+
+// AI Question Generator
+.ai-questions-preview {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px dashed #ced4da;
+  
+  h4 {
+    margin-bottom: 20px;
+    color: #343a40;
+    font-weight: 600;
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  
+  .btn-success {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+    
+    &:hover {
+      background-color: #157347;
+      border-color: #146c43;
+    }
+    
+    &:disabled {
+      background-color: #198754;
+      border-color: #198754;
+      opacity: 0.65;
+    }
+  }
 } 

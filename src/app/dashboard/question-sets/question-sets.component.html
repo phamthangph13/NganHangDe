@@ -120,6 +120,9 @@
       <button class="btn btn-primary add-question-btn" (click)="toggleQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm">
         <i class="bi bi-plus-circle"></i> Thêm câu hỏi
       </button>
+      <button class="btn btn-success add-question-btn" (click)="toggleAIQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm">
+        <i class="bi bi-robot"></i> Tạo câu hỏi bằng AI
+      </button>
     </div>
   </div>
   
@@ -133,6 +136,9 @@
     <div class="button-group">
       <button class="btn btn-primary" (click)="toggleQuestionForm()">
         <i class="bi bi-plus-circle"></i> Tạo câu hỏi mới
+      </button>
+      <button class="btn btn-success" (click)="toggleAIQuestionForm()">
+        <i class="bi bi-robot"></i> Tạo câu hỏi bằng AI
       </button>
     </div>
   </div>
@@ -249,5 +255,83 @@
         <button type="submit" class="btn btn-primary" [disabled]="questionForm.invalid">Lưu</button>
       </div>
     </form>
+  </div>
+  
+  <!-- AI Question Generator Form -->
+  <div class="form-container" *ngIf="showAIQuestionForm">
+    <h3>Tạo câu hỏi bằng AI</h3>
+    
+    <form (ngSubmit)="submitAIQuestionForm()">
+      <div class="form-group">
+        <label for="aiPrompt">Nhập chủ đề hoặc nội dung bạn muốn tạo câu hỏi *</label>
+        <textarea 
+          id="aiPrompt" 
+          [(ngModel)]="aiPrompt" 
+          name="aiPrompt"
+          class="form-control" 
+          rows="4"
+          placeholder="Ví dụ: Tạo các câu hỏi về phương trình bậc 2 lớp 10"
+          required
+        ></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="aiQuestionType">Loại câu hỏi</label>
+        <select id="aiQuestionType" [(ngModel)]="aiQuestionType" name="aiQuestionType" class="form-control">
+          <option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="aiQuestionCount">Số lượng câu hỏi (1-10)</label>
+        <input 
+          type="number" 
+          id="aiQuestionCount" 
+          [(ngModel)]="aiQuestionCount" 
+          name="aiQuestionCount"
+          class="form-control" 
+          min="1" 
+          max="10" 
+          step="1"
+        >
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="toggleAIQuestionForm()">Hủy</button>
+        <button type="submit" class="btn btn-success" [disabled]="!aiPrompt.trim() || isGeneratingAIQuestions">
+          <i class="bi" [ngClass]="isGeneratingAIQuestions ? 'bi-hourglass' : 'bi-robot'"></i>
+          {{ isGeneratingAIQuestions ? 'Đang tạo câu hỏi...' : 'Tạo câu hỏi' }}
+        </button>
+      </div>
+    </form>
+    
+    <!-- AI Generated Questions Preview -->
+    <div class="ai-questions-preview" *ngIf="aiGeneratedQuestions.length > 0">
+      <h4>Câu hỏi được tạo</h4>
+      
+      <div class="question-card" *ngFor="let question of aiGeneratedQuestions; let i = index">
+        <div class="question-header">
+          <div class="question-number">Câu {{ i + 1 }}</div>
+          <div class="question-type">{{ question.type === 'single' ? 'Trắc nghiệm - Một đáp án' : 
+            question.type === 'multiple' ? 'Trắc nghiệm - Nhiều đáp án' : 'Tự luận' }}</div>
+        </div>
+        
+        <div class="question-content" [innerHTML]="getSafeHtml(question.content)"></div>
+        
+        <!-- Options for multiple choice questions -->
+        <div class="options-container" *ngIf="question.type !== 'essay' && question.options">
+          <div class="option" *ngFor="let option of question.options; let optIndex = index"
+               [class.correct]="question.correctAnswers?.includes(optIndex)">
+            <div class="option-marker">{{ getOptionLabel(optIndex) }}</div>
+            <div class="option-content" [innerHTML]="getSafeHtml(option.content)"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="aiGeneratedQuestions = []">Hủy</button>
+        <button type="button" class="btn btn-success" (click)="saveAIGeneratedQuestions()">Lưu tất cả câu hỏi</button>
+      </div>
+    </div>
   </div>
 </div>
