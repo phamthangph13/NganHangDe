@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8OycPNlhbE/S2Okg3bQjGtm2xuvhh+7xBCeIQ2lklZk=",
+  "Hash": "jfQ06Bz8FIUqIAp4XzpU5N09fdUmWgWe8uw7S89LW3M=",
   "Source": "BackEnd",
   "BasePath": "_content/BackEnd",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "BackEnd\\wwwroot",
       "Source": "BackEnd",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\",
       "BasePath": "_content/BackEnd",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
       "SourceId": "BackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/BackEnd",
       "RelativePath": "reset-password#[.{fingerprint=1w4ujtjsyb}]?.html.gz",
       "AssetKind": "All",
@@ -28,20 +28,20 @@
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "Fingerprint": "jkao0tjm28",
       "Integrity": "g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html"
+      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html"
     },
     {
-      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
       "SourceId": "BackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/BackEnd",
       "RelativePath": "email-verification-success#[.{fingerprint=il9sr5o12u}]?.html.gz",
       "AssetKind": "All",
@@ -49,20 +49,20 @@
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "Fingerprint": "1evc8ca5ig",
       "Integrity": "Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html"
+      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html"
     },
     {
-      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
       "SourceId": "BackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/BackEnd",
       "RelativePath": "email-verification-failed#[.{fingerprint=5r34y9s1f6}]?.html.gz",
       "AssetKind": "All",
@@ -70,20 +70,20 @@
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "Fingerprint": "ao5u4lnptm",
       "Integrity": "xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html"
+      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html"
     },
     {
-      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html",
       "SourceId": "BackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\",
       "BasePath": "_content/BackEnd",
       "RelativePath": "email-verification-failed#[.{fingerprint}]?.html",
       "AssetKind": "All",
@@ -101,10 +101,10 @@
       "OriginalItemSpec": "wwwroot\\email-verification-failed.html"
     },
     {
-      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html",
       "SourceId": "BackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\",
       "BasePath": "_content/BackEnd",
       "RelativePath": "email-verification-success#[.{fingerprint}]?.html",
       "AssetKind": "All",
@@ -122,10 +122,10 @@
       "OriginalItemSpec": "wwwroot\\email-verification-success.html"
     },
     {
-      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html",
       "SourceId": "BackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\",
       "BasePath": "_content/BackEnd",
       "RelativePath": "reset-password#[.{fingerprint}]?.html",
       "AssetKind": "All",
@@ -146,7 +146,7 @@
   "Endpoints": [
     {
       "Route": "email-verification-failed.5r34y9s1f6.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -209,7 +209,7 @@
     },
     {
       "Route": "email-verification-failed.5r34y9s1f6.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "Route": "email-verification-failed.5r34y9s1f6.html.gz",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -307,7 +307,7 @@
     },
     {
       "Route": "email-verification-failed.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -362,7 +362,7 @@
     },
     {
       "Route": "email-verification-failed.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -399,7 +399,7 @@
     },
     {
       "Route": "email-verification-failed.html.gz",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -444,7 +444,7 @@
     },
     {
       "Route": "email-verification-success.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -499,7 +499,7 @@
     },
     {
       "Route": "email-verification-success.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -536,7 +536,7 @@
     },
     {
       "Route": "email-verification-success.html.gz",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -581,7 +581,7 @@
     },
     {
       "Route": "email-verification-success.il9sr5o12u.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -644,7 +644,7 @@
     },
     {
       "Route": "email-verification-success.il9sr5o12u.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -689,7 +689,7 @@
     },
     {
       "Route": "email-verification-success.il9sr5o12u.html.gz",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -742,7 +742,7 @@
     },
     {
       "Route": "reset-password.1w4ujtjsyb.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -805,7 +805,7 @@
     },
     {
       "Route": "reset-password.1w4ujtjsyb.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -850,7 +850,7 @@
     },
     {
       "Route": "reset-password.1w4ujtjsyb.html.gz",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -903,7 +903,7 @@
     },
     {
       "Route": "reset-password.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -958,7 +958,7 @@
     },
     {
       "Route": "reset-password.html",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -995,7 +995,7 @@
     },
     {
       "Route": "reset-password.html.gz",
-      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {

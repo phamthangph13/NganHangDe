@@ -74,6 +74,7 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<SubjectService>();
+builder.Services.AddSingleton<QuestionSetService>();
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();

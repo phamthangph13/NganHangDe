@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AZ2ky73MmsE=",
+  "dgSpecHash": "SlIsz9RTdt4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\BackEnd.csproj",
+  "projectFilePath": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\BackEnd.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\winni\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\winni\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",

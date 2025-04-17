@@ -3010,11 +3010,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\BackEnd.csproj",
+      "projectUniqueName": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\BackEnd.csproj",
       "projectName": "BackEnd",
-      "projectPath": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\BackEnd.csproj",
+      "projectPath": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\BackEnd.csproj",
       "packagesPath": "C:\\Users\\winni\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\",
+      "outputPath": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "E:\\C#\\SDK\\NuGetPackages"
