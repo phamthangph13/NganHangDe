@@ -1,0 +1,87 @@
+<div class="class-management-container">
+  <div class="header">
+    <h2>Quản lý lớp học</h2>
+    <div class="actions">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchText" 
+          placeholder="Tìm kiếm lớp học..." 
+          class="search-input"
+        />
+      </div>
+      <button class="btn-add" (click)="toggleForm()">
+        <span *ngIf="!showForm">+ Thêm lớp học</span>
+        <span *ngIf="showForm">Đóng</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Add/Edit Class Form -->
+  <div class="class-form-container" *ngIf="showForm">
+    <form [formGroup]="classForm" (ngSubmit)="onSubmit()">
+      <h3>{{ isEditing ? 'Cập nhật lớp học' : 'Thêm lớp học mới' }}</h3>
+      
+      <div class="form-group">
+        <label for="name">Tên lớp</label>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name" 
+          placeholder="Nhập tên lớp (VD: 10A1)"
+        />
+        <div class="error-message" *ngIf="classForm.get('name')?.invalid && classForm.get('name')?.touched">
+          <span *ngIf="classForm.get('name')?.errors?.['required']">Tên lớp là bắt buộc</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="grade">Khối</label>
+        <select id="grade" formControlName="grade">
+          <option value="">Chọn khối</option>
+          <option value="10">Khối 10</option>
+          <option value="11">Khối 11</option>
+          <option value="12">Khối 12</option>
+        </select>
+        <div class="error-message" *ngIf="classForm.get('grade')?.invalid && classForm.get('grade')?.touched">
+          <span *ngIf="classForm.get('grade')?.errors?.['required']">Khối là bắt buộc</span>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="resetForm()">Hủy</button>
+        <button type="submit" class="btn-submit" [disabled]="classForm.invalid">{{ isEditing ? 'Cập nhật' : 'Thêm mới' }}</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Class List -->
+  <div class="class-list-container">
+    <table class="class-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên lớp</th>
+          <th>Khối</th>
+          <th>Ngày tạo</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cls of filteredClasses">
+          <td>{{ cls.id }}</td>
+          <td>{{ cls.name }}</td>
+          <td>{{ cls.grade }}</td>
+          <td>{{ cls.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button class="btn-edit" (click)="editClass(cls)">Sửa</button>
+            <button class="btn-delete" (click)="deleteClass(cls.id)">Xóa</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredClasses.length === 0">
+          <td colspan="5" class="no-data">Không có lớp học nào</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

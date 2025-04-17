@@ -1,0 +1,244 @@
+.exam-management {
+  padding: 1rem;
+}
+
+.management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.management-header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.create-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.create-btn i {
+  margin-right: 0.5rem;
+}
+
+.create-btn:hover {
+  background-color: #2980b9;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+}
+
+.filter-item label {
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.filter-item select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  background-color: white;
+}
+
+.exams-table-container {
+  overflow-x: auto;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.exams-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.exams-table th {
+  text-align: left;
+  padding: 1rem;
+  color: #7f8c8d;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.exams-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+  font-size: 0.9rem;
+}
+
+.exams-table tr:last-child td {
+  border-bottom: none;
+}
+
+.exams-table tr:hover {
+  background-color: rgba(236, 240, 241, 0.5);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.published {
+  background-color: rgba(39, 174, 96, 0.1);
+  color: #27ae60;
+}
+
+.status-badge.draft {
+  background-color: rgba(243, 156, 18, 0.1);
+  color: #f39c12;
+}
+
+.status-badge.closed {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.action-btn.edit {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.action-btn.edit:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+.action-btn.publish {
+  background-color: rgba(39, 174, 96, 0.1);
+  color: #27ae60;
+}
+
+.action-btn.publish:hover {
+  background-color: rgba(39, 174, 96, 0.2);
+}
+
+.action-btn.close {
+  background-color: rgba(243, 156, 18, 0.1);
+  color: #f39c12;
+}
+
+.action-btn.close:hover {
+  background-color: rgba(243, 156, 18, 0.2);
+}
+
+.action-btn.results {
+  background-color: rgba(155, 89, 182, 0.1);
+  color: #9b59b6;
+}
+
+.action-btn.results:hover {
+  background-color: rgba(155, 89, 182, 0.2);
+}
+
+.action-btn.delete {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+
+.action-btn.delete:hover {
+  background-color: rgba(231, 76, 60, 0.2);
+}
+
+.empty-state {
+  background-color: white;
+  border-radius: 10px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #bdc3c7;
+}
+
+.empty-state h3 {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state .create-btn {
+  margin: 0 auto;
+  display: inline-flex;
+}
+
+@media (max-width: 992px) {
+  .exams-table th:nth-child(5),
+  .exams-table td:nth-child(5),
+  .exams-table th:nth-child(7),
+  .exams-table td:nth-child(7) {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .management-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .exams-table th:nth-child(3),
+  .exams-table td:nth-child(3),
+  .exams-table th:nth-child(4),
+  .exams-table td:nth-child(4),
+  .exams-table th:nth-child(8),
+  .exams-table td:nth-child(8) {
+    display: none;
+  }
+}

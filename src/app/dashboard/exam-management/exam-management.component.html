@@ -1,0 +1,89 @@
+<div class="exam-management">
+  <div class="management-header">
+    <h1>Quản lý đề thi</h1>
+    <button class="create-btn" (click)="createNewExam()">
+      <i class="fas fa-plus"></i> Tạo đề thi mới
+    </button>
+  </div>
+  
+  <div class="filters">
+    <div class="filter-item">
+      <label for="subject-filter">Môn học:</label>
+      <select id="subject-filter" [(ngModel)]="filterSubject">
+        <option value="">Tất cả</option>
+        <option *ngFor="let subject of subjects" [value]="subject">{{ subject }}</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label for="status-filter">Trạng thái:</label>
+      <select id="status-filter" [(ngModel)]="filterStatus">
+        <option value="">Tất cả</option>
+        <option value="published">Đã xuất bản</option>
+        <option value="draft">Bản nháp</option>
+        <option value="closed">Đã kết thúc</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="exams-table-container">
+    <table class="exams-table">
+      <thead>
+        <tr>
+          <th>Tên đề thi</th>
+          <th>Môn học</th>
+          <th>Số câu hỏi</th>
+          <th>Thời gian</th>
+          <th>Ngày xuất bản</th>
+          <th>Trạng thái</th>
+          <th>Lượt làm</th>
+          <th>Điểm TB</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let exam of getFilteredExams()" [ngClass]="{'draft': exam.status === 'draft', 'published': exam.status === 'published', 'closed': exam.status === 'closed'}">
+          <td>{{ exam.title }}</td>
+          <td>{{ exam.subject }}</td>
+          <td>{{ exam.questions }}</td>
+          <td>{{ exam.duration }} phút</td>
+          <td>{{ exam.publishDate === '0000-00-00' ? 'Chưa xuất bản' : (exam.publishDate | date:'dd/MM/yyyy') }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="exam.status">
+              <span *ngIf="exam.status === 'published'">Đã xuất bản</span>
+              <span *ngIf="exam.status === 'draft'">Bản nháp</span>
+              <span *ngIf="exam.status === 'closed'">Đã kết thúc</span>
+            </span>
+          </td>
+          <td>{{ exam.attempts || '—' }}</td>
+          <td>{{ exam.avgScore ? (exam.avgScore | number:'1.1-1') : '—' }}</td>
+          <td class="actions">
+            <button class="action-btn edit" title="Chỉnh sửa" (click)="editExam(exam.id)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button *ngIf="exam.status === 'draft'" class="action-btn publish" title="Xuất bản" (click)="publishExam(exam.id)">
+              <i class="fas fa-upload"></i>
+            </button>
+            <button *ngIf="exam.status === 'published'" class="action-btn close" title="Kết thúc" (click)="closeExam(exam.id)">
+              <i class="fas fa-lock"></i>
+            </button>
+            <button *ngIf="exam.status !== 'draft'" class="action-btn results" title="Xem kết quả" (click)="viewResults(exam.id)">
+              <i class="fas fa-chart-bar"></i>
+            </button>
+            <button class="action-btn delete" title="Xóa" (click)="deleteExam(exam.id)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="empty-state" *ngIf="getFilteredExams().length === 0">
+    <div class="empty-icon">📝</div>
+    <h3>Không tìm thấy đề thi nào</h3>
+    <p *ngIf="filterSubject || filterStatus">Thử thay đổi bộ lọc để xem nhiều đề thi hơn</p>
+    <button class="create-btn" (click)="createNewExam()">
+      <i class="fas fa-plus"></i> Tạo đề thi mới
+    </button>
+  </div>
+</div>

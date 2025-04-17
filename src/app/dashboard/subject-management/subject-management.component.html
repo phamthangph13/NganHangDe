@@ -1,0 +1,153 @@
+<div class="container mt-4">
+  <h1>Quản lý Môn học</h1>
+
+  <!-- Alert Messages -->
+  <div class="row mb-3" *ngIf="errorMessage || successMessage">
+    <div class="col-12">
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="clearMessages()"></button>
+      </div>
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="clearMessages()"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subject Form -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5>{{ isEditing ? 'Chỉnh sửa môn học' : 'Thêm môn học mới' }}</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Tên môn học</label>
+            <input type="text" class="form-control" id="name" formControlName="name" 
+              [ngClass]="{'is-invalid': subjectForm.get('name')?.invalid && subjectForm.get('name')?.touched}">
+            <div class="invalid-feedback" *ngIf="subjectForm.get('name')?.invalid && subjectForm.get('name')?.touched">
+              Tên môn học là bắt buộc
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="code" class="form-label">Mã môn học</label>
+            <input type="text" class="form-control" id="code" formControlName="code" 
+              [ngClass]="{'is-invalid': subjectForm.get('code')?.invalid && subjectForm.get('code')?.touched}">
+            <div class="invalid-feedback" *ngIf="subjectForm.get('code')?.invalid && subjectForm.get('code')?.touched">
+              Mã môn học là bắt buộc
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="gradeLevel" class="form-label">Khối lớp</label>
+            <select class="form-select" id="gradeLevel" formControlName="gradeLevel"
+              [ngClass]="{'is-invalid': subjectForm.get('gradeLevel')?.invalid && subjectForm.get('gradeLevel')?.touched}">
+              <option *ngFor="let grade of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="grade">
+                Khối {{ grade }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="subjectForm.get('gradeLevel')?.invalid && subjectForm.get('gradeLevel')?.touched">
+              Khối lớp phải từ 1-12
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="description" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="description" formControlName="description" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary" [disabled]="subjectForm.invalid || isLoading">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Subject List -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5>Danh sách môn học</h5>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Tìm kiếm môn học...">
+      </div>
+    </div>
+    <div class="card-body">
+      <div *ngIf="isLoading" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Đang tải...</span>
+        </div>
+      </div>
+      
+      <div *ngIf="!isLoading">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã môn học</th>
+              <th>Tên môn học</th>
+              <th>Mô tả</th>
+              <th>Khối lớp</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="subjects.length === 0">
+              <td colspan="6" class="text-center">Không có môn học nào</td>
+            </tr>
+            <tr *ngFor="let subject of subjects; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ subject.code }}</td>
+              <td>{{ subject.name }}</td>
+              <td title="{{ subject.description }}">{{ subject.description || '-' }}</td>
+              <td>{{ subject.gradeLevel }}</td>
+              <td>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-info me-1" (click)="editSubject(subject)">
+                    <i class="bi bi-pencil"></i> Sửa
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger" (click)="deleteSubject(subject)">
+                    <i class="bi bi-trash"></i> Xóa
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Xác nhận xóa</h5>
+          <button type="button" class="btn-close" (click)="cancelDelete()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn xóa môn học <strong>{{ subjectToDelete?.name }}</strong> ({{ subjectToDelete?.code }}) không?</p>
+          <p class="text-danger"><small>Hành động này không thể hoàn tác.</small></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelDelete()">Hủy</button>
+          <button type="button" class="btn btn-danger" [disabled]="isLoading" (click)="confirmDelete()">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="showDeleteModal"></div>
+</div> 

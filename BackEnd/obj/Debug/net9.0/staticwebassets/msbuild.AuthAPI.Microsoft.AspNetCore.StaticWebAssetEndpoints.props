@@ -1,0 +1,40 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/AuthAPI/email-verification-failed.5r34y9s1f6.html">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\email-verification-failed.html'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"5r34y9s1f6"},{"Name":"integrity","Value":"sha256-ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo="},{"Name":"label","Value":"_content/AuthAPI/email-verification-failed.html"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3034"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=\u0022"},{"Name":"Last-Modified","Value":"Mon, 14 Apr 2025 22:01:31 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/AuthAPI/email-verification-failed.html">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\email-verification-failed.html'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3034"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=\u0022"},{"Name":"Last-Modified","Value":"Mon, 14 Apr 2025 22:01:31 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/AuthAPI/email-verification-success.html">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\email-verification-success.html'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1855"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=\u0022"},{"Name":"Last-Modified","Value":"Mon, 14 Apr 2025 22:01:11 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/AuthAPI/email-verification-success.il9sr5o12u.html">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\email-verification-success.html'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"il9sr5o12u"},{"Name":"integrity","Value":"sha256-lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4="},{"Name":"label","Value":"_content/AuthAPI/email-verification-success.html"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1855"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=\u0022"},{"Name":"Last-Modified","Value":"Mon, 14 Apr 2025 22:01:11 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/AuthAPI/reset-password.1w4ujtjsyb.html">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\reset-password.html'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"1w4ujtjsyb"},{"Name":"integrity","Value":"sha256-v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY="},{"Name":"label","Value":"_content/AuthAPI/reset-password.html"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"6245"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=\u0022"},{"Name":"Last-Modified","Value":"Mon, 14 Apr 2025 21:53:13 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/AuthAPI/reset-password.html">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\reset-password.html'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"6245"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=\u0022"},{"Name":"Last-Modified","Value":"Mon, 14 Apr 2025 21:53:13 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+  </ItemGroup>
+</Project>

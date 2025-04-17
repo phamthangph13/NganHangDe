@@ -1,0 +1,102 @@
+<div class="dashboard-container" [class.sidebar-collapsed]="!isSidebarOpen">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <h1>Ngân Hàng Đề Thi</h1>
+      </div>
+      <button class="toggle-sidebar" (click)="toggleSidebar()">
+        <span>&#9776;</span>
+      </button>
+    </div>
+    
+    <div class="user-info">
+      <div class="avatar">{{ currentUser?.name?.charAt(0) || 'U' }}</div>
+      <div class="user-details" *ngIf="isSidebarOpen">
+        <p class="user-name">{{ currentUser?.name }}</p>
+        <p class="user-role">{{ currentUser?.role === 'student' ? 'Học sinh' : 'Giáo viên' }}</p>
+      </div>
+    </div>
+    
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a [routerLink]="['/dashboard', currentUser?.role]" routerLinkActive="active">
+          <span class="icon">📊</span>
+          <span class="text" *ngIf="isSidebarOpen">Trang chủ</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'student'">
+        <a [routerLink]="['/dashboard/student/exams']" routerLinkActive="active">
+          <span class="icon">📝</span>
+          <span class="text" *ngIf="isSidebarOpen">Đề thi</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'student'">
+        <a [routerLink]="['/dashboard/student/history']" routerLinkActive="active">
+          <span class="icon">📖</span>
+          <span class="text" *ngIf="isSidebarOpen">Lịch sử làm bài</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
+        <a [routerLink]="['/dashboard/exams']" routerLinkActive="active">
+          <span class="icon">📋</span>
+          <span class="text" *ngIf="isSidebarOpen">Quản lý đề thi</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
+        <a [routerLink]="['/dashboard/classes']" routerLinkActive="active">
+          <span class="icon">👨‍👩‍👧‍👦</span>
+          <span class="text" *ngIf="isSidebarOpen">Quản lý lớp học</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
+        <a [routerLink]="['/dashboard/question-sets']" routerLinkActive="active">
+          <span class="icon">📋</span>
+          <span class="text" *ngIf="isSidebarOpen">Bộ câu hỏi</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
+        <a [routerLink]="['/dashboard/subjects']" routerLinkActive="active">
+          <span class="icon">📚</span>
+          <span class="text" *ngIf="isSidebarOpen">Quản lý môn học</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
+        <a [routerLink]="['/dashboard/teacher/students']" routerLinkActive="active">
+          <span class="icon">👨‍🎓</span>
+          <span class="text" *ngIf="isSidebarOpen">Học sinh</span>
+        </a>
+      </li>
+    </ul>
+    
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <span class="icon">🚪</span>
+        <span class="text" *ngIf="isSidebarOpen">Đăng xuất</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <div class="header-left">
+        <button class="toggle-sidebar-mobile" (click)="toggleSidebar()">
+          <span>&#9776;</span>
+        </button>
+      </div>
+      <div class="header-right">
+        <div class="user-dropdown">
+          <div class="user-info-minimal">
+            <span class="user-name">{{ currentUser?.name }}</span>
+            <div class="avatar-small">{{ currentUser?.name?.charAt(0) || 'U' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

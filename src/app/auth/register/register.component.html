@@ -1,0 +1,150 @@
+<div class="auth-form-container">
+  <div class="auth-header">
+    <h2>Đăng Ký Tài Khoản</h2>
+    <p>Tạo tài khoản để truy cập kho đề thi</p>
+  </div>
+
+  <div class="user-type-selector">
+    <button 
+      [class.active]="userType === 'student'" 
+      (click)="changeUserType('student')"
+      type="button"
+    >
+      <div class="user-icon">👨‍🎓</div>
+      <span>Học sinh</span>
+    </button>
+    <button 
+      [class.active]="userType === 'teacher'" 
+      (click)="changeUserType('teacher')"
+      type="button"
+    >
+      <div class="user-icon">👨‍🏫</div>
+      <span>Giáo viên</span>
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-message" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message-global" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">Họ</label>
+      <input 
+        type="text" 
+        id="firstName" 
+        formControlName="firstName" 
+        placeholder="Nhập họ của bạn"
+        [ngClass]="{'invalid': registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched}"
+      >
+      <div class="error-message" *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
+        <span *ngIf="registerForm.get('firstName')?.errors?.['required']">Họ là bắt buộc</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Tên</label>
+      <input 
+        type="text" 
+        id="lastName" 
+        formControlName="lastName" 
+        placeholder="Nhập tên của bạn"
+        [ngClass]="{'invalid': registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched}"
+      >
+      <div class="error-message" *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
+        <span *ngIf="registerForm.get('lastName')?.errors?.['required']">Tên là bắt buộc</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        formControlName="email" 
+        placeholder="Nhập email của bạn"
+        [ngClass]="{'invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+      >
+      <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        <span *ngIf="registerForm.get('email')?.errors?.['required']">Email là bắt buộc</span>
+        <span *ngIf="registerForm.get('email')?.errors?.['email']">Email không hợp lệ</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mật khẩu</label>
+      <div class="password-input">
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Nhập mật khẩu của bạn (ít nhất 6 ký tự)"
+          [ngClass]="{'invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+        >
+        <button type="button" class="toggle-password" (click)="toggleShowPassword()">
+          <span *ngIf="!showPassword">👁️</span>
+          <span *ngIf="showPassword">🔒</span>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <span *ngIf="registerForm.get('password')?.errors?.['required']">Mật khẩu là bắt buộc</span>
+        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Mật khẩu phải có ít nhất 6 ký tự</span>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="userType === 'teacher'">
+      <label for="schoolName">Tên trường</label>
+      <input 
+        type="text" 
+        id="schoolName" 
+        formControlName="schoolName" 
+        placeholder="Nhập tên trường của bạn"
+        [ngClass]="{'invalid': userType === 'teacher' && registerForm.get('schoolName')?.invalid && registerForm.get('schoolName')?.touched}"
+      >
+      <div class="error-message" *ngIf="userType === 'teacher' && registerForm.get('schoolName')?.invalid && registerForm.get('schoolName')?.touched">
+        <span *ngIf="registerForm.get('schoolName')?.errors?.['required']">Tên trường là bắt buộc</span>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="userType === 'student'">
+      <label for="grade">Lớp</label>
+      <select 
+        id="grade" 
+        formControlName="grade"
+        [ngClass]="{'invalid': userType === 'student' && registerForm.get('grade')?.invalid && registerForm.get('grade')?.touched}"
+      >
+        <option value="">Chọn lớp</option>
+        <option value="10">Lớp 10</option>
+        <option value="11">Lớp 11</option>
+        <option value="12">Lớp 12</option>
+      </select>
+      <div class="error-message" *ngIf="userType === 'student' && registerForm.get('grade')?.invalid && registerForm.get('grade')?.touched">
+        <span *ngIf="registerForm.get('grade')?.errors?.['required']">Vui lòng chọn lớp</span>
+      </div>
+    </div>
+
+    <div class="agreement-check">
+      <input type="checkbox" id="agreement" formControlName="agreement">
+      <label for="agreement">Tôi đồng ý với <a href="#" target="_blank">Điều khoản sử dụng</a> và <a href="#" target="_blank">Chính sách bảo mật</a></label>
+    </div>
+    
+    <div class="error-message" *ngIf="registerForm.get('agreement')?.invalid && registerForm.get('agreement')?.touched">
+      <span *ngIf="registerForm.get('agreement')?.errors?.['requiredTrue']">Vui lòng đồng ý với điều khoản sử dụng</span>
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="registerForm.invalid || isLoading">
+      <span *ngIf="!isLoading">Đăng Ký</span>
+      <span *ngIf="isLoading">Đang xử lý...</span>
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    <p>Đã có tài khoản? <a routerLink="/auth/login">Đăng nhập</a></p>
+  </div>
+</div>

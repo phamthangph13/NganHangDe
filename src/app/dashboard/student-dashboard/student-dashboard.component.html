@@ -1,0 +1,147 @@
+<div class="dashboard-greeting">
+  <h1>Xin chào, {{ currentUser?.name }}</h1>
+  <p>Chào mừng trở lại với Ngân Hàng Đề Thi</p>
+</div>
+
+<div class="dashboard-stats">
+  <div class="stat-card">
+    <div class="stat-icon">📊</div>
+    <div class="stat-content">
+      <h3>{{ recentExams.length }}</h3>
+      <p>Đề thi đã hoàn thành</p>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📝</div>
+    <div class="stat-content">
+      <h3>{{ upcomingExams.length }}</h3>
+      <p>Đề thi sắp tới</p>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🏆</div>
+    <div class="stat-content">
+      <h3>{{ calculateAvgScore | number:'1.1-1' }}</h3>
+      <p>Điểm trung bình</p>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📚</div>
+    <div class="stat-content">
+      <h3>{{ subjectStats.length }}</h3>
+      <p>Môn học</p>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-sections">
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2>Đề thi sắp tới</h2>
+      <a class="view-all">Xem tất cả</a>
+    </div>
+    <div class="exam-list" *ngIf="upcomingExams.length > 0; else noUpcomingExams">
+      <div class="exam-card" *ngFor="let exam of upcomingExams">
+        <div class="exam-header">
+          <h3>{{ exam.title }}</h3>
+          <span class="exam-subject">{{ exam.subject }}</span>
+        </div>
+        <div class="exam-details">
+          <div class="exam-detail">
+            <span class="detail-label">Số câu hỏi:</span>
+            <span class="detail-value">{{ exam.questions }}</span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Thời gian:</span>
+            <span class="detail-value">{{ exam.duration }} phút</span>
+          </div>
+          <div class="exam-detail" *ngIf="exam.dueDate">
+            <span class="detail-label">Hạn nộp:</span>
+            <span class="detail-value">{{ exam.dueDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+        <div class="exam-actions">
+          <button class="btn btn-primary" [disabled]="exam.status === 'coming'">
+            <span *ngIf="exam.status === 'available'">Làm bài</span>
+            <span *ngIf="exam.status === 'coming'">Sắp mở</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-template #noUpcomingExams>
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p>Không có đề thi sắp tới</p>
+      </div>
+    </ng-template>
+  </div>
+  
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2>Bài thi gần đây</h2>
+      <a class="view-all">Xem tất cả</a>
+    </div>
+    <div class="exam-list" *ngIf="recentExams.length > 0; else noRecentExams">
+      <div class="exam-card" *ngFor="let exam of recentExams">
+        <div class="exam-header">
+          <h3>{{ exam.title }}</h3>
+          <span class="exam-subject">{{ exam.subject }}</span>
+        </div>
+        <div class="exam-score" *ngIf="exam.score !== undefined">
+          <div class="score-circle">
+            <span>{{ exam.score }}</span>
+          </div>
+        </div>
+        <div class="exam-details">
+          <div class="exam-detail">
+            <span class="detail-label">Số câu hỏi:</span>
+            <span class="detail-value">{{ exam.questions }}</span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Thời gian:</span>
+            <span class="detail-value">{{ exam.duration }} phút</span>
+          </div>
+        </div>
+        <div class="exam-actions">
+          <button class="btn btn-secondary">Xem chi tiết</button>
+        </div>
+      </div>
+    </div>
+    <ng-template #noRecentExams>
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p>Chưa có bài thi nào hoàn thành</p>
+      </div>
+    </ng-template>
+  </div>
+  
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2>Thống kê theo môn học</h2>
+    </div>
+    <div class="subject-stats" *ngIf="subjectStats.length > 0; else noSubjectStats">
+      <div class="subject-card" *ngFor="let stat of subjectStats">
+        <h3>{{ stat.subject }}</h3>
+        <div class="subject-details">
+          <div class="subject-detail">
+            <span class="detail-label">Điểm trung bình:</span>
+            <span class="detail-value">{{ stat.avgScore | number:'1.1-1' }}</span>
+          </div>
+          <div class="subject-detail">
+            <span class="detail-label">Đề thi đã làm:</span>
+            <span class="detail-value">{{ stat.completedExams }}</span>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" [style.width.%]="(stat.avgScore / 10) * 100"></div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noSubjectStats>
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <p>Chưa có dữ liệu thống kê</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

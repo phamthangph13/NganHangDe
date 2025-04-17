@@ -1,0 +1,65 @@
+<div class="auth-form-container">
+  <div class="auth-header">
+    <h2>Đăng Nhập</h2>
+    <p>Chào mừng trở lại, vui lòng đăng nhập để tiếp tục</p>
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="error" class="error-alert">
+      {{ error }}
+    </div>
+    
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        formControlName="email" 
+        placeholder="Nhập email của bạn"
+        [ngClass]="{'invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
+      >
+      <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        <span *ngIf="loginForm.get('email')?.errors?.['required']">Email là bắt buộc</span>
+        <span *ngIf="loginForm.get('email')?.errors?.['email']">Email không hợp lệ</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mật khẩu</label>
+      <div class="password-input">
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Nhập mật khẩu của bạn"
+          [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+        >
+        <button type="button" class="toggle-password" (click)="toggleShowPassword()">
+          <span *ngIf="!showPassword">👁️</span>
+          <span *ngIf="showPassword">🔒</span>
+        </button>
+      </div>
+      <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <span *ngIf="loginForm.get('password')?.errors?.['required']">Mật khẩu là bắt buộc</span>
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Mật khẩu phải có ít nhất 6 ký tự</span>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <div class="remember-me">
+        <input type="checkbox" id="remember" formControlName="rememberMe">
+        <label for="remember">Ghi nhớ đăng nhập</label>
+      </div>
+      <a routerLink="/auth/forgot-password" class="forgot-password">Quên mật khẩu?</a>
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || isLoading">
+      <span *ngIf="!isLoading">Đăng Nhập</span>
+      <span *ngIf="isLoading">Đang xử lý...</span>
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    <p>Chưa có tài khoản? <a routerLink="/auth/register">Đăng ký</a></p>
+  </div>
+</div>

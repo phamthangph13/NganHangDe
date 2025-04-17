@@ -1,0 +1,393 @@
+<!-- QUESTION SETS LIST VIEW -->
+<div class="container" *ngIf="!activeQuestionSet">
+  <div class="header-container">
+    <h2>Quản lý bộ câu hỏi</h2>
+    <button class="btn btn-primary" (click)="toggleQuestionSetForm()">
+      {{ showQuestionSetForm ? 'Hủy' : 'Thêm bộ câu hỏi' }}
+    </button>
+  </div>
+  
+  <!-- Search & Filter -->
+  <div class="search-container">
+    <input 
+      type="text" 
+      class="form-control" 
+      placeholder="Tìm kiếm bộ câu hỏi..." 
+      [(ngModel)]="searchText" 
+      (input)="filterQuestionSets()">
+  </div>
+  
+  <!-- Question Set Form -->
+  <div class="form-container" *ngIf="showQuestionSetForm">
+    <h3>{{ isEditingQuestionSet ? 'Cập nhật bộ câu hỏi' : 'Thêm bộ câu hỏi mới' }}</h3>
+    <form [formGroup]="questionSetForm" (ngSubmit)="submitQuestionSetForm()">
+      <div class="form-group">
+        <label for="title">Tiêu đề *</label>
+        <input type="text" id="title" formControlName="title" class="form-control" required>
+        <div class="error-message" *ngIf="questionSetForm.get('title')?.invalid && questionSetForm.get('title')?.touched">
+          Vui lòng nhập tiêu đề
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="subject">Môn học *</label>
+        <select id="subject" formControlName="subject" class="form-control" required>
+          <option value="">-- Chọn môn học --</option>
+          <option *ngFor="let subject of subjects" [value]="subject">{{ subject }}</option>
+        </select>
+        <div class="error-message" *ngIf="questionSetForm.get('subject')?.invalid && questionSetForm.get('subject')?.touched">
+          Vui lòng chọn môn học
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="grade">Lớp *</label>
+        <select id="grade" formControlName="grade" class="form-control" required>
+          <option value="">-- Chọn lớp --</option>
+          <option *ngFor="let grade of grades" [value]="grade">{{ grade }}</option>
+        </select>
+        <div class="error-message" *ngIf="questionSetForm.get('grade')?.invalid && questionSetForm.get('grade')?.touched">
+          Vui lòng chọn lớp
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Mô tả</label>
+        <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="toggleQuestionSetForm()">Hủy</button>
+        <button type="submit" class="btn btn-primary" [disabled]="questionSetForm.invalid">Lưu</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Question Sets List -->
+  <div class="question-sets-container">
+    <div *ngIf="filteredQuestionSets.length === 0" class="empty-message">
+      Không có bộ câu hỏi nào. Hãy tạo bộ câu hỏi mới.
+    </div>
+    
+    <div class="question-set-card" *ngFor="let questionSet of filteredQuestionSets">
+      <div class="question-set-header">
+        <h3>{{ questionSet.title }}</h3>
+        <div class="badge-container">
+          <span class="badge bg-info">{{ questionSet.subject }}</span>
+          <span class="badge bg-secondary">Lớp {{ questionSet.grade }}</span>
+        </div>
+      </div>
+      
+      <p class="description">{{ questionSet.description }}</p>
+      
+      <div class="question-stats">
+        <span><strong>{{ questionSet.questions.length }}</strong> câu hỏi</span>
+        <span>Tạo ngày: {{ questionSet.createdAt | date:'dd/MM/yyyy' }}</span>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-outline-primary" (click)="viewQuestionSet(questionSet)">Xem chi tiết</button>
+        <button class="btn btn-outline-warning" (click)="editQuestionSet(questionSet)">Sửa</button>
+        <button class="btn btn-outline-danger" (click)="deleteQuestionSet(questionSet.id)">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTION SET DETAIL VIEW -->
+<div class="container" *ngIf="activeQuestionSet">
+  <!-- File input elements for image uploading -->
+  <input type="file" id="questionImageUpload" accept="image/*" style="display: none;" (change)="handleImageUpload($event, 'content')">
+  <input type="file" id="optionImageUpload" accept="image/*" style="display: none;" (change)="handleOptionImageUpload($event)">
+  
+  <div class="header-container">
+    <div class="back-button" (click)="backToList()">
+      <i class="bi bi-arrow-left"></i> Quay lại
+    </div>
+    <h2>{{ activeQuestionSet.title }}</h2>
+    <div class="badge-container">
+      <span class="badge bg-info">{{ activeQuestionSet.subject }}</span>
+      <span class="badge bg-secondary">Lớp {{ activeQuestionSet.grade }}</span>
+    </div>
+  </div>
+  
+  <p class="description">{{ activeQuestionSet.description }}</p>
+  
+  <!-- Question management section header -->
+  <div class="header-container">
+    <h3>Danh sách câu hỏi ({{ activeQuestionSet.questions.length }})</h3>
+    <div class="button-group">
+      <button class="btn btn-success" (click)="toggleAIQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm">
+        <i class="bi bi-robot"></i> AI tạo câu hỏi
+      </button>
+      <button class="btn btn-primary add-question-btn" (click)="toggleQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm">
+        <i class="bi bi-plus-circle"></i> Thêm câu hỏi
+      </button>
+    </div>
+  </div>
+  
+  <!-- Empty state with call-to-action when no questions exist -->
+  <div *ngIf="activeQuestionSet.questions.length === 0 && !showQuestionForm && !showAIQuestionForm" class="empty-state">
+    <div class="empty-state-icon">
+      <i class="bi bi-clipboard-plus"></i>
+    </div>
+    <h4>Chưa có câu hỏi nào</h4>
+    <p>Hãy thêm câu hỏi đầu tiên vào bộ câu hỏi này</p>
+    <div class="button-group">
+      <button class="btn btn-success" (click)="toggleAIQuestionForm()">
+        <i class="bi bi-robot"></i> AI tạo câu hỏi
+      </button>
+      <button class="btn btn-primary" (click)="toggleQuestionForm()">
+        <i class="bi bi-plus-circle"></i> Tạo câu hỏi mới
+      </button>
+    </div>
+  </div>
+  
+  <!-- AI Question Form -->
+  <div class="form-container" *ngIf="showAIQuestionForm">
+    <h3>
+      <i class="bi bi-robot"></i> 
+      AI tạo câu hỏi
+    </h3>
+    
+    <div class="ai-form">
+      <div class="form-group">
+        <label for="ai-prompt">Yêu cầu cho AI *</label>
+        <textarea 
+          id="ai-prompt" 
+          [(ngModel)]="aiPrompt" 
+          class="form-control" 
+          rows="4" 
+          placeholder="Nhập yêu cầu cho AI... (ví dụ: Tạo câu hỏi về phương trình bậc hai, chủ đề đại số lớp 10)"
+          [disabled]="isGeneratingAIQuestions"
+        ></textarea>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ai-question-count">Số lượng câu hỏi</label>
+          <select 
+            id="ai-question-count" 
+            [(ngModel)]="aiQuestionCount" 
+            class="form-control" 
+            [disabled]="isGeneratingAIQuestions"
+          >
+            <option [value]="1">1 câu</option>
+            <option [value]="3">3 câu</option>
+            <option [value]="5">5 câu</option>
+            <option [value]="10">10 câu</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="ai-question-type">Loại câu hỏi</label>
+          <select 
+            id="ai-question-type" 
+            [(ngModel)]="aiQuestionType" 
+            class="form-control"
+            [disabled]="isGeneratingAIQuestions"
+          >
+            <option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="toggleAIQuestionForm()" [disabled]="isGeneratingAIQuestions">Hủy</button>
+        <button 
+          type="button" 
+          class="btn btn-success" 
+          (click)="generateAIQuestions()" 
+          [disabled]="!aiPrompt.trim() || isGeneratingAIQuestions"
+        >
+          <i class="bi" [ngClass]="isGeneratingAIQuestions ? 'bi-hourglass-split' : 'bi-magic'"></i> 
+          {{ isGeneratingAIQuestions ? 'Đang tạo câu hỏi...' : 'Tạo câu hỏi' }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- AI Generated Questions -->
+    <div class="ai-generated-questions" *ngIf="aiGeneratedQuestions.length > 0">
+      <div class="ai-questions-header">
+        <h4>Câu hỏi được tạo bởi AI</h4>
+        <button type="button" class="btn btn-primary" (click)="addAllAIQuestions()">
+          <i class="bi bi-plus-circle-dotted"></i> Thêm tất cả câu hỏi
+        </button>
+      </div>
+      
+      <div class="question-card ai-question" *ngFor="let question of aiGeneratedQuestions; let i = index">
+        <div class="question-header">
+          <span class="question-number">Câu hỏi #{{ i + 1 }}</span>
+          <span class="question-type">{{ getQuestionTypeName(question.type) }}</span>
+        </div>
+        
+        <div class="question-content" [innerHTML]="getSafeHtml(question.content)"></div>
+        
+        <!-- Options for multiple choice questions -->
+        <div class="options-list" *ngIf="question.type !== 'essay' && question.options">
+          <div class="option-row" *ngFor="let option of question.options; let j = index" 
+              [class.correct-answer]="question.correctAnswers && question.correctAnswers.includes(j)">
+            <span class="option-bullet">{{ getOptionLabel(j) }}</span>
+            <span class="option-text" [innerHTML]="getSafeHtml(option.content)"></span>
+            <span class="correct-indicator" *ngIf="question.correctAnswers && question.correctAnswers.includes(j)">
+              <i class="bi bi-check-circle-fill"></i>
+            </span>
+          </div>
+        </div>
+        
+        <div class="question-actions">
+          <button class="btn btn-sm btn-primary" (click)="addAIQuestion(question)">
+            <i class="bi bi-plus-circle"></i> Thêm câu hỏi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Question Form -->
+  <div class="form-container" *ngIf="showQuestionForm">
+    <h3>{{ isEditingQuestion ? 'Cập nhật câu hỏi' : 'Thêm câu hỏi mới' }}</h3>
+    
+    <form [formGroup]="questionForm" (ngSubmit)="submitQuestionForm()">
+      <div class="form-group">
+        <label for="content">Nội dung câu hỏi *</label>
+        <div class="rich-text-container">
+          <div class="formatting-toolbar">
+            <button type="button" class="toolbar-btn" title="Chữ đậm" (click)="insertFormat('b')">
+              <i class="bi bi-type-bold"></i>
+            </button>
+            <button type="button" class="toolbar-btn" title="Chữ nghiêng" (click)="insertFormat('i')">
+              <i class="bi bi-type-italic"></i>
+            </button>
+            <button type="button" class="toolbar-btn" title="Gạch chân" (click)="insertFormat('u')">
+              <i class="bi bi-type-underline"></i>
+            </button>
+            <span class="toolbar-separator"></span>
+            <button type="button" class="toolbar-btn" title="Tiêu đề" (click)="insertFormat('h3')">
+              <i class="bi bi-type-h3"></i>
+            </button>
+            <span class="toolbar-separator"></span>
+            <button type="button" class="toolbar-btn" title="Danh sách" (click)="insertFormat('ul')">
+              <i class="bi bi-list-ul"></i>
+            </button>
+            <button type="button" class="toolbar-btn image-upload" title="Tải ảnh từ máy tính" (click)="triggerImageUpload('questionImageUpload')">
+              <i class="bi bi-image"></i>
+            </button>
+          </div>
+          <textarea id="content" formControlName="content" class="form-control rich-text-editor" rows="5" required 
+            placeholder="Nhập nội dung câu hỏi ở đây..."></textarea>
+        </div>
+        <div class="error-message" *ngIf="questionForm.get('content')?.invalid && questionForm.get('content')?.touched">
+          Vui lòng nhập nội dung câu hỏi
+        </div>
+        <div class="editor-help-text">
+          <i class="bi bi-info-circle"></i> Sử dụng các nút định dạng phía trên để thêm các hiệu ứng.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="type">Loại câu hỏi *</label>
+        <select id="type" formControlName="type" class="form-control" required (change)="onQuestionTypeChange()">
+          <option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+        <small class="form-text text-muted" *ngIf="questionForm.value.type === 'single'">
+          <i class="bi bi-info-circle"></i> Câu hỏi trắc nghiệm một đáp án đúng. Học sinh sẽ chọn một đáp án duy nhất.
+        </small>
+        <small class="form-text text-muted" *ngIf="questionForm.value.type === 'multiple'">
+          <i class="bi bi-info-circle"></i> Câu hỏi trắc nghiệm nhiều đáp án đúng. Học sinh có thể chọn nhiều đáp án.
+        </small>
+        <small class="form-text text-muted" *ngIf="questionForm.value.type === 'essay'">
+          <i class="bi bi-info-circle"></i> Câu hỏi tự luận. Học sinh sẽ nhập câu trả lời vào ô văn bản.
+        </small>
+      </div>
+      
+      <!-- Options for multiple choice questions -->
+      <div *ngIf="questionForm.value.type !== 'essay'" class="options-section">
+        <div class="section-header">
+          <h4>Các lựa chọn</h4>
+          <small class="text-muted">
+            {{ questionForm.value.type === 'single' ? 'Chọn một đáp án đúng bằng cách nhấp vào biểu tượng' : 'Chọn một hoặc nhiều đáp án đúng bằng cách nhấp vào biểu tượng' }}
+          </small>
+        </div>
+        
+        <div class="options-container">
+          <div class="option-item" *ngFor="let option of options.controls; let i = index">
+            <div class="option-input-group">
+              <div class="option-check" [class.selected]="isCorrectAnswer(i)" (click)="toggleCorrectAnswer(i)">
+                <i class="bi" [ngClass]="{'bi-check-circle-fill': isCorrectAnswer(i), 'bi-circle': !isCorrectAnswer(i)}"></i>
+              </div>
+              <div class="option-editor">
+                <div class="formatting-toolbar option-toolbar">
+                  <button type="button" class="toolbar-btn" title="Chữ đậm" (click)="insertOptionFormat(i, 'b')">
+                    <i class="bi bi-type-bold"></i>
+                  </button>
+                  <button type="button" class="toolbar-btn" title="Chữ nghiêng" (click)="insertOptionFormat(i, 'i')">
+                    <i class="bi bi-type-italic"></i>
+                  </button>
+                  <button type="button" class="toolbar-btn image-upload" title="Tải ảnh từ máy tính" (click)="triggerOptionImageUpload(i)">
+                    <i class="bi bi-image"></i>
+                  </button>
+                </div>
+                <textarea [id]="'option-' + i" [formControlName]="i" class="form-control" placeholder="Nội dung lựa chọn" rows="2"></textarea>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeOption(i)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <div class="error-message" *ngIf="options.at(i).invalid && options.at(i).touched">
+              Vui lòng nhập nội dung lựa chọn
+            </div>
+          </div>
+        </div>
+        
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="addOption()">
+          <i class="bi bi-plus"></i> Thêm lựa chọn
+        </button>
+        
+        <div class="alert alert-warning mt-3" *ngIf="correctAnswers.length === 0 && questionForm.get('type')?.value !== 'essay'">
+          <i class="bi bi-exclamation-triangle"></i> Vui lòng chọn ít nhất một đáp án đúng
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="toggleQuestionForm()">Hủy</button>
+        <button type="submit" class="btn btn-primary" [disabled]="questionForm.invalid || (correctAnswers.length === 0 && questionForm.get('type')?.value !== 'essay')">
+          <i class="bi bi-save"></i> {{ isEditingQuestion ? 'Cập nhật' : 'Tạo câu hỏi' }}
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Questions List -->
+  <div class="questions-container" *ngIf="activeQuestionSet.questions.length > 0">
+    <div class="question-card" *ngFor="let question of activeQuestionSet.questions; let i = index">
+      <div class="question-header">
+        <span class="question-number">Câu {{ i + 1 }}</span>
+        <span class="question-type">{{ getQuestionTypeName(question.type) }}</span>
+      </div>
+      
+      <div class="question-content" [innerHTML]="getSafeHtml(question.content)"></div>
+      
+      <!-- Options for multiple choice questions -->
+      <div class="options-list" *ngIf="question.type !== 'essay' && question.options">
+        <div class="option-row" *ngFor="let option of question.options; let j = index" 
+            [class.correct-answer]="question.correctAnswers && question.correctAnswers.includes(j)">
+          <span class="option-bullet">{{ getOptionLabel(j) }}</span>
+          <span class="option-text" [innerHTML]="getSafeHtml(option.content)"></span>
+          <span class="correct-indicator" *ngIf="question.correctAnswers && question.correctAnswers.includes(j)">
+            <i class="bi bi-check-circle-fill"></i>
+          </span>
+        </div>
+      </div>
+      
+      <div class="question-actions">
+        <button class="btn btn-sm btn-outline-warning" (click)="editQuestion(question)">
+          <i class="bi bi-pencil"></i> Sửa
+        </button>
+        <button class="btn btn-sm btn-outline-danger" (click)="deleteQuestion(question.id)">
+          <i class="bi bi-trash"></i> Xóa
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

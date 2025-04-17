@@ -1,0 +1,90 @@
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f7f9fc;
+}
+
+.content-side {
+  flex: 1;
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  color: white;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-inner {
+  max-width: 500px;
+}
+
+.content-side h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.feature-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s;
+}
+
+.feature-item:hover {
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.feature-item h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.feature-item p {
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.auth-side {
+  width: 450px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 1024px) {
+  .auth-container {
+    flex-direction: column;
+  }
+  
+  .content-side {
+    padding: 3rem 1.5rem;
+  }
+  
+  .auth-side {
+    width: 100%;
+    padding: 2rem 1.5rem;
+  }
+}

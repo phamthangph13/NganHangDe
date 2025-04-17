@@ -1,0 +1,30 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { DashboardRoutingModule } from './dashboard-routing.module';
+import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
+import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
+import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
+import { ExamManagementComponent } from './exam-management/exam-management.component';
+import { SubjectManagementComponent } from './subject-management/subject-management.component';
+import { RouterModule } from '@angular/router';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../interceptors/auth.interceptor';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    DashboardRoutingModule,
+    RouterModule,
+    // Import standalone components
+    DashboardLayoutComponent,
+    StudentDashboardComponent,
+    TeacherDashboardComponent,
+    ExamManagementComponent,
+    SubjectManagementComponent
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ]
+})
+export class DashboardModule { }

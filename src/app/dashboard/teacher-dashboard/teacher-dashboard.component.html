@@ -1,0 +1,117 @@
+<div class="dashboard-greeting">
+  <h1>Xin chào, {{ currentUser?.name }}</h1>
+  <p>Chào mừng trở lại với Ngân Hàng Đề Thi</p>
+</div>
+
+<div class="dashboard-stats">
+  <div class="stat-card">
+    <div class="stat-icon">📚</div>
+    <div class="stat-content">
+      <h3>{{ totalExams }}</h3>
+      <p>Đề thi</p>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">👨‍🎓</div>
+    <div class="stat-content">
+      <h3>{{ totalStudents }}</h3>
+      <p>Học sinh</p>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🏆</div>
+    <div class="stat-content">
+      <h3>{{ avgScore | number:'1.1-1' }}</h3>
+      <p>Điểm trung bình</p>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-sections">
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2>Đề thi gần đây</h2>
+      <a class="view-all">Xem tất cả</a>
+    </div>
+    <div class="exam-list" *ngIf="recentExams.length > 0; else noExams">
+      <div class="exam-card" *ngFor="let exam of recentExams">
+        <div class="exam-status" [ngClass]="exam.status">
+          <span *ngIf="exam.status === 'published'">Đã xuất bản</span>
+          <span *ngIf="exam.status === 'draft'">Bản nháp</span>
+          <span *ngIf="exam.status === 'closed'">Đã kết thúc</span>
+        </div>
+        <div class="exam-header">
+          <h3>{{ exam.title }}</h3>
+          <span class="exam-subject">{{ exam.subject }}</span>
+        </div>
+        <div class="exam-details">
+          <div class="exam-detail">
+            <span class="detail-label">Số câu hỏi:</span>
+            <span class="detail-value">{{ exam.questions }}</span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Thời gian:</span>
+            <span class="detail-value">{{ exam.duration }} phút</span>
+          </div>
+          <div class="exam-detail">
+            <span class="detail-label">Ngày xuất bản:</span>
+            <span class="detail-value">{{ exam.publishDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="exam-detail" *ngIf="exam.attempts !== undefined">
+            <span class="detail-label">Lượt làm bài:</span>
+            <span class="detail-value">{{ exam.attempts }}</span>
+          </div>
+          <div class="exam-detail" *ngIf="exam.avgScore !== undefined">
+            <span class="detail-label">Điểm trung bình:</span>
+            <span class="detail-value">{{ exam.avgScore }}</span>
+          </div>
+        </div>
+        <div class="exam-actions">
+          <button class="btn btn-primary" *ngIf="exam.status === 'draft'">Chỉnh sửa</button>
+          <button class="btn btn-primary" *ngIf="exam.status === 'published'">Xem kết quả</button>
+          <button class="btn btn-secondary" *ngIf="exam.status === 'closed'">Xem chi tiết</button>
+        </div>
+      </div>
+    </div>
+    <ng-template #noExams>
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p>Chưa có đề thi nào</p>
+      </div>
+    </ng-template>
+  </div>
+  
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2>Học sinh xuất sắc</h2>
+      <a class="view-all">Xem tất cả</a>
+    </div>
+    <div class="student-list" *ngIf="topStudents.length > 0; else noStudents">
+      <div class="student-card" *ngFor="let student of topStudents">
+        <div class="student-info">
+          <div class="student-avatar">{{ student.name.charAt(0) }}</div>
+          <div class="student-details">
+            <h3>{{ student.name }}</h3>
+            <p class="student-grade">Lớp {{ student.grade }}</p>
+          </div>
+        </div>
+        <div class="student-stats">
+          <div class="student-stat">
+            <span class="stat-label">Đề đã làm</span>
+            <span class="stat-value">{{ student.examsCompleted }}</span>
+          </div>
+          <div class="student-stat">
+            <span class="stat-label">Điểm TB</span>
+            <span class="stat-value">{{ student.avgScore }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noStudents>
+      <div class="empty-state">
+        <div class="empty-icon">👨‍🎓</div>
+        <p>Chưa có dữ liệu học sinh</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,1042 @@
+{
+  "Version": 1,
+  "Hash": "8OycPNlhbE/S2Okg3bQjGtm2xuvhh+7xBCeIQ2lklZk=",
+  "Source": "BackEnd",
+  "BasePath": "_content/BackEnd",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "BackEnd\\wwwroot",
+      "Source": "BackEnd",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "BasePath": "_content/BackEnd",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "SourceId": "BackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/BackEnd",
+      "RelativePath": "reset-password#[.{fingerprint=1w4ujtjsyb}]?.html.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "jkao0tjm28",
+      "Integrity": "g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html"
+    },
+    {
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "SourceId": "BackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/BackEnd",
+      "RelativePath": "email-verification-success#[.{fingerprint=il9sr5o12u}]?.html.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "1evc8ca5ig",
+      "Integrity": "Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html"
+    },
+    {
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "SourceId": "BackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/BackEnd",
+      "RelativePath": "email-verification-failed#[.{fingerprint=5r34y9s1f6}]?.html.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "ao5u4lnptm",
+      "Integrity": "xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html"
+    },
+    {
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "SourceId": "BackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "BasePath": "_content/BackEnd",
+      "RelativePath": "email-verification-failed#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "5r34y9s1f6",
+      "Integrity": "ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\email-verification-failed.html"
+    },
+    {
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "SourceId": "BackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "BasePath": "_content/BackEnd",
+      "RelativePath": "email-verification-success#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "il9sr5o12u",
+      "Integrity": "lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\email-verification-success.html"
+    },
+    {
+      "Identity": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "SourceId": "BackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\",
+      "BasePath": "_content/BackEnd",
+      "RelativePath": "reset-password#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "1w4ujtjsyb",
+      "Integrity": "v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\reset-password.html"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "email-verification-failed.5r34y9s1f6.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000828500414"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1206"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:31 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "5r34y9s1f6"
+        },
+        {
+          "Name": "label",
+          "Value": "email-verification-failed.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-failed.5r34y9s1f6.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3034"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:31 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "5r34y9s1f6"
+        },
+        {
+          "Name": "label",
+          "Value": "email-verification-failed.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-failed.5r34y9s1f6.html.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1206"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:31 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "5r34y9s1f6"
+        },
+        {
+          "Name": "label",
+          "Value": "email-verification-failed.html.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-failed.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000828500414"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1206"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:31 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-failed.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3034"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:31 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ARLFlwCt7foZ/bt4trD4nAd09O7CvrSyj4SPYK1UDvo="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-failed.html.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\yfil930nxn-5r34y9s1f6.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1206"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:31 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xt/gLyCgM9+09n5OnuV7yxB84BZDw8Du0Y+Ybcnf6OQ="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-success.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001277139208"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "782"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-success.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1855"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-success.html.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "782"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-success.il9sr5o12u.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001277139208"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "782"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "il9sr5o12u"
+        },
+        {
+          "Name": "label",
+          "Value": "email-verification-success.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-success.il9sr5o12u.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1855"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "il9sr5o12u"
+        },
+        {
+          "Name": "label",
+          "Value": "email-verification-success.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-lg7/b3qmnaBBABZfBpB3rUhrmt2O5PZpmmi1xoy4cl4="
+        }
+      ]
+    },
+    {
+      "Route": "email-verification-success.il9sr5o12u.html.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\pejkngmdih-il9sr5o12u.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "782"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 22:01:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "il9sr5o12u"
+        },
+        {
+          "Name": "label",
+          "Value": "email-verification-success.html.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Fz76qWQcYsS7hVbuge0qjQEBikiz8T0kNbpixMrvHqM="
+        }
+      ]
+    },
+    {
+      "Route": "reset-password.1w4ujtjsyb.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000557413601"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1793"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 21:53:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1w4ujtjsyb"
+        },
+        {
+          "Name": "label",
+          "Value": "reset-password.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY="
+        }
+      ]
+    },
+    {
+      "Route": "reset-password.1w4ujtjsyb.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6245"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 21:53:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1w4ujtjsyb"
+        },
+        {
+          "Name": "label",
+          "Value": "reset-password.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY="
+        }
+      ]
+    },
+    {
+      "Route": "reset-password.1w4ujtjsyb.html.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1793"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 21:53:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1w4ujtjsyb"
+        },
+        {
+          "Name": "label",
+          "Value": "reset-password.html.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc="
+        }
+      ]
+    },
+    {
+      "Route": "reset-password.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000557413601"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1793"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 21:53:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY="
+        }
+      ]
+    },
+    {
+      "Route": "reset-password.html",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6245"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 21:53:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-v9QD3R0lafyKFfU0e9ZdX1y6ghV8I4qeY0ZQGKsafnY="
+        }
+      ]
+    },
+    {
+      "Route": "reset-password.html.gz",
+      "AssetFile": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\obj\\Debug\\net9.0\\compressed\\1tgus5g1of-1w4ujtjsyb.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1793"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 14 Apr 2025 21:53:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-g48/rLBHms8Mb0LPR2X4RhWjO2IPnukMKJ/JCh4xDhc="
+        }
+      ]
+    }
+  ]
+}

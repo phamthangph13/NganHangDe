@@ -1,0 +1,120 @@
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 1rem;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-info {
+  color: #fff;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+}
+
+.form-group {
+  width: 300px;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  color: #343a40;
+  font-weight: 600;
+}
+
+/* Styles cho modal */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  opacity: 0.5;
+}
+
+.modal.show .modal-dialog {
+  transform: none;
+}
+
+/* Animation cho thông báo thành công */
+.alert-success.fade.show {
+  animation: fadeInOut 5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Style cho cột mô tả */
+table td:nth-child(4) {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hiển thị mô tả đầy đủ khi hover */
+table td:nth-child(4):hover {
+  white-space: normal;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+  background-color: #f8f9fa;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 8px;
+  transition: all 0.3s ease;
+} 

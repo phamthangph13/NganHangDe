@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "PackagePath": "staticwebassets\\email-verification-failed.html"
+    },
+    {
+      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\email-verification-success.html",
+      "PackagePath": "staticwebassets\\email-verification-success.html"
+    },
+    {
+      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\Front-End\\Front-End\\BackEnd\\wwwroot\\reset-password.html",
+      "PackagePath": "staticwebassets\\reset-password.html"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.BackEnd.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.BackEnd.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.BackEnd.props",
+      "PackagePath": "build\\BackEnd.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.BackEnd.props",
+      "PackagePath": "buildMultiTargeting\\BackEnd.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.BackEnd.props",
+      "PackagePath": "buildTransitive\\BackEnd.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
