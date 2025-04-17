@@ -1,0 +1,167 @@
+<div class="exam-creator">
+  <div class="creator-header">
+    <h1>Tạo đề thi mới</h1>
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
+  </div>
+
+  <form [formGroup]="examForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-section">
+      <h2>Thông tin cơ bản</h2>
+      
+      <div class="form-group">
+        <label for="title">Tên đề thi <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="title" 
+          formControlName="title" 
+          [ngClass]="{'is-invalid': submitted && f['title'].errors}"
+        >
+        <div *ngIf="submitted && f['title'].errors" class="error-message">
+          <div *ngIf="f['title'].errors['required']">Vui lòng nhập tên đề thi</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="questionSetId">Chọn bộ câu hỏi <span class="required">*</span></label>
+        <select 
+          id="questionSetId" 
+          formControlName="questionSetId"
+          [ngClass]="{'is-invalid': submitted && f['questionSetId'].errors}"
+        >
+          <option value="">-- Chọn bộ câu hỏi --</option>
+          <option *ngFor="let qs of questionSets" [value]="qs.id">{{ qs.title }} ({{ qs.questionCount }} câu hỏi)</option>
+        </select>
+        <div *ngIf="submitted && f['questionSetId'].errors" class="error-message">
+          <div *ngIf="f['questionSetId'].errors['required']">Vui lòng chọn bộ câu hỏi</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Mô tả đề thi</label>
+        <textarea 
+          id="description" 
+          formControlName="description" 
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="duration">Thời gian làm bài (phút) <span class="required">*</span></label>
+        <input 
+          type="number" 
+          id="duration" 
+          formControlName="duration" 
+          min="1" 
+          max="300"
+          [ngClass]="{'is-invalid': submitted && f['duration'].errors}"
+        >
+        <div *ngIf="submitted && f['duration'].errors" class="error-message">
+          <div *ngIf="f['duration'].errors['required']">Vui lòng nhập thời gian làm bài</div>
+          <div *ngIf="f['duration'].errors['min']">Thời gian tối thiểu là 1 phút</div>
+          <div *ngIf="f['duration'].errors['max']">Thời gian tối đa là 300 phút</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Quyền truy cập</h2>
+      
+      <div class="form-group">
+        <label>Ai có thể làm bài này? <span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" formControlName="accessType" value="public">
+            <span>Tất cả mọi người</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" formControlName="accessType" value="class">
+            <span>Học sinh thuộc lớp</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" formControlName="accessType" value="selected">
+            <span>Một số học sinh cụ thể</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="examForm.get('accessType')?.value !== 'public'">
+        <label for="classId">Chọn lớp <span class="required">*</span></label>
+        <select 
+          id="classId" 
+          formControlName="classId"
+          [ngClass]="{'is-invalid': submitted && f['classId'].errors}"
+        >
+          <option value="">-- Chọn lớp --</option>
+          <option *ngFor="let cls of classes" [value]="cls.id">{{ cls.name }}</option>
+        </select>
+        <div *ngIf="submitted && f['classId'].errors" class="error-message">
+          <div *ngIf="f['classId'].errors['required']">Vui lòng chọn lớp</div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="examForm.get('accessType')?.value === 'selected'">
+        <label>Chọn học sinh <span class="required">*</span></label>
+        
+        <div *ngIf="studentLoadError" class="error-alert">
+          <div>
+            <p>{{ studentLoadError }}</p>
+            <p class="alternative-message">Bạn có thể chọn tất cả học sinh hoặc thử tải lại danh sách.</p>
+          </div>
+          <div class="error-actions">
+            <button type="button" class="retry-btn" (click)="loadStudentsForClass(examForm.get('classId')?.value)">Thử lại</button>
+            <button type="button" class="alt-btn" (click)="continueWithAllStudents()">Chọn tất cả học sinh</button>
+          </div>
+        </div>
+        
+        <div *ngIf="!studentLoadError && students.length === 0 && examForm.get('classId')?.value">
+          <p class="info-message">Không có học sinh nào trong lớp này.</p>
+        </div>
+        
+        <div *ngIf="!studentLoadError && students.length === 0 && !examForm.get('classId')?.value">
+          <p class="info-message">Vui lòng chọn lớp trước.</p>
+        </div>
+        
+        <div *ngIf="students.length > 0">
+          <div class="select-all-container">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                [checked]="isAllStudentsSelected()" 
+                (change)="toggleSelectAllStudents($event)"
+              >
+              <span>Chọn tất cả</span>
+            </label>
+          </div>
+          
+          <div class="students-container" [ngClass]="{'is-invalid': submitted && f['selectedStudentIds'].errors}">
+            <div class="student-item" *ngFor="let student of students">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [value]="student.id" 
+                  [checked]="isStudentSelected(student.id)"
+                  (change)="onStudentSelectionChange($event, student.id)"
+                >
+                <span>{{ student.name }}</span>
+                <small>{{ student.email }}</small>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="submitted && f['selectedStudentIds'].errors" class="error-message">
+          <div *ngIf="f['selectedStudentIds'].errors['required']">Vui lòng chọn ít nhất một học sinh</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" (click)="cancel()">Hủy bỏ</button>
+      <button type="submit" class="create-btn">Tạo đề thi</button>
+    </div>
+  </form>
+</div> 

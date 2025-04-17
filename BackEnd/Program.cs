@@ -82,6 +82,7 @@ builder.Services.AddSingleton<SubjectService>();
 builder.Services.AddSingleton<QuestionSetService>();
 builder.Services.AddSingleton<GeminiService>();
 builder.Services.AddSingleton<ClassService>();
+builder.Services.AddSingleton<ExamService>();
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();

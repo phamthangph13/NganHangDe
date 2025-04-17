@@ -8,7 +8,7 @@
   
   <div class="filters">
     <div class="filter-item">
-      <label for="subject-filter">Môn học:</label>
+      <label for="subject-filter">Bộ câu hỏi:</label>
       <select id="subject-filter" [(ngModel)]="filterSubject">
         <option value="">Tất cả</option>
         <option *ngFor="let subject of subjects" [value]="subject">{{ subject }}</option>
@@ -25,14 +25,20 @@
     </div>
   </div>
   
-  <div class="exams-table-container">
+  <div class="loading-indicator" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
+  </div>
+  
+  <div class="exams-table-container" *ngIf="!loading">
     <table class="exams-table">
       <thead>
         <tr>
           <th>Tên đề thi</th>
-          <th>Môn học</th>
+          <th>Bộ câu hỏi</th>
           <th>Số câu hỏi</th>
           <th>Thời gian</th>
+          <th>Quyền truy cập</th>
           <th>Ngày xuất bản</th>
           <th>Trạng thái</th>
           <th>Lượt làm</th>
@@ -43,10 +49,15 @@
       <tbody>
         <tr *ngFor="let exam of getFilteredExams()" [ngClass]="{'draft': exam.status === 'draft', 'published': exam.status === 'published', 'closed': exam.status === 'closed'}">
           <td>{{ exam.title }}</td>
-          <td>{{ exam.subject }}</td>
-          <td>{{ exam.questions }}</td>
+          <td>{{ exam.questionSetTitle }}</td>
+          <td>{{ exam.questionCount }}</td>
           <td>{{ exam.duration }} phút</td>
-          <td>{{ exam.publishDate === '0000-00-00' ? 'Chưa xuất bản' : (exam.publishDate | date:'dd/MM/yyyy') }}</td>
+          <td>
+            <span *ngIf="exam.accessType === 'public'">Công khai</span>
+            <span *ngIf="exam.accessType === 'class'">Lớp: {{ exam.className }}</span>
+            <span *ngIf="exam.accessType === 'selected'">{{ exam.selectedStudentIds?.length || 0 }} học sinh</span>
+          </td>
+          <td>{{ exam.publishDate ? (exam.publishDate | date:'dd/MM/yyyy') : 'Chưa xuất bản' }}</td>
           <td>
             <span class="status-badge" [ngClass]="exam.status">
               <span *ngIf="exam.status === 'published'">Đã xuất bản</span>
@@ -54,10 +65,10 @@
               <span *ngIf="exam.status === 'closed'">Đã kết thúc</span>
             </span>
           </td>
-          <td>{{ exam.attempts || '—' }}</td>
-          <td>{{ exam.avgScore ? (exam.avgScore | number:'1.1-1') : '—' }}</td>
+          <td>{{ exam.attemptCount || '—' }}</td>
+          <td>{{ exam.averageScore ? (exam.averageScore | number:'1.1-1') : '—' }}</td>
           <td class="actions">
-            <button class="action-btn edit" title="Chỉnh sửa" (click)="editExam(exam.id)">
+            <button class="action-btn edit" title="Chỉnh sửa" (click)="editExam(exam.id)" *ngIf="exam.status === 'draft'">
               <i class="fas fa-edit"></i>
             </button>
             <button *ngIf="exam.status === 'draft'" class="action-btn publish" title="Xuất bản" (click)="publishExam(exam.id)">
@@ -78,7 +89,7 @@
     </table>
   </div>
   
-  <div class="empty-state" *ngIf="getFilteredExams().length === 0">
+  <div class="empty-state" *ngIf="!loading && getFilteredExams().length === 0">
     <div class="empty-icon">📝</div>
     <h3>Không tìm thấy đề thi nào</h3>
     <p *ngIf="filterSubject || filterStatus">Thử thay đổi bộ lọc để xem nhiều đề thi hơn</p>

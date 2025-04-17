@@ -1,0 +1,46 @@
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.student-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.btn-primary {
+  min-width: 120px;
+}
+
+.card-footer {
+  background-color: #f8f9fa;
+}
+
+// Improve radio button and checkbox area
+.form-check {
+  padding: 8px 0;
+  margin-bottom: 5px;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+  }
+}
+
+// Make the checkbox list more readable
+.card .card-body .form-check {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+} 

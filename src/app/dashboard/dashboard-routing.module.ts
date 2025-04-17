@@ -4,6 +4,7 @@ import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.co
 import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
 import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 import { ExamManagementComponent } from './exam-management/exam-management.component';
+import { ExamCreatorComponent } from './exam-creator/exam-creator.component';
 import { ClassManagementComponent } from './class-management/class-management.component';
 import { QuestionSetsComponent } from './question-sets/question-sets.component';
 import { SubjectManagementComponent } from './subject-management/subject-management.component';
@@ -33,6 +34,12 @@ const routes: Routes = [
       {
         path: 'exams',
         component: ExamManagementComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'teacher' }
+      },
+      {
+        path: 'exam-creator',
+        component: ExamCreatorComponent,
         canActivate: [AuthGuard],
         data: { role: 'teacher' }
       },
