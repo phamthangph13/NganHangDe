@@ -17,11 +17,16 @@ namespace BackEnd.Controllers
     {
         private readonly QuestionSetService _questionSetService;
         private readonly SubjectService _subjectService;
+        private readonly GeminiService _geminiService;
 
-        public QuestionSetsController(QuestionSetService questionSetService, SubjectService subjectService)
+        public QuestionSetsController(
+            QuestionSetService questionSetService, 
+            SubjectService subjectService,
+            GeminiService geminiService)
         {
             _questionSetService = questionSetService;
             _subjectService = subjectService;
+            _geminiService = geminiService;
         }
 
         [HttpGet]
@@ -302,6 +307,42 @@ namespace BackEnd.Controllers
                 gradeLevels.Add(i);
             }
             return Ok(gradeLevels);
+        }
+
+        [HttpPost("generate-ai-questions")]
+        public async Task<ActionResult<GenerateQuestionsResponse>> GenerateAIQuestions(GenerateQuestionsRequest request)
+        {
+            try
+            {
+                // Validate question set exists
+                if (string.IsNullOrEmpty(request.QuestionSetId) || !ObjectId.TryParse(request.QuestionSetId, out _))
+                    return BadRequest(new { message = "Invalid question set ID format" });
+
+                var questionSet = await _questionSetService.GetByIdAsync(request.QuestionSetId);
+                if (questionSet == null)
+                    return NotFound(new { message = "Question set not found" });
+
+                // Validate question type
+                if (string.IsNullOrEmpty(request.Type) || 
+                    (request.Type != "single" && request.Type != "multiple" && request.Type != "essay"))
+                {
+                    return BadRequest(new { message = "Question type must be 'single', 'multiple', or 'essay'" });
+                }
+
+                // Generate questions using Gemini
+                var generatedQuestions = await _geminiService.GenerateQuestionsAsync(
+                    request.Prompt, 
+                    request.Type, 
+                    request.Count
+                );
+
+                return Ok(new GenerateQuestionsResponse { Questions = generatedQuestions });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating AI questions: {ex.Message}");
+                return StatusCode(500, new { message = "Failed to generate AI questions", error = ex.Message });
+            }
         }
     }
 } 

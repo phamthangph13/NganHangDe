@@ -541,13 +541,34 @@ export class QuestionSetsComponent implements OnInit {
     
     this.isGeneratingAIQuestions = true;
     
-    // Here you would call your AI question generation service
-    // For now, we'll simulate it with a timeout and some mock data
-    setTimeout(() => {
-      // Generate mock questions based on the type
-      this.aiGeneratedQuestions = this.generateMockAIQuestions();
-      this.isGeneratingAIQuestions = false;
-    }, 1500);
+    const request = {
+      prompt: this.aiPrompt.trim(),
+      questionSetId: this.activeQuestionSet.id,
+      type: this.aiQuestionType,
+      count: this.aiQuestionCount
+    };
+    
+    this.questionSetService.generateAIQuestions(request).subscribe({
+      next: (response) => {
+        // Convert the API response to our local Question format
+        this.aiGeneratedQuestions = response.questions.map(q => ({
+          id: 'temp-' + Math.random().toString(36).substr(2, 9),
+          content: q.content,
+          type: q.type,
+          options: q.options?.map((opt, idx) => ({
+            id: idx,
+            content: opt.content
+          })),
+          correctAnswers: q.correctAnswers
+        }));
+        this.isGeneratingAIQuestions = false;
+      },
+      error: (error) => {
+        console.error('Error generating AI questions:', error);
+        this.isGeneratingAIQuestions = false;
+        alert('Có lỗi khi tạo câu hỏi. Vui lòng thử lại sau.');
+      }
+    });
   }
   
   // Save AI Generated Questions
@@ -579,52 +600,5 @@ export class QuestionSetsComponent implements OnInit {
     
     // Start adding questions
     addQuestions();
-  }
-  
-  // Generate Mock AI Questions (to be replaced with actual API call)
-  private generateMockAIQuestions(): Question[] {
-    const mockQuestions: Question[] = [];
-    const count = Math.min(Math.max(this.aiQuestionCount, 1), 10);
-    
-    for (let i = 0; i < count; i++) {
-      if (this.aiQuestionType === 'essay') {
-        mockQuestions.push({
-          id: `mock-${i}`,
-          content: `${this.aiPrompt} - Câu hỏi tự luận ${i+1}?`,
-          type: 'essay'
-        });
-      } else {
-        const options = [
-          { id: 0, content: `Đáp án A cho câu hỏi ${i+1}` },
-          { id: 1, content: `Đáp án B cho câu hỏi ${i+1}` },
-          { id: 2, content: `Đáp án C cho câu hỏi ${i+1}` },
-          { id: 3, content: `Đáp án D cho câu hỏi ${i+1}` }
-        ];
-        
-        let correctAnswers = [0]; // Default to first option
-        if (this.aiQuestionType === 'multiple') {
-          // For multiple choice, randomly select 1-3 correct answers
-          correctAnswers = [];
-          const numCorrect = Math.floor(Math.random() * 3) + 1;
-          for (let j = 0; j < numCorrect; j++) {
-            let idx;
-            do {
-              idx = Math.floor(Math.random() * options.length);
-            } while (correctAnswers.includes(idx));
-            correctAnswers.push(idx);
-          }
-        }
-        
-        mockQuestions.push({
-          id: `mock-${i}`,
-          content: `${this.aiPrompt} - Câu hỏi trắc nghiệm ${i+1}?`,
-          type: this.aiQuestionType,
-          options,
-          correctAnswers
-        });
-      }
-    }
-    
-    return mockQuestions;
   }
 } 

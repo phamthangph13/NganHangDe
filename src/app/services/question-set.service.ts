@@ -6,7 +6,9 @@ import {
   QuestionSetDetail, 
   CreateQuestionSetDto, 
   UpdateQuestionSetDto,
-  CreateQuestionDto
+  CreateQuestionDto,
+  GenerateAIQuestionsRequest,
+  GenerateAIQuestionsResponse
 } from './models/question-set.model';
 import { environment } from '../../environments/environment';
 
@@ -52,5 +54,9 @@ export class QuestionSetService {
 
   getGradeLevels(): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/grade-levels`);
+  }
+  
+  generateAIQuestions(request: GenerateAIQuestionsRequest): Observable<GenerateAIQuestionsResponse> {
+    return this.http.post<GenerateAIQuestionsResponse>(`${this.apiUrl}/generate-ai-questions`, request);
   }
 } 

@@ -130,3 +130,11 @@ C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\obj\Debug\net9.0\refint\BackE
 C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\obj\Debug\net9.0\BackEnd.pdb
 C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\obj\Debug\net9.0\BackEnd.genruntimeconfig.cache
 C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\obj\Debug\net9.0\ref\BackEnd.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\GenerativeAI.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
+C:\Users\winni\OneDrive\Desktop\NganHangDe\BackEnd\bin\Debug\net9.0\System.Text.Json.dll

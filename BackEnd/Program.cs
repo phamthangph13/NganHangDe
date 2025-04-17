@@ -69,12 +69,18 @@ builder.Services.Configure<JwtSettings>(
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
+// Configure Gemini AI Settings
+builder.Services.Configure<GeminiSettings>(
+    builder.Configuration.GetSection("GeminiSettings"));
+
 // Configure Services
+builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<SubjectService>();
 builder.Services.AddSingleton<QuestionSetService>();
+builder.Services.AddSingleton<GeminiService>();
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();

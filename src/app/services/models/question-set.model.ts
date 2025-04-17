@@ -50,4 +50,15 @@ export interface CreateQuestionDto {
 
 export interface CreateOptionDto {
   content: string;
+}
+
+export interface GenerateAIQuestionsRequest {
+  prompt: string;
+  questionSetId: string;
+  type: string;
+  count: number;
+}
+
+export interface GenerateAIQuestionsResponse {
+  questions: CreateQuestionDto[];
 } 
