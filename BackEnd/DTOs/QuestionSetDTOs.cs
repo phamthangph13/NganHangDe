@@ -53,11 +53,11 @@ namespace BackEnd.DTOs
         public string Id { get; set; }
         public string Content { get; set; }
         public string Type { get; set; } // "single", "multiple", or "essay"
-        public List<OptionDTO> Options { get; set; } = new List<OptionDTO>();
+        public List<QuestionOptionDTO> Options { get; set; } = new List<QuestionOptionDTO>();
         public List<int> CorrectAnswers { get; set; } = new List<int>();
     }
 
-    public class OptionDTO
+    public class QuestionOptionDTO
     {
         public int Id { get; set; }
         public string Content { get; set; }

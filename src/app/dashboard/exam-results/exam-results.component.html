@@ -1,0 +1,154 @@
+<div class="exam-results">
+  <div class="header-actions">
+    <button class="back-btn" (click)="backToExams()">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+    <h1>Kết quả đề thi</h1>
+    <button class="export-btn" (click)="exportResults()">
+      <i class="fas fa-file-export"></i> Xuất kết quả
+    </button>
+  </div>
+  
+  <div class="loading-indicator" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
+  </div>
+  
+  <div class="error-message" *ngIf="error">
+    <p>{{ error }}</p>
+    <button (click)="backToExams()">Quay lại</button>
+  </div>
+  
+  <div class="exam-info" *ngIf="exam && !loading && !error">
+    <h2>{{ exam.title }}</h2>
+    <div class="exam-details">
+      <div class="detail-item">
+        <span class="label">Bộ câu hỏi:</span>
+        <span class="value">{{ exam.questionSetTitle }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Số câu hỏi:</span>
+        <span class="value">{{ exam.questionCount }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Thời gian:</span>
+        <span class="value">{{ exam.duration }} phút</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Ngày xuất bản:</span>
+        <span class="value">{{ exam.publishDate | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="statistics" *ngIf="examResults.length > 0 && !loading && !error">
+    <h3>Thống kê kết quả</h3>
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-value">{{ avgScore | number:'1.1-1' }}</div>
+        <div class="stat-label">Điểm trung bình</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ maxScore | number:'1.1-1' }}</div>
+        <div class="stat-label">Điểm cao nhất</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ minScore | number:'1.1-1' }}</div>
+        <div class="stat-label">Điểm thấp nhất</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ passCount }}</div>
+        <div class="stat-label">Đạt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ failCount }}</div>
+        <div class="stat-label">Chưa đạt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ examResults.length }}</div>
+        <div class="stat-label">Tổng số lượt làm</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="results-filter" *ngIf="examResults.length > 0 && !loading && !error">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="filterName" 
+        placeholder="Tìm kiếm theo tên học sinh..."
+      />
+      <i class="fas fa-search"></i>
+    </div>
+  </div>
+  
+  <div class="results-table-container" *ngIf="examResults.length > 0 && !loading && !error">
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th (click)="setSorting('studentName')">
+            Tên học sinh
+            <i class="fas" [ngClass]="getSortIcon('studentName')"></i>
+          </th>
+          <th (click)="setSorting('score')">
+            Điểm số
+            <i class="fas" [ngClass]="getSortIcon('score')"></i>
+          </th>
+          <th (click)="setSorting('correctAnswers')">
+            Số câu đúng
+            <i class="fas" [ngClass]="getSortIcon('correctAnswers')"></i>
+          </th>
+          <th (click)="setSorting('totalQuestions')">
+            Tổng số câu
+            <i class="fas" [ngClass]="getSortIcon('totalQuestions')"></i>
+          </th>
+          <th (click)="setSorting('startTime')">
+            Thời gian bắt đầu
+            <i class="fas" [ngClass]="getSortIcon('startTime')"></i>
+          </th>
+          <th (click)="setSorting('duration')">
+            Thời gian làm bài
+            <i class="fas" [ngClass]="getSortIcon('duration')"></i>
+          </th>
+          <th (click)="setSorting('completed')">
+            Trạng thái
+            <i class="fas" [ngClass]="getSortIcon('completed')"></i>
+          </th>
+          <th>Chi tiết</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let result of getFilteredResults()" 
+            [ngClass]="{'completed': result.completed, 'incomplete': !result.completed}">
+          <td>{{ result.studentName }}</td>
+          <td class="score-cell" [ngClass]="{'pass': result.score >= 5, 'fail': result.score < 5}">
+            {{ result.completed ? (result.score | number:'1.1-1') : '—' }}
+          </td>
+          <td>{{ result.correctAnswers }} / {{ result.totalQuestions }}</td>
+          <td>{{ result.totalQuestions }}</td>
+          <td>{{ result.startTime | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ result.completed ? (result.duration + ' phút') : '—' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="result.completed ? 'completed' : 'incomplete'">
+              {{ result.completed ? 'Đã hoàn thành' : 'Chưa hoàn thành' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="detail-btn" title="Xem chi tiết" (click)="viewStudentDetail(result.id)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="empty-state" *ngIf="examResults.length === 0 && !loading && !error">
+    <div class="empty-icon">📊</div>
+    <h3>Chưa có học sinh nào làm đề thi này</h3>
+    <p>Kết quả sẽ hiển thị ở đây khi học sinh bắt đầu làm bài</p>
+    <button class="back-btn" (click)="backToExams()">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+  </div>
+</div> 

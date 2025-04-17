@@ -1,0 +1,84 @@
+<div class="student-result">
+  <div class="header-actions">
+    <button class="back-btn" (click)="backToResults()">
+      <i class="fas fa-arrow-left"></i> Quay lại danh sách kết quả
+    </button>
+    <h1>Chi tiết kết quả</h1>
+  </div>
+  
+  <div class="loading-indicator" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
+  </div>
+  
+  <div class="error-message" *ngIf="error">
+    <p>{{ error }}</p>
+    <button (click)="backToResults()">Quay lại</button>
+  </div>
+  
+  <div class="content" *ngIf="resultDetail && !loading && !error">
+    <div class="student-info">
+      <h2>{{ resultDetail.studentName }}</h2>
+      <div class="result-summary">
+        <div class="summary-item">
+          <div class="summary-label">Điểm số:</div>
+          <div class="summary-value score" [ngClass]="{'pass': resultDetail.score! >= 5, 'fail': resultDetail.score! < 5}">
+            {{ resultDetail.score | number:'1.1-1' }}/10
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Số câu đúng:</div>
+          <div class="summary-value">{{ resultDetail.correctAnswers }}/{{ resultDetail.totalQuestions }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Thời gian làm bài:</div>
+          <div class="summary-value">{{ resultDetail.duration }} phút</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Bắt đầu:</div>
+          <div class="summary-value">{{ resultDetail.startTime | date:'dd/MM/yyyy HH:mm' }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Kết thúc:</div>
+          <div class="summary-value">{{ resultDetail.endTime | date:'dd/MM/yyyy HH:mm' }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Trạng thái:</div>
+          <div class="summary-value status" [ngClass]="{'completed': resultDetail.completed, 'incomplete': !resultDetail.completed}">
+            {{ resultDetail.completed ? 'Đã hoàn thành' : 'Chưa hoàn thành' }}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="answers-section">
+      <h3>Chi tiết câu trả lời</h3>
+      
+      <div class="answer-card" *ngFor="let answer of resultDetail.answers; let i = index">
+        <div class="question-header" [ngClass]="{'correct': answer.isCorrect, 'incorrect': !answer.isCorrect}">
+          <div class="question-number">Câu {{ i + 1 }}</div>
+          <div class="question-status">
+            <i class="fas" [ngClass]="answer.isCorrect ? 'fa-check-circle' : 'fa-times-circle'"></i>
+            {{ answer.isCorrect ? 'Đúng' : 'Sai' }}
+          </div>
+        </div>
+        
+        <div class="question-text">{{ answer.questionText }}</div>
+        
+        <div class="options-list">
+          <div 
+            class="option-item" 
+            *ngFor="let option of answer.options"
+            [ngClass]="getOptionClass(option, answer)"
+          >
+            <div class="option-marker">
+              <i *ngIf="getOptionIcon(option, answer)" class="fas" [ngClass]="getOptionIcon(option, answer)"></i>
+              <span *ngIf="!getOptionIcon(option, answer)" class="marker-circle" [ngClass]="{'selected': option.id === answer.selectedOptionId}"></span>
+            </div>
+            <div class="option-text">{{ option.text }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

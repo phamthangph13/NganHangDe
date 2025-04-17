@@ -540,5 +540,172 @@ namespace BackEnd.Controllers
 
             return Ok(examDtos);
         }
+
+        // GET: api/Exams/{id}/results
+        [HttpGet("{id}/results")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<ActionResult<IEnumerable<ExamResultDTO>>> GetExamResults(string id)
+        {
+            string teacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            // Verify exam exists and teacher owns it
+            var exam = await _examService.GetByIdAsync(id);
+            if (exam == null)
+            {
+                return NotFound();
+            }
+            
+            if (exam.TeacherId != teacherId)
+            {
+                return Forbid();
+            }
+            
+            // Get all attempts for this exam
+            var attempts = await _examService.GetExamResultsAsync(id);
+            
+            // Create DTOs with student information
+            var resultDtos = new List<ExamResultDTO>();
+            foreach (var attempt in attempts)
+            {
+                var student = await _examService.GetStudentByIdAsync(attempt.StudentId);
+                if (student == null)
+                    continue;
+                    
+                var studentName = $"{student.FirstName} {student.LastName}";
+                
+                resultDtos.Add(new ExamResultDTO
+                {
+                    Id = attempt.Id,
+                    StudentId = attempt.StudentId,
+                    StudentName = studentName,
+                    ExamId = attempt.ExamId,
+                    Score = attempt.Score,
+                    TotalQuestions = attempt.Answers.Count,
+                    CorrectAnswers = attempt.Answers.Count(a => a.IsCorrect.HasValue && a.IsCorrect.Value),
+                    StartTime = attempt.StartTime,
+                    EndTime = attempt.EndTime,
+                    Duration = attempt.EndTime.HasValue ? 
+                        (int)Math.Ceiling((attempt.EndTime.Value - attempt.StartTime).TotalMinutes) : 0,
+                    Completed = attempt.Status == "completed"
+                });
+            }
+            
+            return Ok(resultDtos);
+        }
+
+        // GET: api/Exams/results/{resultId}
+        [HttpGet("results/{resultId}")]
+        [Authorize(Roles = "Teacher,Student")]
+        public async Task<ActionResult<StudentResultDetailDTO>> GetStudentResult(string resultId)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userRole = User.FindFirstValue(ClaimTypes.Role);
+            
+            // Get the attempt
+            var attempt = await _examService.GetExamAttemptByIdAsync(resultId);
+            if (attempt == null)
+            {
+                return NotFound();
+            }
+            
+            // Get the exam
+            var exam = await _examService.GetByIdAsync(attempt.ExamId);
+            if (exam == null)
+            {
+                return NotFound();
+            }
+            
+            // Check permissions
+            if (userRole == "Teacher" && exam.TeacherId != userId)
+            {
+                return Forbid();
+            }
+            else if (userRole == "Student" && attempt.StudentId != userId)
+            {
+                return Forbid();
+            }
+            
+            // Get student details
+            var student = await _examService.GetStudentByIdAsync(attempt.StudentId);
+            if (student == null)
+            {
+                return NotFound("Student not found");
+            }
+            
+            var studentName = $"{student.FirstName} {student.LastName}";
+            
+            // Get question details
+            var questionSet = await _examService.GetQuestionSetAsync(exam.QuestionSetId);
+            if (questionSet == null)
+            {
+                return NotFound("Question set not found");
+            }
+            
+            // Create DTO
+            var resultDetails = new StudentResultDetailDTO
+            {
+                Id = attempt.Id,
+                StudentId = attempt.StudentId,
+                StudentName = studentName,
+                ExamId = attempt.ExamId,
+                Score = attempt.Score,
+                TotalQuestions = attempt.Answers.Count,
+                CorrectAnswers = attempt.Answers.Count(a => a.IsCorrect.HasValue && a.IsCorrect.Value),
+                StartTime = attempt.StartTime,
+                EndTime = attempt.EndTime,
+                Duration = attempt.EndTime.HasValue ? 
+                    (int)Math.Ceiling((attempt.EndTime.Value - attempt.StartTime).TotalMinutes) : 0,
+                Completed = attempt.Status == "completed",
+                Answers = new List<StudentAnswerDTO>()
+            };
+            
+            // Add answer details
+            foreach (var answer in attempt.Answers)
+            {
+                var question = questionSet.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+                if (question == null)
+                    continue;
+                    
+                // Get correct option ID based on the first correct answer (for single choice)
+                string correctOptionId = "0";
+                if (question.CorrectAnswers.Count > 0)
+                {
+                    int correctOptionIndex = question.CorrectAnswers[0];
+                    if (correctOptionIndex >= 0 && correctOptionIndex < question.Options.Count)
+                    {
+                        correctOptionId = question.Options[correctOptionIndex].Id.ToString();
+                    }
+                }
+                
+                // Get selected option ID for this question
+                string selectedOptionId = null;
+                if (answer.SelectedOptions != null && answer.SelectedOptions.Count > 0)
+                {
+                    int selectedOptionIndex = answer.SelectedOptions[0];
+                    if (selectedOptionIndex >= 0 && selectedOptionIndex < question.Options.Count)
+                    {
+                        selectedOptionId = question.Options[selectedOptionIndex].Id.ToString();
+                    }
+                }
+                
+                var answerDto = new StudentAnswerDTO
+                {
+                    QuestionId = answer.QuestionId,
+                    QuestionText = question.Content,
+                    CorrectOptionId = correctOptionId,
+                    SelectedOptionId = selectedOptionId,
+                    IsCorrect = answer.IsCorrect.HasValue && answer.IsCorrect.Value,
+                    Options = question.Options.Select(o => new ExamOptionDTO
+                    {
+                        Id = o.Id.ToString(),
+                        Text = o.Content
+                    }).ToList()
+                };
+                
+                resultDetails.Answers.Add(answerDto);
+            }
+            
+            return Ok(resultDetails);
+        }
     }
 } 

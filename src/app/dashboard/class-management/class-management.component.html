@@ -94,7 +94,7 @@
           <td class="class-code-cell">
             <div class="class-code">
               <span>{{ cls.classCode }}</span>
-              <button class="btn-copy" (click)="copyClassCode(cls.classCode)" title="Sao chép mã lớp">
+              <button class="btn-copy" [disabled]="!cls.classCode" (click)="cls.classCode && copyClassCode(cls.classCode)" title="Sao chép mã lớp">
                 <i class="fas fa-copy"></i>
               </button>
               <button class="btn-refresh" (click)="regenerateClassCode(cls.id)" title="Tạo mã mới">

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Class {
   id: string;
   name: string;
-  grade: number;
-  classCode: string;
-  createdAt: Date;
+  grade?: number;
+  classCode?: string;
+  teacherId?: string;
+  createdAt?: Date;
   studentCount?: number;
 }
 
@@ -45,20 +46,16 @@ export class ClassService {
     return this.http.get<Class[]>(this.apiUrl);
   }
 
-  getClassesByGrade(grade: number): Observable<Class[]> {
-    return this.http.get<Class[]>(`${this.apiUrl}/grade/${grade}`);
-  }
-
-  getClass(id: string): Observable<Class> {
+  getClassById(id: string): Observable<Class> {
     return this.http.get<Class>(`${this.apiUrl}/${id}`);
   }
 
-  createClass(createClassDTO: CreateClassDTO): Observable<Class> {
-    return this.http.post<Class>(this.apiUrl, createClassDTO);
+  createClass(classData: any): Observable<Class> {
+    return this.http.post<Class>(this.apiUrl, classData);
   }
 
-  updateClass(id: string, updateClassDTO: UpdateClassDTO): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, updateClassDTO);
+  updateClass(id: string, classData: any): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, classData);
   }
 
   deleteClass(id: string): Observable<void> {

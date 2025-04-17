@@ -196,5 +196,33 @@ namespace BackEnd.Services
 
             return false;
         }
+        
+        public async Task<List<ExamAttempt>> GetExamResultsAsync(string examId)
+        {
+            return await _examAttempts
+                .Find(a => a.ExamId == examId)
+                .ToListAsync();
+        }
+        
+        public async Task<ExamAttempt> GetExamAttemptByIdAsync(string attemptId)
+        {
+            return await _examAttempts
+                .Find(a => a.Id == attemptId)
+                .FirstOrDefaultAsync();
+        }
+        
+        public async Task<ExamAttempt> GetStudentExamAttemptAsync(string examId, string studentId)
+        {
+            return await _examAttempts
+                .Find(a => a.ExamId == examId && a.StudentId == studentId)
+                .FirstOrDefaultAsync();
+        }
+        
+        public async Task<User> GetStudentByIdAsync(string studentId)
+        {
+            return await _users
+                .Find(u => u.Id == studentId && u.Role == "student")
+                .FirstOrDefaultAsync();
+        }
     }
 } 

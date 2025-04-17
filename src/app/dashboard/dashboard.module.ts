@@ -1,21 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { AuthInterceptor } from '../interceptors/auth.interceptor';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
-import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
-import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
-import { ExamManagementComponent } from './exam-management/exam-management.component';
-import { ExamCreatorComponent } from './exam-creator/exam-creator.component';
-import { ClassManagementComponent } from './class-management/class-management.component';
-import { QuestionSetsComponent } from './question-sets/question-sets.component';
-import { SubjectManagementComponent } from './subject-management/subject-management.component';
-import { StudentClassesComponent } from './student-classes/student-classes.component';
-import { ClassDetailsComponent } from './class-details/class-details.component';
-import { RouterModule } from '@angular/router';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from '../interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [],
@@ -23,19 +13,9 @@ import { AuthInterceptor } from '../interceptors/auth.interceptor';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    DashboardRoutingModule,
+    HttpClientModule,
     RouterModule,
-    // Import standalone components
-    DashboardLayoutComponent,
-    StudentDashboardComponent,
-    TeacherDashboardComponent,
-    ExamManagementComponent,
-    ExamCreatorComponent,
-    ClassManagementComponent,
-    QuestionSetsComponent,
-    SubjectManagementComponent,
-    StudentClassesComponent,
-    ClassDetailsComponent
+    DashboardRoutingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

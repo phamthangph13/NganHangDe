@@ -59,10 +59,14 @@ export class ClassManagementComponent implements OnInit {
   }
 
   get filteredClasses(): Class[] {
-    return this.classes.filter(cls => 
-      cls.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      cls.grade.toString().includes(this.searchText.toLowerCase())
-    );
+    if (!this.searchText || this.searchText.trim() === '') {
+      return this.classes.slice();
+    } else {
+      return this.classes.filter(cls => 
+        cls.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        (cls.grade !== undefined && cls.grade.toString().includes(this.searchText.toLowerCase()))
+      );
+    }
   }
 
   toggleForm(): void {
@@ -86,7 +90,7 @@ export class ClassManagementComponent implements OnInit {
     this.currentClassId = cls.id;
     this.classForm.setValue({
       name: cls.name,
-      grade: cls.grade
+      grade: cls.grade ?? ''
     });
     this.showForm = true;
   }

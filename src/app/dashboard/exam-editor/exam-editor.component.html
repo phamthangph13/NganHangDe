@@ -1,163 +1,154 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-12">
-      <h2>Chỉnh sửa đề thi</h2>
-      <div *ngIf="loading" class="d-flex justify-content-center">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Đang tải...</span>
+<div class="exam-editor">
+  <div class="header-actions">
+    <button class="back-btn" (click)="cancelEdit()">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+    <h1>Chỉnh sửa đề thi</h1>
+  </div>
+  
+  <div class="loading-indicator" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
+  </div>
+  
+  <div class="error-message" *ngIf="error">
+    <p>{{ error }}</p>
+    <button (click)="cancelEdit()">Quay lại</button>
+  </div>
+  
+  <div class="success-message" *ngIf="success">
+    <p>{{ success }}</p>
+    <button (click)="cancelEdit()">Quay lại danh sách</button>
+  </div>
+  
+  <div class="form-container" *ngIf="exam && !loading && !error">
+    <div class="exam-info">
+      <p class="info-label">Bộ câu hỏi:</p>
+      <p class="info-value">{{ exam.questionSetTitle }}</p>
+      <p class="info-label">Số câu hỏi:</p>
+      <p class="info-value">{{ exam.questionCount }}</p>
+    </div>
+    
+    <form (submit)="updateExam()">
+      <div class="form-group">
+        <label for="title">Tên đề thi <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title" 
+          [(ngModel)]="formData.title" 
+          required
+          maxlength="100"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Mô tả</label>
+        <textarea 
+          id="description" 
+          name="description" 
+          [(ngModel)]="formData.description"
+          rows="3"
+          maxlength="500"
+        ></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="duration">Thời gian làm bài (phút) <span class="required">*</span></label>
+        <input 
+          type="number" 
+          id="duration" 
+          name="duration" 
+          [(ngModel)]="formData.duration" 
+          required
+          min="5"
+          max="300"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label>Quyền truy cập <span class="required">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input 
+              type="radio" 
+              id="access-public" 
+              name="accessType" 
+              value="public" 
+              [(ngModel)]="formData.accessType"
+            >
+            <label for="access-public">Công khai - Tất cả học sinh đều có thể làm bài</label>
+          </div>
+          
+          <div class="radio-option">
+            <input 
+              type="radio" 
+              id="access-class" 
+              name="accessType" 
+              value="class" 
+              [(ngModel)]="formData.accessType"
+            >
+            <label for="access-class">Lớp học - Chỉ học sinh trong lớp được chọn</label>
+          </div>
+          
+          <div class="radio-option">
+            <input 
+              type="radio" 
+              id="access-selected" 
+              name="accessType" 
+              value="selected" 
+              [(ngModel)]="formData.accessType"
+            >
+            <label for="access-selected">Học sinh được chọn - Chỉ một số học sinh cụ thể</label>
+          </div>
         </div>
       </div>
       
-      <form [formGroup]="examForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <div class="card">
-          <div class="card-body">
-            <div class="mb-3">
-              <label for="title" class="form-label">Tiêu đề đề thi *</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="title" 
-                formControlName="title"
-                [ngClass]="{ 'is-invalid': submitted && f['title'].errors }"
-              >
-              <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
-                <div *ngIf="f['title'].errors['required']">Tiêu đề không được để trống</div>
-              </div>
-            </div>
-            
-            <div class="mb-3">
-              <label for="description" class="form-label">Mô tả</label>
-              <textarea 
-                class="form-control" 
-                id="description" 
-                rows="3" 
-                formControlName="description"
-              ></textarea>
-            </div>
-            
-            <div class="mb-3">
-              <label for="duration" class="form-label">Thời gian làm bài (phút) *</label>
-              <input 
-                type="number" 
-                class="form-control" 
-                id="duration" 
-                formControlName="duration"
-                [ngClass]="{ 'is-invalid': submitted && f['duration'].errors }"
-              >
-              <div *ngIf="submitted && f['duration'].errors" class="invalid-feedback">
-                <div *ngIf="f['duration'].errors['required']">Thời gian không được để trống</div>
-                <div *ngIf="f['duration'].errors['min']">Thời gian tối thiểu là 1 phút</div>
-                <div *ngIf="f['duration'].errors['max']">Thời gian tối đa là 300 phút</div>
-              </div>
-            </div>
-            
-            <div class="mb-3">
-              <label class="form-label">Phạm vi truy cập *</label>
-              <div class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="radio" 
-                  id="accessTypePublic" 
-                  value="public" 
-                  formControlName="accessType"
-                >
-                <label class="form-check-label" for="accessTypePublic">
-                  Công khai - Mọi học sinh đều có thể tham gia
-                </label>
-              </div>
-              <div class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="radio" 
-                  id="accessTypeClass" 
-                  value="class" 
-                  formControlName="accessType"
-                >
-                <label class="form-check-label" for="accessTypeClass">
-                  Lớp học - Chỉ học sinh trong lớp được chọn có thể tham gia
-                </label>
-              </div>
-              <div class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="radio" 
-                  id="accessTypeSelected" 
-                  value="selected" 
-                  formControlName="accessType"
-                >
-                <label class="form-check-label" for="accessTypeSelected">
-                  Học sinh đã chọn - Chỉ những học sinh được chọn cụ thể mới có thể tham gia
-                </label>
-              </div>
-            </div>
-            
-            <!-- Class selection for class or selected access types -->
-            <div class="mb-3" *ngIf="examForm.get('accessType')?.value !== 'public'">
-              <label for="classId" class="form-label">Lớp học *</label>
-              <select 
-                class="form-select" 
-                id="classId" 
-                formControlName="classId"
-                [ngClass]="{ 'is-invalid': submitted && f['classId'].errors }"
-              >
-                <option value="">-- Chọn lớp học --</option>
-                <option *ngFor="let class of classes" [value]="class.id">{{ class.name }}</option>
-              </select>
-              <div *ngIf="submitted && f['classId'].errors" class="invalid-feedback">
-                <div *ngIf="f['classId'].errors['required']">Vui lòng chọn lớp học</div>
-              </div>
-            </div>
-            
-            <!-- Student selection for selected access type -->
-            <div class="mb-3" *ngIf="examForm.get('accessType')?.value === 'selected' && students.length > 0">
-              <label class="form-label">Chọn học sinh *</label>
-              <div class="form-check mb-2">
-                <input 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  id="selectAllStudents" 
-                  [checked]="isAllStudentsSelected()"
-                  (change)="toggleSelectAllStudents($event)"
-                >
-                <label class="form-check-label" for="selectAllStudents">
-                  <strong>Chọn tất cả học sinh</strong>
-                </label>
-              </div>
-              
-              <div class="card">
-                <div class="card-body" style="max-height: 300px; overflow-y: auto;">
-                  <div *ngFor="let student of students" class="form-check">
-                    <input 
-                      class="form-check-input" 
-                      type="checkbox" 
-                      [id]="'student' + student.id" 
-                      [checked]="isStudentSelected(student.id)"
-                      (change)="onStudentSelectionChange($event, student.id)"
-                    >
-                    <label class="form-check-label" [for]="'student' + student.id">
-                      {{ student.name }} ({{ student.email }})
-                    </label>
-                  </div>
-                </div>
-              </div>
-              
-              <div *ngIf="submitted && f['selectedStudentIds'].errors" class="text-danger mt-2">
-                <div *ngIf="f['selectedStudentIds'].errors['required']">Vui lòng chọn ít nhất một học sinh</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="card-footer">
-            <div class="d-flex justify-content-between">
-              <button type="button" class="btn btn-secondary" (click)="cancel()">Hủy</button>
-              <button type="submit" class="btn btn-primary" [disabled]="loading">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                Lưu thay đổi
-              </button>
-            </div>
+      <div class="form-group" *ngIf="formData.accessType === 'class'">
+        <label for="classId">Chọn lớp <span class="required">*</span></label>
+        <select 
+          id="classId" 
+          name="classId" 
+          [(ngModel)]="formData.classId" 
+          required
+        >
+          <option value="">-- Chọn lớp học --</option>
+          <option *ngFor="let cls of classes" [value]="cls.id">{{ cls.name }}</option>
+        </select>
+        
+        <div class="empty-state" *ngIf="classes.length === 0">
+          <p>Bạn chưa có lớp học nào</p>
+          <a routerLink="/dashboard/classes">Tạo lớp học mới</a>
+        </div>
+      </div>
+      
+      <div class="form-group" *ngIf="formData.accessType === 'selected'">
+        <label>Chọn học sinh <span class="required">*</span></label>
+        
+        <div class="empty-state" *ngIf="selectedStudents.length === 0">
+          <p>Chưa có học sinh nào được chọn</p>
+        </div>
+        
+        <div class="student-list" *ngIf="selectedStudents.length > 0">
+          <div class="student-item" *ngFor="let student of selectedStudents">
+            <input 
+              type="checkbox" 
+              [id]="'student-' + student.id" 
+              [name]="'student-' + student.id"
+              [checked]="formData.selectedStudentIds?.includes(student.id)"
+              (change)="toggleStudent(student.id, $event)"
+            >
+            <label [for]="'student-' + student.id">{{ student.name }} ({{ student.email }})</label>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="cancelEdit()">Hủy</button>
+        <button type="submit" class="save-btn" [disabled]="loading">
+          <i class="fas fa-save"></i> Lưu thay đổi
+        </button>
+      </div>
+    </form>
   </div>
 </div> 

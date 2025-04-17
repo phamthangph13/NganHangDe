@@ -5,6 +5,9 @@ import { StudentDashboardComponent } from './student-dashboard/student-dashboard
 import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 import { ExamManagementComponent } from './exam-management/exam-management.component';
 import { ExamCreatorComponent } from './exam-creator/exam-creator.component';
+import { ExamEditorComponent } from './exam-editor/exam-editor.component';
+import { ExamResultsComponent } from './exam-results/exam-results.component';
+import { StudentResultComponent } from './student-result/student-result.component';
 import { ClassManagementComponent } from './class-management/class-management.component';
 import { QuestionSetsComponent } from './question-sets/question-sets.component';
 import { SubjectManagementComponent } from './subject-management/subject-management.component';
@@ -40,6 +43,24 @@ const routes: Routes = [
       {
         path: 'exam-creator',
         component: ExamCreatorComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'teacher' }
+      },
+      {
+        path: 'exam-editor/:id',
+        component: ExamEditorComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'teacher' }
+      },
+      {
+        path: 'exam-results/:id',
+        component: ExamResultsComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'teacher' }
+      },
+      {
+        path: 'student-result/:id',
+        component: StudentResultComponent,
         canActivate: [AuthGuard],
         data: { role: 'teacher' }
       },

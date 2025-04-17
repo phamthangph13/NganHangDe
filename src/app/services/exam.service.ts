@@ -54,6 +54,34 @@ export interface PublishExamDto {
   publishDate?: Date;
 }
 
+export interface ExamResult {
+  id: string;
+  studentId: string;
+  studentName: string;
+  examId: string;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  startTime: Date;
+  endTime: Date | null;
+  duration: number;
+  completed: boolean;
+}
+
+export interface StudentResultDetail extends ExamResult {
+  answers: {
+    questionId: string;
+    questionText: string;
+    correctOptionId: string;
+    selectedOptionId: string | null;
+    isCorrect: boolean;
+    options: {
+      id: string;
+      text: string;
+    }[];
+  }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -96,5 +124,13 @@ export class ExamService {
 
   getStudentAvailableExams(): Observable<Exam[]> {
     return this.http.get<Exam[]>(`${this.apiUrl}/available`);
+  }
+  
+  getExamResults(examId: string): Observable<ExamResult[]> {
+    return this.http.get<ExamResult[]>(`${this.apiUrl}/${examId}/results`);
+  }
+  
+  getStudentResultDetail(resultId: string): Observable<StudentResultDetail> {
+    return this.http.get<StudentResultDetail>(`${this.apiUrl}/results/${resultId}`);
   }
 } 

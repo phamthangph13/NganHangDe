@@ -255,11 +255,11 @@ namespace BackEnd.Services
                     Id = q.Id,
                     Content = q.Content,
                     Type = q.Type,
-                    Options = q.Options?.Select(o => new OptionDTO
+                    Options = q.Options?.Select(o => new QuestionOptionDTO
                     {
                         Id = o.Id,
                         Content = o.Content
-                    }).ToList() ?? new List<OptionDTO>(),
+                    }).ToList() ?? new List<QuestionOptionDTO>(),
                     CorrectAnswers = q.CorrectAnswers?.ToList() ?? new List<int>()
                 }).ToList() ?? new List<QuestionDTO>()
             };

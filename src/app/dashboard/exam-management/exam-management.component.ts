@@ -119,7 +119,18 @@ export class ExamManagementComponent implements OnInit {
   }
   
   editExam(examId: string): void {
-    this.router.navigate(['/dashboard/exam-editor', examId]);
+    console.log('Navigating to exam editor with ID:', examId);
+    
+    // Navegar por URL para asegurar que se force una recarga del componente
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/dashboard/exam-editor', examId])
+    );
+    
+    // Alternativa 1: Usar navigateByUrl
+    this.router.navigateByUrl(url);
+    
+    // Alternativa 2: Si la anterior no funciona, probar esta
+    // window.location.href = url;
   }
   
   deleteExam(examId: string): void {
