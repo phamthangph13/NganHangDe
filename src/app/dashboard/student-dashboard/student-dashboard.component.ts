@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
 
 interface Exam {
@@ -19,10 +20,17 @@ interface SubjectStat {
   completedExams: number;
 }
 
+interface Class {
+  id: string;
+  name: string;
+  grade: number;
+  joinDate: string;
+}
+
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.css'
 })
@@ -31,6 +39,7 @@ export class StudentDashboardComponent implements OnInit {
   upcomingExams: Exam[] = [];
   recentExams: Exam[] = [];
   subjectStats: SubjectStat[] = [];
+  studentClasses: Class[] = [];
   calculateAvgScore: number = 0;
   
   constructor(private authService: AuthService) { }
@@ -123,6 +132,12 @@ export class StudentDashboardComponent implements OnInit {
       { subject: 'Ngữ văn', avgScore: 8.2, completedExams: 4 },
       { subject: 'Tiếng Anh', avgScore: 7.0, completedExams: 6 },
       { subject: 'Vật lý', avgScore: 6.5, completedExams: 3 }
+    ];
+
+    // Mock student classes
+    this.studentClasses = [
+      { id: '1', name: 'Lớp Toán nâng cao', grade: 12, joinDate: '2024-03-15' },
+      { id: '2', name: 'Lớp Tiếng Anh giao tiếp', grade: 11, joinDate: '2024-02-20' }
     ];
   }
 }

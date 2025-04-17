@@ -1,0 +1,75 @@
+<div class="student-classes-container">
+  <div class="page-header">
+    <h2>Lớp học của tôi</h2>
+  </div>
+
+  <!-- Join Class Form -->
+  <div class="join-class-card">
+    <h3>Tham gia lớp học mới</h3>
+    <div class="join-form">
+      <div class="form-group">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Nhập mã lớp học" 
+          [(ngModel)]="classCode" 
+          [disabled]="loading"
+        >
+      </div>
+      <button 
+        class="btn-join" 
+        (click)="joinClass()" 
+        [disabled]="loading || !classCode.trim()"
+      >
+        <span *ngIf="!loading">Tham gia</span>
+        <span *ngIf="loading">Đang xử lý...</span>
+      </button>
+    </div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  </div>
+
+  <!-- Classes List -->
+  <div class="classes-list">
+    <h3>Các lớp đang tham gia</h3>
+    
+    <div *ngIf="loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <p>Đang tải dữ liệu...</p>
+    </div>
+    
+    <div *ngIf="!loading && classes.length === 0" class="no-classes">
+      <p>Bạn chưa tham gia lớp học nào.</p>
+    </div>
+    
+    <div class="class-cards">
+      <div *ngFor="let class of classes" class="class-card">
+        <div class="class-header">
+          <h4>{{ class.name }}</h4>
+          <span class="grade-badge">Lớp {{ class.grade }}</span>
+        </div>
+        <div class="class-info">
+          <div class="info-item">
+            <span class="info-label">Giáo viên:</span>
+            <span class="info-value">{{ class.teacherName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ngày tham gia:</span>
+            <span class="info-value">{{ formatDate(class.joinDate) }}</span>
+          </div>
+        </div>
+        <div class="class-actions">
+          <button class="btn-view">Xem chi tiết</button>
+          <button 
+            class="btn-leave" 
+            (click)="leaveClass(class.id)"
+            [disabled]="leavingClassId === class.id"
+          >
+            <span *ngIf="leavingClassId !== class.id">Rời khỏi lớp</span>
+            <span *ngIf="leavingClassId === class.id">Đang xử lý...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

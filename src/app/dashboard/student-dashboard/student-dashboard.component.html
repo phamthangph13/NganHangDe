@@ -35,6 +35,32 @@
 </div>
 
 <div class="dashboard-sections">
+  <!-- New Classes Section -->
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2>Lớp học của tôi</h2>
+      <a class="view-all" routerLink="/dashboard/student-classes">Xem tất cả</a>
+    </div>
+    <div class="class-list" *ngIf="studentClasses && studentClasses.length > 0; else noClasses">
+      <div class="class-preview-card" *ngFor="let class of studentClasses.slice(0, 3)">
+        <div class="class-preview-header">
+          <h3>{{ class.name }}</h3>
+          <span class="class-badge">Lớp {{ class.grade }}</span>
+        </div>
+        <div class="class-preview-actions">
+          <button class="btn btn-outline" routerLink="/dashboard/student-classes">Xem chi tiết</button>
+        </div>
+      </div>
+    </div>
+    <ng-template #noClasses>
+      <div class="empty-state">
+        <div class="empty-icon">👨‍🏫</div>
+        <p>Bạn chưa tham gia lớp học nào</p>
+        <button class="btn btn-primary" routerLink="/dashboard/student-classes">Tham gia lớp học</button>
+      </div>
+    </ng-template>
+  </div>
+
   <div class="dashboard-section">
     <div class="section-header">
       <h2>Đề thi sắp tới</h2>

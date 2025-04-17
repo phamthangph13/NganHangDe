@@ -32,6 +32,12 @@
         </a>
       </li>
       <li class="nav-item" *ngIf="currentUser?.role === 'student'">
+        <a [routerLink]="['/dashboard/student-classes']" routerLinkActive="active">
+          <span class="icon">👨‍👩‍👧‍👦</span>
+          <span class="text" *ngIf="isSidebarOpen">Lớp học</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'student'">
         <a [routerLink]="['/dashboard/student/history']" routerLinkActive="active">
           <span class="icon">📖</span>
           <span class="text" *ngIf="isSidebarOpen">Lịch sử làm bài</span>

@@ -1,0 +1,97 @@
+<div class="class-details-container">
+  <div class="header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+    <h2>Chi tiết lớp học</h2>
+  </div>
+
+  <!-- Error message -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+    <button class="close-btn" (click)="error = null">×</button>
+  </div>
+
+  <!-- Success message -->
+  <div class="alert alert-success" *ngIf="success">
+    {{ success }}
+    <button class="close-btn" (click)="success = null">×</button>
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- Class information -->
+  <div class="class-info-card" *ngIf="classDetail && !loading">
+    <div class="card-header">
+      <h3>Thông tin lớp học</h3>
+    </div>
+    <div class="card-content">
+      <div class="info-row">
+        <div class="info-label">Tên lớp:</div>
+        <div class="info-value">{{ classDetail.name }}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Khối:</div>
+        <div class="info-value">{{ classDetail.grade }}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Mã lớp:</div>
+        <div class="info-value class-code">
+          <span>{{ classDetail.classCode }}</span>
+          <button class="btn-icon" (click)="copyClassCode()" title="Sao chép mã lớp">
+            <i class="fas fa-copy"></i>
+          </button>
+          <button class="btn-icon" (click)="regenerateClassCode()" title="Tạo mã mới">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Ngày tạo:</div>
+        <div class="info-value">{{ formatDate(classDetail.createdAt) }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student list -->
+  <div class="student-list-card" *ngIf="classDetail && !loading">
+    <div class="card-header">
+      <h3>Danh sách học sinh ({{ classDetail.students.length }})</h3>
+    </div>
+    
+    <div class="card-content" *ngIf="classDetail.students.length > 0">
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Ngày tham gia</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of classDetail.students">
+            <td>{{ student.name }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ formatDate(student.joinDate) }}</td>
+            <td>
+              <button class="btn-remove" (click)="removeStudent(student.id)">
+                <i class="fas fa-user-minus"></i> Xóa
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="empty-state" *ngIf="classDetail.students.length === 0">
+      <i class="fas fa-user-graduate fa-3x"></i>
+      <p>Lớp học chưa có học sinh</p>
+      <p class="hint">Học sinh có thể tham gia lớp bằng mã lớp</p>
+    </div>
+  </div>
+</div> 

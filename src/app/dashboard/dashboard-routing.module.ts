@@ -7,6 +7,8 @@ import { ExamManagementComponent } from './exam-management/exam-management.compo
 import { ClassManagementComponent } from './class-management/class-management.component';
 import { QuestionSetsComponent } from './question-sets/question-sets.component';
 import { SubjectManagementComponent } from './subject-management/subject-management.component';
+import { StudentClassesComponent } from './student-classes/student-classes.component';
+import { ClassDetailsComponent } from './class-details/class-details.component';
 import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
@@ -39,6 +41,18 @@ const routes: Routes = [
         component: ClassManagementComponent,
         canActivate: [AuthGuard],
         data: { role: 'teacher' }
+      },
+      {
+        path: 'classes/:id',
+        component: ClassDetailsComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'teacher' }
+      },
+      {
+        path: 'student-classes',
+        component: StudentClassesComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'student' }
       },
       {
         path: 'question-sets',
