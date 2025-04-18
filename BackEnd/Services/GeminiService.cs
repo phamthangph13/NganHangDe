@@ -119,6 +119,7 @@ Return the result in a JSON format like this example:
   }}
 ]
 
+IMPORTANT: All content in the response must be in Vietnamese language. 
 Only return the JSON array, no other text.";
         }
 
@@ -310,6 +311,7 @@ Only return the JSON array, no other text.";
             prompt.AppendLine("2. Identification of knowledge gaps or misunderstandings");
             prompt.AppendLine("3. Specific suggestions for improvement in each identified weak area");
             prompt.AppendLine("4. Recommended study resources or learning strategies");
+            prompt.AppendLine("\nIMPORTANT: Your response MUST be entirely in Vietnamese language.");
             prompt.AppendLine("\nKeep your response focused, specific, and actionable. Provide detailed recommendations that will help the student improve.");
             
             return prompt.ToString();
@@ -430,6 +432,7 @@ Only return the JSON array, no other text.";
   }
 ]");
             
+            prompt.AppendLine("IMPORTANT: The content in fields 'name', 'description', and 'recommendations' MUST be in Vietnamese language.");
             prompt.AppendLine("Only return the JSON array, no other text. Ensure the percentCorrect is an integer between 0 and 100.");
             
             return prompt.ToString();
