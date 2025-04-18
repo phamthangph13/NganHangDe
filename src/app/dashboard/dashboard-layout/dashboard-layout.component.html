@@ -43,6 +43,12 @@
           <span class="text" *ngIf="isSidebarOpen">Lịch sử làm bài</span>
         </a>
       </li>
+      <li class="nav-item" *ngIf="currentUser?.role === 'student'">
+        <a [routerLink]="['/dashboard/student-weaknesses']" routerLinkActive="active">
+          <span class="icon">🔍</span>
+          <span class="text" *ngIf="isSidebarOpen">Phát hiện điểm yếu</span>
+        </a>
+      </li>
       <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
         <a [routerLink]="['/dashboard/exams']" routerLinkActive="active">
           <span class="icon">📋</span>

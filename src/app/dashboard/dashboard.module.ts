@@ -10,6 +10,7 @@ import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.co
 import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
 import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 import { StudentHistoryComponent } from './student-history/student-history.component';
+import { StudentWeaknessesComponent } from './student-weaknesses/student-weaknesses.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { StudentHistoryComponent } from './student-history/student-history.compo
     HttpClientModule,
     RouterModule,
     DashboardRoutingModule,
-    StudentHistoryComponent
+    StudentHistoryComponent,
+    StudentWeaknessesComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

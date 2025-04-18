@@ -1,0 +1,51 @@
+<div class="weaknesses-container">
+  <div class="page-header">
+    <h1>Phát hiện điểm yếu</h1>
+    <p>Phân tích chi tiết về các điểm yếu trong các bài thi của bạn</p>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <div class="error-container" *ngIf="error && !loading">
+    <p class="error-message">{{ error }}</p>
+    <button class="retry-btn" (click)="loadExamHistory()">Thử lại</button>
+  </div>
+
+  <div class="exams-list" *ngIf="!loading && !error">
+    <div class="empty-state" *ngIf="examHistory.length === 0">
+      <p>Bạn chưa có bài thi nào. Hãy hoàn thành một bài thi để xem phân tích.</p>
+    </div>
+
+    <div class="exam-card" *ngFor="let exam of examHistory">
+      <div class="exam-header">
+        <h2>{{ exam.examName }}</h2>
+        <div class="exam-meta">
+          <span class="exam-date">Ngày: {{ exam.completedDate | date:'dd/MM/yyyy' }}</span>
+          <span class="exam-score">Điểm: {{ exam.score }}/{{ exam.totalScore }}</span>
+        </div>
+      </div>
+
+      <div class="weakness-analysis">
+        <h3>Phân tích điểm yếu</h3>
+        
+        <div class="weakness-categories" *ngIf="exam.weaknessCategories?.length > 0">
+          <div class="category" *ngFor="let category of exam.weaknessCategories">
+            <h4>{{ category.name }}</h4>
+            <div class="progress-bar">
+              <div class="progress" [style.width.%]="category.percentCorrect"></div>
+            </div>
+            <p class="percent">{{ category.percentCorrect }}% đúng</p>
+            <p class="recommendations">{{ category.recommendations }}</p>
+          </div>
+        </div>
+
+        <div class="no-weaknesses" *ngIf="!exam.weaknessCategories || exam.weaknessCategories.length === 0">
+          <p>Chưa có đủ dữ liệu để phân tích điểm yếu cho bài thi này.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

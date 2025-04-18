@@ -16,6 +16,7 @@ import { ClassDetailsComponent } from './class-details/class-details.component';
 import { StudentExamsComponent } from './student-exams/student-exams.component';
 import { StudentHistoryComponent } from './student-history/student-history.component';
 import { StudentHistoryDetailComponent } from './student-history-detail/student-history-detail.component';
+import { StudentWeaknessesComponent } from './student-weaknesses/student-weaknesses.component';
 import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
@@ -52,6 +53,12 @@ const routes: Routes = [
       {
         path: 'student-history',
         component: StudentHistoryComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'student' }
+      },
+      {
+        path: 'student-weaknesses',
+        component: StudentWeaknessesComponent,
         canActivate: [AuthGuard],
         data: { role: 'student' }
       },
