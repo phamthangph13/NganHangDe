@@ -137,9 +137,14 @@ Only return the JSON array, no other text.";
                     cleanedResponse = response.Substring(startIdx, endIdx - startIdx);
                 }
                 
+                // Try to normalize mathematical symbols and expressions for better parsing
+                cleanedResponse = NormalizeMathNotation(cleanedResponse);
+                
                 var options = new JsonSerializerOptions
                 {
-                    PropertyNameCaseInsensitive = true
+                    PropertyNameCaseInsensitive = true,
+                    AllowTrailingCommas = true,
+                    ReadCommentHandling = JsonCommentHandling.Skip
                 };
                 
                 // Try to parse the response as JSON
@@ -180,19 +185,140 @@ Only return the JSON array, no other text.";
                 Console.WriteLine($"Error parsing Gemini response: {ex.Message}");
                 Console.WriteLine($"Raw response: {response}");
                 
-                // Fallback to a simple parsing approach if JSON deserialization fails
-                return CreateFallbackQuestions(response, defaultType);
+                // Fallback to a more robust parsing approach if JSON deserialization fails
+                return ExtractQuestionsFromText(response, defaultType);
+            }
+        }
+
+        // Helper method to normalize math notation for better JSON parsing
+        private string NormalizeMathNotation(string input)
+        {
+            // Replace common math symbols that might cause JSON parsing issues
+            var result = input
+                .Replace("\\", "\\\\")  // Escape backslashes
+                .Replace("\n", " ")     // Remove newlines in inappropriate places
+                .Replace("\r", " ");    // Remove carriage returns
+                
+            return result;
+        }
+
+        private List<CreateQuestionDTO> ExtractQuestionsFromText(string response, string questionType)
+        {
+            try
+            {
+                // Look for questions patterns in the text
+                var lines = response.Split('\n');
+                var questions = new List<CreateQuestionDTO>();
+                CreateQuestionDTO currentQuestion = null;
+                
+                foreach (var line in lines)
+                {
+                    // Skip empty lines
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+                    
+                    // Look for question patterns
+                    if (line.Contains("câu hỏi") || line.Contains("Câu hỏi") || 
+                        line.StartsWith("Câu ") || line.Contains("Question:") || 
+                        (line.Contains("?") && line.Length < 200))
+                    {
+                        // If we already have a question in progress, add it to the list
+                        if (currentQuestion != null)
+                        {
+                            questions.Add(currentQuestion);
+                        }
+                        
+                        currentQuestion = new CreateQuestionDTO
+                        {
+                            Content = line.Trim(),
+                            Type = questionType,
+                            Options = new List<CreateOptionDTO>(),
+                            CorrectAnswers = new List<int>()
+                        };
+                    }
+                    // Look for options
+                    else if (currentQuestion != null && 
+                            (line.Contains("A.") || line.Contains("A)") || 
+                             line.Contains("B.") || line.Contains("B)") ||
+                             line.Contains("C.") || line.Contains("C)") ||
+                             line.Contains("D.") || line.Contains("D)")))
+                    {
+                        // Extract option content
+                        string optionContent = line.Trim();
+                        
+                        // Check if this is marked as correct
+                        bool isCorrect = optionContent.Contains("[CORRECT]") || 
+                                        optionContent.Contains("(CORRECT)") ||
+                                        optionContent.EndsWith("✓");
+                        
+                        // Remove the correct marker
+                        optionContent = optionContent
+                            .Replace("[CORRECT]", "")
+                            .Replace("(CORRECT)", "")
+                            .Replace("✓", "")
+                            .Trim();
+                        
+                        currentQuestion.Options.Add(new CreateOptionDTO { Content = optionContent });
+                        
+                        // If this option is correct, add its index to correctAnswers
+                        if (isCorrect)
+                        {
+                            currentQuestion.CorrectAnswers.Add(currentQuestion.Options.Count - 1);
+                        }
+                    }
+                    // Additional content for current question
+                    else if (currentQuestion != null)
+                    {
+                        // Append to question content if it seems like part of the question
+                        currentQuestion.Content += " " + line.Trim();
+                    }
+                }
+                
+                // Add the last question if there is one
+                if (currentQuestion != null)
+                {
+                    questions.Add(currentQuestion);
+                }
+                
+                // If we managed to extract at least one question, return them
+                if (questions.Count > 0)
+                {
+                    return questions;
+                }
+                
+                // If extraction failed, return a single fallback question
+                return CreateFallbackQuestions(response, questionType);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in text-based extraction: {ex.Message}");
+                return CreateFallbackQuestions(response, questionType);
             }
         }
 
         private List<CreateQuestionDTO> CreateFallbackQuestions(string response, string questionType)
         {
-            // Very simple fallback - create a single question with the raw response
+            // Try to create at least one meaningful question from the response
+            string questionContent = "Câu hỏi không thể phân tích được từ AI. Hãy thử lại với cách diễn đạt khác.";
+            
+            // If there's any content that might be usable, use it as the question
+            if (!string.IsNullOrWhiteSpace(response) && response.Length > 20)
+            {
+                var sentences = response.Split(new[] { '.', '?', '!' }, StringSplitOptions.RemoveEmptyEntries);
+                if (sentences.Length > 0)
+                {
+                    var potentialQuestion = sentences[0].Trim();
+                    if (potentialQuestion.Length > 10 && !potentialQuestion.Contains("error"))
+                    {
+                        questionContent = potentialQuestion + "?";
+                    }
+                }
+            }
+            
             return new List<CreateQuestionDTO>
             {
                 new CreateQuestionDTO
                 {
-                    Content = "Unable to properly parse AI response. Please try again with a simpler prompt.",
+                    Content = questionContent,
                     Type = questionType,
                     Options = questionType != "essay" ? new List<CreateOptionDTO>
                     {
