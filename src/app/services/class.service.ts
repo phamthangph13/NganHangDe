@@ -3,6 +3,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export enum ClassAccessType {
+  Direct = 0,
+  Approval = 1
+}
+
+export enum EnrollmentStatus {
+  Pending = 0,
+  Approved = 1,
+  Rejected = 2
+}
+
 export interface Class {
   id: string;
   name: string;
@@ -11,16 +22,19 @@ export interface Class {
   teacherId?: string;
   createdAt?: Date;
   studentCount?: number;
+  accessType?: ClassAccessType;
 }
 
 export interface CreateClassDTO {
   name: string;
   grade: number;
+  accessType?: ClassAccessType;
 }
 
 export interface UpdateClassDTO {
   name: string;
   grade: number;
+  accessType?: ClassAccessType;
 }
 
 export interface ClassCodeResponse {
@@ -32,6 +46,11 @@ export interface Student {
   id: string;
   name: string;
   email: string;
+  status?: EnrollmentStatus;
+}
+
+export interface ApproveStudentRequest {
+  approve: boolean;
 }
 
 @Injectable({
@@ -50,11 +69,11 @@ export class ClassService {
     return this.http.get<Class>(`${this.apiUrl}/${id}`);
   }
 
-  createClass(classData: any): Observable<Class> {
+  createClass(classData: CreateClassDTO): Observable<Class> {
     return this.http.post<Class>(this.apiUrl, classData);
   }
 
-  updateClass(id: string, classData: any): Observable<void> {
+  updateClass(id: string, classData: UpdateClassDTO): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, classData);
   }
 
@@ -64,6 +83,18 @@ export class ClassService {
 
   regenerateClassCode(id: string): Observable<ClassCodeResponse> {
     return this.http.post<ClassCodeResponse>(`${this.apiUrl}/${id}/regenerate-code`, {});
+  }
+
+  getPendingStudents(classId: string): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl}/${classId}/pending-students`);
+  }
+
+  approveStudent(classId: string, studentId: string, approve: boolean): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${classId}/approve-student/${studentId}`, { approve });
+  }
+
+  joinClass(classCode: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/join`, { classCode });
   }
 
   // Kiểm tra xem học sinh có thuộc lớp này không

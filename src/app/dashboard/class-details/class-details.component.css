@@ -240,4 +240,51 @@
 .hint {
   font-size: 14px;
   opacity: 0.8;
+}
+
+.pending-students {
+  margin-bottom: 20px;
+  border-left: 4px solid #ff9800;
+}
+
+.pending-students .card-header {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.approval-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-approve {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-approve:hover {
+  background-color: #388e3c;
+}
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-reject:hover {
+  background-color: #d32f2f;
 } 

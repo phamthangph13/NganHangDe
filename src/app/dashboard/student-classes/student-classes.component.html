@@ -47,6 +47,9 @@
         <div class="class-header">
           <h4>{{ class.name }}</h4>
           <span class="grade-badge">Lớp {{ class.grade }}</span>
+          <span class="status-badge" [ngClass]="getStatusClass(class.status)">
+            {{ getStatusText(class.status) }}
+          </span>
         </div>
         <div class="class-info">
           <div class="info-item">
@@ -59,16 +62,94 @@
           </div>
         </div>
         <div class="class-actions">
-          <button class="btn-view">Xem chi tiết</button>
+          <button 
+            class="btn-view" 
+            (click)="viewClassDetails(class.id)"
+            [disabled]="class.status === EnrollmentStatus.Pending || class.status === EnrollmentStatus.Rejected"
+            title="Xem chi tiết lớp học"
+          >
+            <i class="fas fa-eye"></i> Xem chi tiết
+          </button>
           <button 
             class="btn-leave" 
             (click)="leaveClass(class.id)"
             [disabled]="leavingClassId === class.id"
           >
-            <span *ngIf="leavingClassId !== class.id">Rời khỏi lớp</span>
+            <span *ngIf="leavingClassId !== class.id"><i class="fas fa-sign-out-alt"></i> Rời khỏi lớp</span>
             <span *ngIf="leavingClassId === class.id">Đang xử lý...</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Class Details Modal -->
+  <div class="modal-overlay" *ngIf="showClassDetailsModal" (click)="closeClassDetailsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Chi tiết lớp học</h3>
+        <button class="btn-close" (click)="closeClassDetailsModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div *ngIf="loadingDetails" class="modal-loading">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu...</p>
+      </div>
+      
+      <div *ngIf="!loadingDetails && selectedClass" class="modal-body">
+        <div class="class-detail-info">
+          <div class="detail-row">
+            <span class="detail-label">Tên lớp:</span>
+            <span class="detail-value">{{ selectedClass.name }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Khối:</span>
+            <span class="detail-value">{{ selectedClass.grade }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Mã lớp:</span>
+            <span class="detail-value code-value">
+              {{ selectedClass.classCode }}
+              <button class="btn-copy" (click)="copyClassCode(selectedClass.classCode)" title="Sao chép mã lớp">
+                <i class="fas fa-copy"></i>
+              </button>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Ngày tạo:</span>
+            <span class="detail-value">{{ formatDate(selectedClass.createdAt) }}</span>
+          </div>
+        </div>
+        
+        <div class="students-section" *ngIf="selectedClass.students && selectedClass.students.length > 0">
+          <h4>Danh sách học sinh ({{ selectedClass.students.length }})</h4>
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Ngày tham gia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of selectedClass.students">
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ formatDate(student.joinDate) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="students-section empty-students" *ngIf="!selectedClass.students || selectedClass.students.length === 0">
+          <p>Lớp học chưa có học sinh nào khác.</p>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-default" (click)="closeClassDetailsModal()">Đóng</button>
       </div>
     </div>
   </div>

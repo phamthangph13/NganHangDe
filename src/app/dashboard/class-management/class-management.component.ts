@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ClassService, Class, CreateClassDTO, UpdateClassDTO } from '../../services/class.service';
+import { ClassService, Class, CreateClassDTO, UpdateClassDTO, ClassAccessType } from '../../services/class.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -25,6 +25,9 @@ export class ClassManagementComponent implements OnInit {
   
   // Array of available grades (1-12)
   grades = Array.from({ length: 12 }, (_, i) => i + 1);
+  
+  // Access types for the form
+  accessTypes = ClassAccessType;
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +36,8 @@ export class ClassManagementComponent implements OnInit {
   ) {
     this.classForm = this.fb.group({
       name: ['', [Validators.required]],
-      grade: ['', [Validators.required]]
+      grade: ['', [Validators.required]],
+      accessType: [ClassAccessType.Direct]
     });
   }
 
@@ -81,7 +85,8 @@ export class ClassManagementComponent implements OnInit {
     this.currentClassId = null;
     this.classForm.reset({
       name: '',
-      grade: ''
+      grade: '',
+      accessType: ClassAccessType.Direct
     });
   }
 
@@ -90,7 +95,8 @@ export class ClassManagementComponent implements OnInit {
     this.currentClassId = cls.id;
     this.classForm.setValue({
       name: cls.name,
-      grade: cls.grade ?? ''
+      grade: cls.grade ?? '',
+      accessType: cls.accessType ?? ClassAccessType.Direct
     });
     this.showForm = true;
   }
@@ -149,6 +155,13 @@ export class ClassManagementComponent implements OnInit {
     }
   }
 
+  getAccessTypeLabel(accessType: ClassAccessType | undefined): string {
+    if (accessType === ClassAccessType.Approval) {
+      return 'Yêu cầu phê duyệt';
+    }
+    return 'Truy cập trực tiếp';
+  }
+
   viewClassDetails(id: string): void {
     this.router.navigate(['/dashboard/classes', id]);
   }
@@ -162,7 +175,8 @@ export class ClassManagementComponent implements OnInit {
         // Update existing class
         const updateData: UpdateClassDTO = {
           name: formValue.name,
-          grade: +formValue.grade
+          grade: +formValue.grade,
+          accessType: +formValue.accessType
         };
         
         this.classService.updateClass(this.currentClassId, updateData).subscribe({
@@ -183,7 +197,8 @@ export class ClassManagementComponent implements OnInit {
         // Add new class
         const newClass: CreateClassDTO = {
           name: formValue.name,
-          grade: +formValue.grade
+          grade: +formValue.grade,
+          accessType: +formValue.accessType
         };
         
         this.classService.createClass(newClass).subscribe({

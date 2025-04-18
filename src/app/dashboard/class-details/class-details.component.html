@@ -51,9 +51,48 @@
         </div>
       </div>
       <div class="info-row">
+        <div class="info-label">Quyền truy cập:</div>
+        <div class="info-value">{{ getAccessTypeLabel(classDetail.accessType) }}</div>
+      </div>
+      <div class="info-row">
         <div class="info-label">Ngày tạo:</div>
         <div class="info-value">{{ formatDate(classDetail.createdAt) }}</div>
       </div>
+    </div>
+  </div>
+
+  <!-- Pending Students List (if accessType is Approval) -->
+  <div class="student-list-card pending-students" *ngIf="classDetail && !loading && classDetail.accessType === accessTypes.Approval && pendingStudents.length > 0">
+    <div class="card-header">
+      <h3>Yêu cầu tham gia lớp học ({{ pendingStudents.length }})</h3>
+    </div>
+    
+    <div class="card-content">
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Ngày gửi yêu cầu</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of pendingStudents">
+            <td>{{ student.name }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ formatDate(student.joinDate) }}</td>
+            <td class="approval-actions">
+              <button class="btn-approve" (click)="approveStudent(student.id, true)">
+                <i class="fas fa-check"></i> Phê duyệt
+              </button>
+              <button class="btn-reject" (click)="approveStudent(student.id, false)">
+                <i class="fas fa-times"></i> Từ chối
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 

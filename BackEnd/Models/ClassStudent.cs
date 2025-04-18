@@ -20,5 +20,15 @@ namespace BackEnd.Models
 
         [BsonElement("JoinDate")]
         public DateTime JoinDate { get; set; } = DateTime.UtcNow;
+        
+        [BsonElement("Status")]
+        public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Approved;
+    }
+    
+    public enum EnrollmentStatus
+    {
+        Pending,
+        Approved,
+        Rejected
     }
 } 

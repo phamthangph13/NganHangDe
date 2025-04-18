@@ -106,7 +106,11 @@ namespace BackEnd.Services
         public async Task<List<StudentEnrollmentInfo>> GetStudentEnrollmentInfoAsync(string classId)
         {
             var enrollments = await GetClassEnrollmentsAsync(classId);
-            var studentIds = enrollments.Select(e => e.StudentId).ToList();
+            
+            // Chỉ lấy enrollments có Status là Approved
+            var approvedEnrollments = enrollments.Where(e => e.Status == EnrollmentStatus.Approved).ToList();
+            
+            var studentIds = approvedEnrollments.Select(e => e.StudentId).ToList();
 
             if (!studentIds.Any())
             {
@@ -118,14 +122,15 @@ namespace BackEnd.Services
                 .ToListAsync();
 
             return students.Select(s => {
-                var enrollment = enrollments.FirstOrDefault(e => e.StudentId == s.Id);
+                var enrollment = approvedEnrollments.FirstOrDefault(e => e.StudentId == s.Id);
                 return new StudentEnrollmentInfo
                 {
                     Id = s.Id,
                     FirstName = s.FirstName,
                     LastName = s.LastName,
                     Email = s.Email,
-                    JoinDate = enrollment?.JoinDate ?? DateTime.MinValue
+                    JoinDate = enrollment?.JoinDate ?? DateTime.MinValue,
+                    Status = enrollment?.Status ?? EnrollmentStatus.Approved
                 };
             }).ToList();
         }
@@ -245,11 +250,15 @@ namespace BackEnd.Services
                 {
                     ClassId = classInfo.Id,
                     StudentId = studentId,
-                    JoinDate = DateTime.UtcNow
+                    JoinDate = DateTime.UtcNow,
+                    Status = classInfo.AccessType == ClassAccessType.Direct 
+                        ? EnrollmentStatus.Approved 
+                        : EnrollmentStatus.Pending
                 };
 
                 await _classStudents.InsertOneAsync(enrollment);
                 result.Success = true;
+                result.RequiresApproval = classInfo.AccessType == ClassAccessType.Approval;
                 return result;
             }
             catch (Exception)
@@ -257,6 +266,38 @@ namespace BackEnd.Services
                 // Failed to join
                 return result;
             }
+        }
+
+        public async Task<bool> ApproveStudentEnrollmentAsync(string classId, string studentId, bool approve)
+        {
+            var filter = Builders<ClassStudent>.Filter.And(
+                Builders<ClassStudent>.Filter.Eq(cs => cs.ClassId, classId),
+                Builders<ClassStudent>.Filter.Eq(cs => cs.StudentId, studentId));
+                
+            var update = Builders<ClassStudent>.Update
+                .Set(cs => cs.Status, approve ? EnrollmentStatus.Approved : EnrollmentStatus.Rejected);
+                
+            var result = await _classStudents.UpdateOneAsync(filter, update);
+            return result.IsAcknowledged && result.ModifiedCount > 0;
+        }
+
+        public async Task<List<ClassStudent>> GetPendingEnrollmentsAsync(string classId)
+        {
+            return await _classStudents
+                .Find(cs => cs.ClassId == classId && cs.Status == EnrollmentStatus.Pending)
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetStudentsByIdsAsync(List<string> studentIds)
+        {
+            if (studentIds == null || !studentIds.Any())
+            {
+                return new List<User>();
+            }
+
+            return await _users
+                .Find(u => studentIds.Contains(u.Id) && u.Role == "Student")
+                .ToListAsync();
         }
 
         private string GenerateUniqueClassCode()
@@ -295,6 +336,7 @@ namespace BackEnd.Services
         public string LastName { get; set; }
         public string Email { get; set; }
         public DateTime JoinDate { get; set; }
+        public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Approved;
     }
 
     public class ClassJoinResult
@@ -302,5 +344,6 @@ namespace BackEnd.Services
         public bool Success { get; set; } = false;
         public bool ClassNotFound { get; set; } = false;
         public bool AlreadyJoined { get; set; } = false;
+        public bool RequiresApproval { get; set; } = false;
     }
 } 

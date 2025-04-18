@@ -161,7 +161,7 @@
   flex-direction: column;
   background-color: #f5f7fa;
   overflow-y: auto;
-  padding-top: 64px; /* Account for fixed navigation height */
+  padding-top: 0; /* Removed top padding since we removed top navigation */
 }
 
 .header {
@@ -241,9 +241,5 @@
 }
 
 .top-navigation {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  display: none; /* Hide instead of removing to maintain compatibility */
 }

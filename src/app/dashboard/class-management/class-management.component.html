@@ -58,6 +58,14 @@
         </div>
       </div>
       
+      <div class="form-group">
+        <label for="accessType">Quyền truy cập</label>
+        <select id="accessType" formControlName="accessType">
+          <option [value]="accessTypes.Direct">Tham gia trực tiếp với mã lớp</option>
+          <option [value]="accessTypes.Approval">Yêu cầu phê duyệt khi tham gia</option>
+        </select>
+      </div>
+      
       <div class="form-actions">
         <button type="button" class="btn-cancel" (click)="resetForm()">Hủy</button>
         <button type="submit" class="btn-submit" [disabled]="classForm.invalid || isLoading">
@@ -82,6 +90,7 @@
           <th>Tên lớp</th>
           <th>Khối</th>
           <th>Mã lớp</th>
+          <th>Quyền truy cập</th>
           <th>Học sinh</th>
           <th>Ngày tạo</th>
           <th>Thao tác</th>
@@ -102,6 +111,7 @@
               </button>
             </div>
           </td>
+          <td>{{ getAccessTypeLabel(cls.accessType) }}</td>
           <td>{{ cls.studentCount || 0 }}</td>
           <td>{{ cls.createdAt | date:'dd/MM/yyyy' }}</td>
           <td class="actions">
@@ -111,7 +121,7 @@
           </td>
         </tr>
         <tr *ngIf="filteredClasses.length === 0">
-          <td colspan="6" class="no-data">Không có lớp học nào</td>
+          <td colspan="7" class="no-data">Không có lớp học nào</td>
         </tr>
       </tbody>
     </table>
