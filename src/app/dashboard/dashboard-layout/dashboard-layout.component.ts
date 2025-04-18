@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
 import { NavigationMenuComponent } from '../navigation-menu/navigation-menu.component';
 
@@ -19,7 +19,10 @@ export class DashboardLayoutComponent implements OnInit {
   currentUser: User | null = null;
   isSidebarOpen = true;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -36,5 +39,20 @@ export class DashboardLayoutComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+  
+  navigateToHistory(event: Event): void {
+    event.preventDefault();
+    
+    // Navigate to student dashboard
+    this.router.navigate(['/dashboard/student']).then(() => {
+      // Sau khi chuyển hướng thành công, tìm phần tử history và cuộn đến đó
+      setTimeout(() => {
+        const historyElement = document.getElementById('history');
+        if (historyElement) {
+          historyElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    });
   }
 }

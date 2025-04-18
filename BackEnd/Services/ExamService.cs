@@ -218,6 +218,13 @@ namespace BackEnd.Services
                 .FirstOrDefaultAsync();
         }
         
+        public async Task<List<ExamAttempt>> GetStudentExamAttemptsAsync(string studentId)
+        {
+            return await _examAttempts
+                .Find(a => a.StudentId == studentId)
+                .ToListAsync();
+        }
+        
         public async Task<User> GetStudentByIdAsync(string studentId)
         {
             return await _users

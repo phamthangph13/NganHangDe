@@ -41,7 +41,7 @@
         </a>
       </li>
       <li class="nav-item" *ngIf="currentUser?.role === 'student'">
-        <a [routerLink]="['/dashboard/student/history']" routerLinkActive="active">
+        <a [routerLink]="['/dashboard/student-history']" routerLinkActive="active">
           <span class="icon">📖</span>
           <span class="text" *ngIf="isSidebarOpen">Lịch sử làm bài</span>
         </a>

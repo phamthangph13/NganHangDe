@@ -189,6 +189,12 @@ export class ExamResultsComponent implements OnInit {
     this.router.navigate(['/dashboard/student-result', resultId]);
   }
   
+  viewStudentHistory(studentId: string, studentName: string): void {
+    this.router.navigate(['/dashboard/student-history', studentId], { 
+      queryParams: { name: studentName }
+    });
+  }
+  
   exportResults(): void {
     // This would typically generate a CSV or Excel file
     alert('Tính năng xuất kết quả sẽ được triển khai trong phiên bản tiếp theo');

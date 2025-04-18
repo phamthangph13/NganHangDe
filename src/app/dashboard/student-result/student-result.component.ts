@@ -134,6 +134,6 @@ export class StudentResultComponent implements OnInit {
   }
   
   backToResults(): void {
-    this.router.navigate(['/dashboard/exam-results', this.resultDetail?.examId]);
+    this.router.navigate(['/dashboard/student']);
   }
 } 

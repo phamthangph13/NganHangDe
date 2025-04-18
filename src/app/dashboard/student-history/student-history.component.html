@@ -1,0 +1,63 @@
+<div class="history-container">
+  <div class="page-header">
+    <h1>Lịch sử làm bài</h1>
+    <p>Xem lại tất cả các bài thi bạn đã làm</p>
+  </div>
+  
+  <div class="exam-history" *ngIf="!loading && !error && examHistory.length > 0">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Tên bài thi</th>
+          <th>Lớp</th>
+          <th>Thời gian làm</th>
+          <th>Điểm số</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let history of examHistory">
+          <td>{{ history.examTitle }}</td>
+          <td>{{ history.className }}</td>
+          <td>{{ history.startTime | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <span [ngClass]="getScoreClass(history.score)">
+              {{ history.score ? (history.score | number:'1.1-1') : 'N/A' }}
+            </span>
+          </td>
+          <td>
+            <span [ngClass]="getStatusClass(history.status)">
+              {{ history.status === 'completed' ? 'Đã hoàn thành' : 
+                  history.status === 'in_progress' ? 'Đang làm' : 'Đã hủy' }}
+            </span>
+          </td>
+          <td>
+            <button 
+              class="btn btn-primary" 
+              *ngIf="history.completed"
+              (click)="viewExamResult(history.attemptId)">
+              Xem kết quả
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Đang tải lịch sử bài thi...</p>
+  </div>
+  
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadExamHistory()">Thử lại</button>
+  </div>
+  
+  <div *ngIf="!loading && !error && examHistory.length === 0" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <p>Chưa có lịch sử bài thi</p>
+    <button class="btn btn-primary" routerLink="/dashboard/student-exams">Xem đề thi</button>
+  </div>
+</div> 

@@ -1,0 +1,64 @@
+<div class="history-container">
+  <div class="header-controls">
+    <h2>Lịch sử làm bài của học sinh: {{ studentName }}</h2>
+    <button class="back-button" (click)="goBack()">Quay lại</button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    <p>{{ error }}</p>
+    <button (click)="loadExamHistory()">Thử lại</button>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !error && examHistory.length === 0">
+    <p>Học sinh chưa tham gia bài thi nào.</p>
+  </div>
+
+  <div class="history-table-container" *ngIf="!loading && !error && examHistory.length > 0">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tên đề thi</th>
+          <th>Lớp</th>
+          <th>Thời gian bắt đầu</th>
+          <th>Thời gian kết thúc</th>
+          <th>Thời gian làm bài</th>
+          <th>Trạng thái</th>
+          <th>Điểm</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let attempt of examHistory; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ attempt.examTitle }}</td>
+          <td>{{ attempt.className }}</td>
+          <td>{{ attempt.startTime | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ attempt.endTime ? (attempt.endTime | date:'dd/MM/yyyy HH:mm') : 'Chưa hoàn thành' }}</td>
+          <td>{{ attempt.duration }} phút</td>
+          <td class="status" [ngClass]="getStatusClass(attempt.status)">
+            {{ attempt.status === 'completed' ? 'Đã hoàn thành' : 
+               attempt.status === 'in_progress' ? 'Đang làm bài' : 
+               attempt.status === 'abandoned' ? 'Đã bỏ dở' : attempt.status }}
+          </td>
+          <td class="score" [ngClass]="getScoreClass(attempt.score)">
+            {{ attempt.score !== null ? attempt.score : 'N/A' }}
+          </td>
+          <td>
+            <button 
+              class="view-result-btn" 
+              *ngIf="attempt.completed"
+              (click)="viewExamResult(attempt.attemptId)">
+              Xem kết quả
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1171,5 +1171,120 @@ namespace BackEnd.Controllers
                 Completed = true
             });
         }
+
+        // GET: api/Exams/student-history
+        [HttpGet("student-history")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult<List<ExamHistoryDTO>>> GetStudentHistory()
+        {
+            try
+            {
+                // Lấy ID của học sinh đăng nhập
+                var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(studentId))
+                {
+                    return Unauthorized("Không tìm thấy thông tin học sinh.");
+                }
+
+                // Lấy lịch sử làm bài của học sinh
+                var examAttempts = await _examService.GetStudentExamAttemptsAsync(studentId);
+                
+                // Tạo danh sách kết quả
+                var examHistoryList = new List<ExamHistoryDTO>();
+                
+                foreach (var attempt in examAttempts)
+                {
+                    var exam = await _examService.GetByIdAsync(attempt.ExamId);
+                    var questionSet = await _examService.GetQuestionSetAsync(exam.QuestionSetId);
+                    var examClass = exam.ClassId != null ? await _examService.GetClassAsync(exam.ClassId) : null;
+                    
+                    var historyItem = new ExamHistoryDTO
+                    {
+                        AttemptId = attempt.Id,
+                        ExamId = exam.Id,
+                        ExamTitle = exam.Title,
+                        ClassName = examClass?.Name ?? "Chưa xác định",
+                        StartTime = attempt.StartTime,
+                        EndTime = attempt.EndTime,
+                        Duration = exam.Duration,
+                        Score = attempt.Score,
+                        TotalQuestions = questionSet?.Questions.Count ?? 0,
+                        CorrectAnswers = attempt.Answers?.Count(a => a.IsCorrect.HasValue && a.IsCorrect.Value) ?? 0,
+                        Status = attempt.Status,
+                        Completed = attempt.Status == "completed"
+                    };
+                    
+                    examHistoryList.Add(historyItem);
+                }
+                
+                return Ok(examHistoryList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi khi lấy lịch sử làm bài: {ex.Message}");
+            }
+        }
+
+        [HttpGet("student/{studentId}/history")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<ActionResult<List<ExamHistoryDTO>>> GetStudentHistoryById(string studentId)
+        {
+            try
+            {
+                // Xác thực quyền giáo viên
+                var teacherId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(teacherId))
+                {
+                    return Unauthorized("Không tìm thấy thông tin giáo viên.");
+                }
+
+                // Kiểm tra học sinh có tồn tại không
+                var student = await _examService.GetStudentByIdAsync(studentId);
+                if (student == null)
+                {
+                    return NotFound("Không tìm thấy thông tin học sinh.");
+                }
+
+                // Kiểm tra học sinh có thuộc lớp mà giáo viên dạy không (tùy chọn, phụ thuộc vào logic của ứng dụng)
+                // Trong trường hợp này, chúng ta cho phép giáo viên xem lịch sử của bất kỳ học sinh nào
+
+                // Lấy lịch sử làm bài của học sinh
+                var examAttempts = await _examService.GetStudentExamAttemptsAsync(studentId);
+                
+                // Tạo danh sách kết quả
+                var examHistoryList = new List<ExamHistoryDTO>();
+                
+                foreach (var attempt in examAttempts)
+                {
+                    var exam = await _examService.GetByIdAsync(attempt.ExamId);
+                    var questionSet = await _examService.GetQuestionSetAsync(exam.QuestionSetId);
+                    var examClass = exam.ClassId != null ? await _examService.GetClassAsync(exam.ClassId) : null;
+                    
+                    var historyItem = new ExamHistoryDTO
+                    {
+                        AttemptId = attempt.Id,
+                        ExamId = exam.Id,
+                        ExamTitle = exam.Title,
+                        ClassName = examClass?.Name ?? "Chưa xác định",
+                        StartTime = attempt.StartTime,
+                        EndTime = attempt.EndTime,
+                        Duration = exam.Duration,
+                        Score = attempt.Score,
+                        TotalQuestions = questionSet?.Questions.Count ?? 0,
+                        CorrectAnswers = attempt.Answers?.Count(a => a.IsCorrect.HasValue && a.IsCorrect.Value) ?? 0,
+                        Status = attempt.Status,
+                        Completed = attempt.Status == "completed"
+                    };
+                    
+                    examHistoryList.Add(historyItem);
+                }
+                
+                return Ok(examHistoryList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi khi lấy lịch sử làm bài: {ex.Message}");
+            }
+        }
     }
 } 

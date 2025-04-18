@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
+import { ExamService, ExamHistoryDTO } from '../../services/exam.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-interface Exam {
+// Các interface cho dữ liệu mock
+interface ExamMock {
   id: number;
   title: string;
   subject: string;
   questions: number;
   duration: number;
   dueDate?: string;
-  status?: 'coming' | 'completed' | 'available';
+  status?: string;
   score?: number;
 }
 
@@ -20,7 +25,7 @@ interface SubjectStat {
   completedExams: number;
 }
 
-interface Class {
+interface ClassMock {
   id: string;
   name: string;
   grade: number;
@@ -34,20 +39,51 @@ interface Class {
   templateUrl: './student-dashboard.component.html',
   styleUrl: './student-dashboard.component.css'
 })
-export class StudentDashboardComponent implements OnInit {
+export class StudentDashboardComponent implements OnInit, AfterViewInit {
   currentUser: User | null = null;
-  upcomingExams: Exam[] = [];
-  recentExams: Exam[] = [];
+  upcomingExams: ExamMock[] = [];
+  recentExams: ExamMock[] = [];
   subjectStats: SubjectStat[] = [];
-  studentClasses: Class[] = [];
+  studentClasses: ClassMock[] = [];
   calculateAvgScore: number = 0;
   
-  constructor(private authService: AuthService) { }
+  // Dữ liệu lịch sử thi thật
+  examHistory: ExamHistoryDTO[] = [];
+  historyLoading = false;
+  historyError: string | null = null;
+  
+  @ViewChild('historySection') historySection!: ElementRef;
+  
+  constructor(
+    private authService: AuthService,
+    private examService: ExamService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadMockData();
     this.calculateAverage();
+    this.loadExamHistory();
+  }
+  
+  ngAfterViewInit(): void {
+    // Xử lý fragment để cuộn đến phần tương ứng sau khi view đã được khởi tạo
+    this.route.fragment.subscribe(fragment => {
+      if (fragment === 'history') {
+        setTimeout(() => {
+          const element = document.getElementById('history');
+          if (element) {
+            console.log('Scrolling to history section');
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            console.log('History element not found');
+          }
+        }, 500);
+      }
+    });
   }
 
   private calculateAverage(): void {
@@ -139,5 +175,59 @@ export class StudentDashboardComponent implements OnInit {
       { id: '1', name: 'Lớp Toán nâng cao', grade: 12, joinDate: '2024-03-15' },
       { id: '2', name: 'Lớp Tiếng Anh giao tiếp', grade: 11, joinDate: '2024-02-20' }
     ];
+  }
+
+  loadExamHistory(): void {
+    this.historyLoading = true;
+    this.historyError = null;
+    
+    this.examService.getStudentExamHistory()
+      .pipe(
+        catchError(error => {
+          console.error('Error loading exam history:', error);
+          this.historyError = 'Không thể tải lịch sử làm bài. Vui lòng thử lại sau.';
+          return of([]);
+        })
+      )
+      .subscribe(history => {
+        this.examHistory = history.sort((a, b) => 
+          new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+        );
+        this.historyLoading = false;
+      });
+  }
+  
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'completed':
+      case 'Đã hoàn thành':
+        return 'status-completed';
+      case 'in_progress':
+        return 'status-in-progress';
+      case 'abandoned':
+        return 'status-abandoned';
+      default:
+        return '';
+    }
+  }
+  
+  getScoreClass(score: number | null): string {
+    if (score === null) return '';
+    
+    if (score >= 8) return 'score-excellent';
+    if (score >= 6.5) return 'score-good';
+    if (score >= 5) return 'score-average';
+    return 'score-poor';
+  }
+  
+  viewExamResult(attemptId: string): void {
+    this.router.navigate(['/exam/result', attemptId]);
+  }
+
+  scrollToHistory(): void {
+    const element = document.getElementById('history');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 }

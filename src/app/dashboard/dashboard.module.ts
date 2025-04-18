@@ -6,16 +6,22 @@ import { RouterModule } from '@angular/router';
 import { AuthInterceptor } from '../interceptors/auth.interceptor';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
+import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
+import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
+import { StudentHistoryComponent } from './student-history/student-history.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    StudentHistoryComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

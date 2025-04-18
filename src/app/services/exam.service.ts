@@ -75,6 +75,21 @@ export interface ExamResult {
   completed: boolean;
 }
 
+export interface ExamHistoryDTO {
+  attemptId: string;
+  examId: string;
+  examTitle: string;
+  className: string;
+  startTime: Date;
+  endTime: Date | null;
+  duration: number;
+  score: number | null;
+  totalQuestions: number;
+  correctAnswers: number;
+  status: string;
+  completed: boolean;
+}
+
 export interface StudentResultDetail extends ExamResult {
   answers: {
     questionId: string;
@@ -184,6 +199,14 @@ export class ExamService {
   
   getStudentResultDetail(resultId: string): Observable<StudentResultDetail> {
     return this.http.get<StudentResultDetail>(`${this.apiUrl}/results/${resultId}`);
+  }
+  
+  getStudentExamHistory(): Observable<ExamHistoryDTO[]> {
+    return this.http.get<ExamHistoryDTO[]>(`${this.apiUrl}/student-history`);
+  }
+  
+  getStudentExamHistoryById(studentId: string): Observable<ExamHistoryDTO[]> {
+    return this.http.get<ExamHistoryDTO[]>(`${this.apiUrl}/student/${studentId}/history`);
   }
   
   validateExamAccess(examId: string): Observable<ValidationResultDto> {

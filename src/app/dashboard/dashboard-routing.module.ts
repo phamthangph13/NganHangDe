@@ -14,6 +14,8 @@ import { SubjectManagementComponent } from './subject-management/subject-managem
 import { StudentClassesComponent } from './student-classes/student-classes.component';
 import { ClassDetailsComponent } from './class-details/class-details.component';
 import { StudentExamsComponent } from './student-exams/student-exams.component';
+import { StudentHistoryComponent } from './student-history/student-history.component';
+import { StudentHistoryDetailComponent } from './student-history-detail/student-history-detail.component';
 import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
@@ -46,6 +48,18 @@ const routes: Routes = [
         component: StudentExamsComponent,
         canActivate: [AuthGuard],
         data: { role: 'student' }
+      },
+      {
+        path: 'student-history',
+        component: StudentHistoryComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'student' }
+      },
+      {
+        path: 'student-history/:id',
+        component: StudentHistoryDetailComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'teacher' }
       },
       {
         path: 'exam-creator',

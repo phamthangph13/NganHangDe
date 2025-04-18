@@ -273,4 +273,19 @@
 .empty-state p {
   color: #666;
   margin-bottom: 20px;
+}
+
+.history-btn {
+  background-color: #4a6bdf;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: background-color 0.2s;
+}
+
+.history-btn:hover {
+  background-color: #3a5bc9;
 } 
