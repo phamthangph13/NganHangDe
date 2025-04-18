@@ -1,0 +1,68 @@
+<div class="exams-container">
+  <div class="page-header">
+    <h1>Danh sách đề thi</h1>
+    <p>Các đề thi được giáo viên gán cho bạn hoặc lớp học của bạn</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Đang tải danh sách đề thi...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p><mat-icon color="warn">error</mat-icon> {{ error }}</p>
+        <button mat-button color="primary" (click)="loadAvailableExams()">Thử lại</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && !error && availableExams.length === 0" class="empty-container">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <mat-icon class="empty-icon">assignment</mat-icon>
+        <h2>Không có đề thi nào</h2>
+        <p>Hiện tại bạn không có đề thi nào được giao. Vui lòng kiểm tra lại sau.</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && !error && availableExams.length > 0" class="exams-grid">
+    <mat-card *ngFor="let exam of availableExams" appearance="outlined" class="exam-card">
+      <mat-card-header>
+        <mat-card-title>{{ exam.title }}</mat-card-title>
+        <mat-card-subtitle *ngIf="exam.className">Lớp: {{ exam.className }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="exam-details">
+          <div class="detail-item">
+            <mat-icon>help</mat-icon>
+            <span>{{ exam.questionCount }} câu hỏi</span>
+          </div>
+          <div class="detail-item">
+            <mat-icon>timer</mat-icon>
+            <span>{{ exam.duration }} phút</span>
+          </div>
+          <div *ngIf="exam.requirePassword" class="detail-item" matTooltip="Yêu cầu mật khẩu">
+            <mat-icon>lock</mat-icon>
+            <span>Có mật khẩu</span>
+          </div>
+        </div>
+        
+        <p *ngIf="exam.description" class="exam-description">{{ exam.description }}</p>
+        
+        <mat-divider></mat-divider>
+        
+        <p *ngIf="exam.publishDate" class="publish-date">
+          Ngày đăng: {{ exam.publishDate | date:'dd/MM/yyyy' }}
+        </p>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="startExam(exam.id)">Bắt đầu làm bài</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

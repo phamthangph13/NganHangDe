@@ -161,6 +161,7 @@
   flex-direction: column;
   background-color: #f5f7fa;
   overflow-y: auto;
+  padding-top: 64px; /* Account for fixed navigation height */
 }
 
 .header {
@@ -237,4 +238,12 @@
   .main-content {
     margin-left: 0;
   }
+}
+
+.top-navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }

@@ -64,7 +64,7 @@
   <div class="dashboard-section">
     <div class="section-header">
       <h2>Đề thi sắp tới</h2>
-      <a class="view-all">Xem tất cả</a>
+      <a class="view-all" routerLink="/dashboard/student-exams">Xem tất cả</a>
     </div>
     <div class="exam-list" *ngIf="upcomingExams.length > 0; else noUpcomingExams">
       <div class="exam-card" *ngFor="let exam of upcomingExams">
@@ -87,7 +87,7 @@
           </div>
         </div>
         <div class="exam-actions">
-          <button class="btn btn-primary" [disabled]="exam.status === 'coming'">
+          <button class="btn btn-primary" [disabled]="exam.status === 'coming'" routerLink="/dashboard/student-exams">
             <span *ngIf="exam.status === 'available'">Làm bài</span>
             <span *ngIf="exam.status === 'coming'">Sắp mở</span>
           </button>
@@ -98,6 +98,7 @@
       <div class="empty-state">
         <div class="empty-icon">📝</div>
         <p>Không có đề thi sắp tới</p>
+        <button class="btn btn-primary" routerLink="/dashboard/student-exams">Xem tất cả đề thi</button>
       </div>
     </ng-template>
   </div>
@@ -105,7 +106,7 @@
   <div class="dashboard-section">
     <div class="section-header">
       <h2>Bài thi gần đây</h2>
-      <a class="view-all">Xem tất cả</a>
+      <a class="view-all" routerLink="/dashboard/student-exams">Xem tất cả</a>
     </div>
     <div class="exam-list" *ngIf="recentExams.length > 0; else noRecentExams">
       <div class="exam-card" *ngFor="let exam of recentExams">
@@ -129,7 +130,7 @@
           </div>
         </div>
         <div class="exam-actions">
-          <button class="btn btn-secondary">Xem chi tiết</button>
+          <button class="btn btn-secondary" routerLink="/dashboard/student-exams">Xem chi tiết</button>
         </div>
       </div>
     </div>
@@ -137,6 +138,7 @@
       <div class="empty-state">
         <div class="empty-icon">📝</div>
         <p>Chưa có bài thi nào hoàn thành</p>
+        <button class="btn btn-primary" routerLink="/dashboard/student-exams">Xem tất cả đề thi</button>
       </div>
     </ng-template>
   </div>

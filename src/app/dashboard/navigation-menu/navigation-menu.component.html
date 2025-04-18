@@ -1,0 +1,57 @@
+<mat-toolbar color="primary" class="nav-toolbar">
+  <div class="logo-container">
+    <a routerLink="/">Ngân Hàng Đề Thi</a>
+  </div>
+  
+  <div class="spacer"></div>
+
+  <div class="nav-links" *ngIf="currentUser">
+    <a mat-button routerLink="/dashboard" routerLinkActive="active">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </a>
+
+    <ng-container *ngIf="isStudent">
+      <a mat-button routerLink="/dashboard/student-exams" routerLinkActive="active">
+        <mat-icon>assignment</mat-icon>
+        <span>Đề Thi</span>
+      </a>
+      <a mat-button routerLink="/dashboard/student-classes" routerLinkActive="active">
+        <mat-icon>school</mat-icon>
+        <span>Lớp Học</span>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="isTeacher">
+      <a mat-button routerLink="/dashboard/exams" routerLinkActive="active">
+        <mat-icon>assignment</mat-icon>
+        <span>Đề Thi</span>
+      </a>
+      <a mat-button routerLink="/dashboard/classes" routerLinkActive="active">
+        <mat-icon>school</mat-icon>
+        <span>Lớp Học</span>
+      </a>
+      <a mat-button routerLink="/dashboard/question-sets" routerLinkActive="active">
+        <mat-icon>quiz</mat-icon>
+        <span>Bộ Câu Hỏi</span>
+      </a>
+    </ng-container>
+  </div>
+
+  <div class="user-menu" *ngIf="currentUser">
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+      <mat-icon>account_circle</mat-icon>
+      <span>{{ currentUser.firstName || currentUser.name }}</span>
+    </button>
+    <mat-menu #userMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="refreshAuth()">
+        <mat-icon>sync</mat-icon>
+        <span>Làm mới phiên</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Đăng xuất</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

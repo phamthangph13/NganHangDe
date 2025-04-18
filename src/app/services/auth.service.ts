@@ -199,15 +199,26 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken() && !!this.currentUserSubject.value;
+    const hasToken = !!this.getToken();
+    const hasUser = !!this.currentUserSubject.value;
+    console.log('Auth check - Has token:', hasToken, 'Has user:', hasUser);
+    return hasToken && hasUser;
   }
 
   hasRole(role: string): boolean {
     const user = this.currentUserSubject.value;
-    if (!user || !user.role) return false;
+    const userRole = user?.role?.toLowerCase() || '';
+    const requiredRole = role.toLowerCase();
+    
+    console.log('Role check - Required role:', requiredRole, 'User role:', userRole);
+    
+    if (!user || !user.role) {
+      console.log('Role check failed - No user or role information');
+      return false;
+    }
     
     // Make comparison case-insensitive
-    return user.role.toLowerCase() === role.toLowerCase();
+    return userRole === requiredRole;
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

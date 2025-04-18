@@ -1,4 +1,7 @@
 <div class="dashboard-container" [class.sidebar-collapsed]="!isSidebarOpen">
+  <!-- Top Navigation -->
+  <app-navigation-menu class="top-navigation"></app-navigation-menu>
+  
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">
@@ -26,7 +29,7 @@
         </a>
       </li>
       <li class="nav-item" *ngIf="currentUser?.role === 'student'">
-        <a [routerLink]="['/dashboard/student/exams']" routerLinkActive="active">
+        <a [routerLink]="['/dashboard/student-exams']" routerLinkActive="active">
           <span class="icon">📝</span>
           <span class="text" *ngIf="isSidebarOpen">Đề thi</span>
         </a>

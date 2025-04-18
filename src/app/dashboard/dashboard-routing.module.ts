@@ -13,6 +13,7 @@ import { QuestionSetsComponent } from './question-sets/question-sets.component';
 import { SubjectManagementComponent } from './subject-management/subject-management.component';
 import { StudentClassesComponent } from './student-classes/student-classes.component';
 import { ClassDetailsComponent } from './class-details/class-details.component';
+import { StudentExamsComponent } from './student-exams/student-exams.component';
 import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
@@ -39,6 +40,12 @@ const routes: Routes = [
         component: ExamManagementComponent,
         canActivate: [AuthGuard],
         data: { role: 'teacher' }
+      },
+      {
+        path: 'student-exams',
+        component: StudentExamsComponent,
+        canActivate: [AuthGuard],
+        data: { role: 'student' }
       },
       {
         path: 'exam-creator',

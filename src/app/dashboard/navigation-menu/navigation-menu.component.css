@@ -1,0 +1,56 @@
+.nav-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  height: 64px;
+}
+
+.logo-container a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a {
+  margin: 0 4px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a mat-icon {
+  margin-right: 4px;
+}
+
+.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+}
+
+.user-button mat-icon {
+  margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .nav-links span {
+    display: none;
+  }
+  
+  .user-button span {
+    display: none;
+  }
+}

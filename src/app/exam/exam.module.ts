@@ -38,9 +38,7 @@ const routes: Routes = [
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule,
-    ExamAccessComponent,
-    ExamSessionComponent
+    MatSnackBarModule
   ]
 })
 export class ExamModule { } 
