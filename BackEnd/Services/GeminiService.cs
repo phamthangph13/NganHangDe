@@ -94,7 +94,12 @@ namespace BackEnd.Services
                 _ => "multiple-choice questions with a single correct answer"
             };
 
-            return $@"
+            // Check if the prompt is related to foreign language learning
+            bool isForeignLanguage = IsRelatedToForeignLanguage(userPrompt);
+            string targetLanguage = ExtractTargetLanguage(userPrompt);
+            
+            // Base prompt structure
+            var basePrompt = $@"
 Generate {count} {questionTypeDescription} based on the following topic: {userPrompt}
 
 For multiple-choice questions, please follow these rules:
@@ -117,10 +122,81 @@ Return the result in a JSON format like this example:
     ],
     ""correctAnswers"": [{(questionType == "single" ? "1" : "1, 2")}]
   }}
-]
+]";
+
+            // If it's a foreign language subject, use the target language for content
+            if (isForeignLanguage)
+            {
+                return basePrompt + $@"
+
+IMPORTANT: All content in the response (questions and options) must be in {targetLanguage} language only. 
+Only return the JSON array, no other text.";
+            }
+            else
+            {
+                return basePrompt + @"
 
 IMPORTANT: All content in the response must be in Vietnamese language. 
 Only return the JSON array, no other text.";
+            }
+        }
+
+        private bool IsRelatedToForeignLanguage(string prompt)
+        {
+            // Check if the prompt mentions common foreign languages or language teaching keywords
+            string lowerPrompt = prompt.ToLowerInvariant();
+            string[] languageKeywords = new[] 
+            { 
+                "english", "tiếng anh", 
+                "german", "tiếng đức", 
+                "french", "tiếng pháp", 
+                "chinese", "tiếng trung", 
+                "japanese", "tiếng nhật", 
+                "korean", "tiếng hàn", 
+                "spanish", "tiếng tây ban nha", 
+                "russian", "tiếng nga",
+                "language", "foreign language", "ngoại ngữ",
+                "vocabulary", "grammar", "từ vựng", "ngữ pháp"
+            };
+            
+            return languageKeywords.Any(keyword => lowerPrompt.Contains(keyword));
+        }
+
+        private string ExtractTargetLanguage(string prompt)
+        {
+            // Map Vietnamese language names to English language names
+            Dictionary<string, string> languageMap = new Dictionary<string, string>
+            {
+                { "tiếng anh", "English" },
+                { "english", "English" },
+                { "tiếng đức", "German" },
+                { "german", "German" },
+                { "tiếng pháp", "French" },
+                { "french", "French" },
+                { "tiếng trung", "Chinese" },
+                { "chinese", "Chinese" },
+                { "tiếng nhật", "Japanese" },
+                { "japanese", "Japanese" },
+                { "tiếng hàn", "Korean" },
+                { "korean", "Korean" },
+                { "tiếng tây ban nha", "Spanish" },
+                { "spanish", "Spanish" },
+                { "tiếng nga", "Russian" },
+                { "russian", "Russian" }
+            };
+            
+            string lowerPrompt = prompt.ToLowerInvariant();
+            
+            foreach (var language in languageMap)
+            {
+                if (lowerPrompt.Contains(language.Key))
+                {
+                    return language.Value;
+                }
+            }
+            
+            // Default to English if no specific language is found
+            return "the target foreign language";
         }
 
         private List<CreateQuestionDTO> ParseResponseToQuestions(string response, string defaultType)
