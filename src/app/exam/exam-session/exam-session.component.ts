@@ -245,7 +245,12 @@ export class ExamSessionComponent implements OnInit, OnDestroy {
         this.examService.submitExam(this.examId, this.examSession!.attemptId).subscribe({
           next: (result) => {
             this.submitInProgress = false;
-            // Navigate to results page
+            // Hiển thị thông báo thành công
+            this.snackBar.open('Đã nộp bài thành công!', 'Đóng', {
+              duration: 3000,
+              verticalPosition: 'top'
+            });
+            // Chuyển hướng đến trang kết quả
             this.router.navigate(['/exam/result', result.id]);
           },
           error: (err) => {

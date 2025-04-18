@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ExamAccessComponent } from './exam-access/exam-access.component';
 import { ExamSessionComponent } from './exam-session/exam-session.component';
+import { ExamResultComponent } from './exam-result/exam-result.component';
 import { StudentGuard } from '../guards/student.guard';
 
 const routes: Routes = [
@@ -22,6 +23,11 @@ const routes: Routes = [
   {
     path: ':id/session',
     component: ExamSessionComponent,
+    canActivate: [StudentGuard]
+  },
+  {
+    path: 'result/:id',
+    component: ExamResultComponent,
     canActivate: [StudentGuard]
   }
 ];

@@ -1,0 +1,174 @@
+.result-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-section {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.loading-section p {
+  margin-top: 20px;
+  color: #666;
+}
+
+.error-section {
+  margin: 30px 0;
+}
+
+.error-section mat-card {
+  text-align: center;
+  padding: 30px;
+}
+
+.error-section mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 16px;
+}
+
+.error-section p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.result-summary {
+  margin-bottom: 20px;
+}
+
+.score-section {
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-right: 30px;
+  flex-shrink: 0;
+}
+
+.excellent-score {
+  background-color: #4CAF50;
+}
+
+.good-score {
+  background-color: #8BC34A;
+}
+
+.average-score {
+  background-color: #FFC107;
+}
+
+.poor-score {
+  background-color: #F44336;
+}
+
+.score-value {
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.score-details {
+  flex-grow: 1;
+}
+
+.score-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.score-detail:last-child {
+  border-bottom: none;
+}
+
+.score-detail .label {
+  color: #666;
+}
+
+.score-detail .value {
+  font-weight: 500;
+  color: #333;
+}
+
+.section-divider {
+  margin: 20px 0;
+}
+
+.completion-message {
+  display: flex;
+  align-items: center;
+  background-color: rgba(76, 175, 80, 0.1);
+  padding: 16px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.completion-message mat-icon {
+  color: #4CAF50;
+  margin-right: 12px;
+}
+
+.completion-message p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+@media (max-width: 600px) {
+  .score-section {
+    flex-direction: column;
+  }
+  
+  .score-circle {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header button {
+    margin-top: 16px;
+  }
+}
