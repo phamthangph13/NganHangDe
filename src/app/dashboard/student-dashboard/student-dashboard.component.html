@@ -1,238 +1,141 @@
 <div class="dashboard-greeting">
   <h1>Xin chào, {{ currentUser?.name }}</h1>
-  <p>Chào mừng trở lại với Ngân Hàng Đề Thi</p>
+  <p>Chào mừng đến với Ngân Hàng Đề Thi Trực Tuyến</p>
 </div>
 
-<div class="dashboard-stats">
-  <div class="stat-card">
-    <div class="stat-icon">📊</div>
-    <div class="stat-content">
-      <h3>{{ recentExams.length }}</h3>
-      <p>Đề thi đã hoàn thành</p>
-    </div>
+<div class="banner">
+  <div class="banner-content">
+    <h2>Nền tảng học tập thông minh dành cho học sinh</h2>
+    <p>Luyện tập, làm bài và cải thiện kết quả học tập của bạn với hệ thống đề thi trực tuyến hiện đại</p>
+    <button class="btn btn-primary" (click)="navigateToExams()">Khám phá ngay</button>
   </div>
-  <div class="stat-card">
-    <div class="stat-icon">📝</div>
-    <div class="stat-content">
-      <h3>{{ upcomingExams.length }}</h3>
-      <p>Đề thi sắp tới</p>
-    </div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-icon">🏆</div>
-    <div class="stat-content">
-      <h3>{{ calculateAvgScore | number:'1.1-1' }}</h3>
-      <p>Điểm trung bình</p>
-    </div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-icon">📚</div>
-    <div class="stat-content">
-      <h3>{{ subjectStats.length }}</h3>
-      <p>Môn học</p>
-    </div>
+  <div class="banner-image">
+    <img src="assets/images/student-dashboard.png" alt="Dashboard preview" onerror="this.src='https://via.placeholder.com/400x300?text=Học+Sinh'">
   </div>
 </div>
 
-<div class="dashboard-sections">
-  <!-- New Classes Section -->
-  <div class="dashboard-section">
-    <div class="section-header">
-      <h2>Lớp học của tôi</h2>
-      <a class="view-all" routerLink="/dashboard/student-classes">Xem tất cả</a>
-    </div>
-    <div class="class-list" *ngIf="studentClasses && studentClasses.length > 0; else noClasses">
-      <div class="class-preview-card" *ngFor="let class of studentClasses.slice(0, 3)">
-        <div class="class-preview-header">
-          <h3>{{ class.name }}</h3>
-          <span class="class-badge">Lớp {{ class.grade }}</span>
-        </div>
-        <div class="class-preview-actions">
-          <button class="btn btn-outline" routerLink="/dashboard/student-classes">Xem chi tiết</button>
-        </div>
-      </div>
-    </div>
-    <ng-template #noClasses>
-      <div class="empty-state">
-        <div class="empty-icon">👨‍🏫</div>
-        <p>Bạn chưa tham gia lớp học nào</p>
-        <button class="btn btn-primary" routerLink="/dashboard/student-classes">Tham gia lớp học</button>
-      </div>
-    </ng-template>
-  </div>
-
-  <div class="dashboard-section">
-    <div class="section-header">
-      <h2>Đề thi sắp tới</h2>
-      <a class="view-all" routerLink="/dashboard/student-exams">Xem tất cả</a>
-    </div>
-    <div class="exam-list" *ngIf="upcomingExams.length > 0; else noUpcomingExams">
-      <div class="exam-card" *ngFor="let exam of upcomingExams">
-        <div class="exam-header">
-          <h3>{{ exam.title }}</h3>
-          <span class="exam-subject">{{ exam.subject }}</span>
-        </div>
-        <div class="exam-details">
-          <div class="exam-detail">
-            <span class="detail-label">Số câu hỏi:</span>
-            <span class="detail-value">{{ exam.questions }}</span>
-          </div>
-          <div class="exam-detail">
-            <span class="detail-label">Thời gian:</span>
-            <span class="detail-value">{{ exam.duration }} phút</span>
-          </div>
-          <div class="exam-detail" *ngIf="exam.dueDate">
-            <span class="detail-label">Hạn nộp:</span>
-            <span class="detail-value">{{ exam.dueDate | date:'dd/MM/yyyy' }}</span>
-          </div>
-        </div>
-        <div class="exam-actions">
-          <button class="btn btn-primary" [disabled]="exam.status === 'coming'" routerLink="/dashboard/student-exams">
-            <span *ngIf="exam.status === 'available'">Làm bài</span>
-            <span *ngIf="exam.status === 'coming'">Sắp mở</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <ng-template #noUpcomingExams>
-      <div class="empty-state">
-        <div class="empty-icon">📝</div>
-        <p>Không có đề thi sắp tới</p>
-        <button class="btn btn-primary" routerLink="/dashboard/student-exams">Xem tất cả đề thi</button>
-      </div>
-    </ng-template>
-  </div>
+<div class="features-section">
+  <h2 class="section-title">Tính năng dành cho học sinh</h2>
   
-  <div class="dashboard-section">
-    <div class="section-header">
-      <h2>Bài thi gần đây</h2>
-      <a class="view-all" routerLink="/dashboard/student-exams">Xem tất cả</a>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>Làm bài trực tuyến</h3>
+      <p>Làm bài thi trực tuyến với nhiều dạng câu hỏi khác nhau: trắc nghiệm, tự luận, điền khuyết...</p>
     </div>
-    <div class="exam-list" *ngIf="recentExams.length > 0; else noRecentExams">
-      <div class="exam-card" *ngFor="let exam of recentExams">
-        <div class="exam-header">
-          <h3>{{ exam.title }}</h3>
-          <span class="exam-subject">{{ exam.subject }}</span>
-        </div>
-        <div class="exam-score" *ngIf="exam.score !== undefined">
-          <div class="score-circle">
-            <span>{{ exam.score }}</span>
-          </div>
-        </div>
-        <div class="exam-details">
-          <div class="exam-detail">
-            <span class="detail-label">Số câu hỏi:</span>
-            <span class="detail-value">{{ exam.questions }}</span>
-          </div>
-          <div class="exam-detail">
-            <span class="detail-label">Thời gian:</span>
-            <span class="detail-value">{{ exam.duration }} phút</span>
-          </div>
-        </div>
-        <div class="exam-actions">
-          <button class="btn btn-secondary" routerLink="/dashboard/student-exams">Xem chi tiết</button>
-        </div>
-      </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">⏱️</div>
+      <h3>Tính giờ tự động</h3>
+      <p>Hệ thống tự động tính giờ và nộp bài khi hết thời gian, giúp bạn luyện tập quản lý thời gian hiệu quả.</p>
     </div>
-    <ng-template #noRecentExams>
-      <div class="empty-state">
-        <div class="empty-icon">📝</div>
-        <p>Chưa có bài thi nào hoàn thành</p>
-        <button class="btn btn-primary" routerLink="/dashboard/student-exams">Xem tất cả đề thi</button>
-      </div>
-    </ng-template>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Phân tích kết quả</h3>
+      <p>Xem điểm số, thời gian làm bài và phân tích chi tiết câu trả lời đúng/sai sau mỗi bài thi.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>Ôn tập thông minh</h3>
+      <p>Hệ thống gợi ý nội dung ôn tập dựa trên những câu hỏi bạn trả lời sai để cải thiện kết quả học tập.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">👨‍👩‍👧‍👦</div>
+      <h3>Tham gia lớp học</h3>
+      <p>Dễ dàng tham gia các lớp học online, nhận đề bài và theo dõi tiến độ học tập của mình.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Học mọi lúc, mọi nơi</h3>
+      <p>Truy cập và làm bài trên mọi thiết bị: máy tính, máy tính bảng và điện thoại thông minh.</p>
+    </div>
   </div>
-  
-  <div class="dashboard-section">
-    <div class="section-header">
-      <h2>Thống kê theo môn học</h2>
-    </div>
-    <div class="subject-stats" *ngIf="subjectStats.length > 0; else noSubjectStats">
-      <div class="subject-card" *ngFor="let stat of subjectStats">
-        <h3>{{ stat.subject }}</h3>
-        <div class="subject-details">
-          <div class="subject-detail">
-            <span class="detail-label">Điểm trung bình:</span>
-            <span class="detail-value">{{ stat.avgScore | number:'1.1-1' }}</span>
-          </div>
-          <div class="subject-detail">
-            <span class="detail-label">Đề thi đã làm:</span>
-            <span class="detail-value">{{ stat.completedExams }}</span>
-          </div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress" [style.width.%]="(stat.avgScore / 10) * 100"></div>
-        </div>
-      </div>
-    </div>
-    <ng-template #noSubjectStats>
-      <div class="empty-state">
-        <div class="empty-icon">📊</div>
-        <p>Chưa có dữ liệu thống kê</p>
-      </div>
-    </ng-template>
-  </div>
+</div>
 
-  <div class="dashboard-section" id="history" #historySection>
-    <div class="section-header">
-      <h2>Lịch sử bài thi</h2>
+<div class="benefits-section">
+  <h2 class="section-title">Lợi ích khi sử dụng Ngân Hàng Đề Thi</h2>
+  
+  <div class="benefits-container">
+    <div class="benefit-image">
+      <img src="assets/images/student-benefits.png" alt="Student benefits" onerror="this.src='https://via.placeholder.com/500x400?text=Lợi+Ích+Học+Sinh'">
     </div>
     
-    <div class="exam-history" *ngIf="!historyLoading && !historyError && examHistory.length > 0">
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>Tên bài thi</th>
-            <th>Lớp</th>
-            <th>Thời gian làm</th>
-            <th>Điểm số</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let history of examHistory.slice(0, 5)">
-            <td>{{ history.examTitle }}</td>
-            <td>{{ history.className }}</td>
-            <td>{{ history.startTime | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>
-              <span [ngClass]="getScoreClass(history.score)">
-                {{ history.score ? (history.score | number:'1.1-1') : 'N/A' }}
-              </span>
-            </td>
-            <td>
-              <span [ngClass]="getStatusClass(history.status)">
-                {{ history.status === 'completed' ? 'Đã hoàn thành' : 
-                    history.status === 'in_progress' ? 'Đang làm' : 'Đã hủy' }}
-              </span>
-            </td>
-            <td>
-              <button 
-                class="btn btn-sm btn-primary" 
-                *ngIf="history.completed"
-                (click)="viewExamResult(history.attemptId)">
-                Xem kết quả
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="benefit-content">
+      <div class="benefit-item">
+        <div class="benefit-icon">🎯</div>
+        <div class="benefit-text">
+          <h3>Nâng cao hiệu quả học tập</h3>
+          <p>Làm quen với các dạng đề thi, cải thiện kỹ năng làm bài và nâng cao điểm số thực tế.</p>
+        </div>
+      </div>
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">🧠</div>
+        <div class="benefit-text">
+          <h3>Phát hiện điểm yếu</h3>
+          <p>Biết được những kiến thức còn yếu để tập trung ôn tập hiệu quả hơn.</p>
+        </div>
+      </div>
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">⏰</div>
+        <div class="benefit-text">
+          <h3>Tiết kiệm thời gian</h3>
+          <p>Không còn phải chờ giáo viên chấm bài, kết quả được trả về ngay sau khi hoàn thành bài thi.</p>
+        </div>
+      </div>
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">📈</div>
+        <div class="benefit-text">
+          <h3>Theo dõi tiến độ</h3>
+          <p>Xem được sự tiến bộ của bản thân qua thời gian với các biểu đồ trực quan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="testimonials-section">
+  <h2 class="section-title">Học sinh nói gì về chúng tôi</h2>
+  
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p>"Từ khi sử dụng Ngân Hàng Đề Thi, điểm số của mình đã cải thiện rõ rệt. Mình có thể làm nhiều đề thi khác nhau và biết được những chỗ nào cần ôn tập thêm."</p>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-avatar">M</div>
+        <div class="author-info">
+          <h4>Minh Anh</h4>
+          <p>Học sinh lớp 12, THPT Chu Văn An</p>
+        </div>
+      </div>
     </div>
     
-    <div *ngIf="historyLoading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Đang tải lịch sử bài thi...</p>
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p>"Hệ thống rất dễ sử dụng và mình có thể làm bài mọi lúc mọi nơi. Phần phân tích kết quả giúp mình hiểu rõ những điểm yếu của bản thân để cải thiện."</p>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-avatar">T</div>
+        <div class="author-info">
+          <h4>Tuấn Kiệt</h4>
+          <p>Học sinh lớp 11, THPT Nguyễn Huệ</p>
+        </div>
+      </div>
     </div>
-    
-    <div *ngIf="historyError" class="error-message">
-      <p>{{ historyError }}</p>
-      <button class="btn btn-primary" (click)="loadExamHistory()">Thử lại</button>
-    </div>
-    
-    <div *ngIf="!historyLoading && !historyError && examHistory.length === 0" class="empty-state">
-      <div class="empty-icon">📊</div>
-      <p>Chưa có lịch sử bài thi</p>
-      <button class="btn btn-primary" routerLink="/dashboard/student-exams">Xem đề thi</button>
-    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-content">
+    <h2>Bắt đầu luyện tập ngay hôm nay</h2>
+    <p>Hàng ngàn đề thi chất lượng đang chờ bạn khám phá</p>
+    <button class="btn btn-primary btn-large" (click)="navigateToExams()">Xem đề thi</button>
   </div>
 </div>
