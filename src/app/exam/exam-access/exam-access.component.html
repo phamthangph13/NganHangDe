@@ -1,0 +1,74 @@
+<div class="exam-access-container">
+  <mat-card class="exam-access-card">
+    <mat-card-header>
+      <div class="header-content">
+        <span class="material-icons-outlined header-icon">school</span>
+        <mat-card-title>Truy cập bài kiểm tra</mat-card-title>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Đang xác thực quyền truy cập...</p>
+      </div>
+
+      <div *ngIf="!isLoading && !hasAccess" class="access-denied">
+        <span class="material-icons-outlined denied-icon">error_outline</span>
+        <h2>Không có quyền truy cập</h2>
+        <p>{{ accessMessage }}</p>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="goBack()">
+            <span class="material-icons-outlined">arrow_back</span>
+            Quay lại trang chủ
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && hasAccess" class="access-granted">
+        <div *ngIf="!requirePassword">
+          <span class="material-icons-outlined success-icon">check_circle_outline</span>
+          <h2>Xác thực thành công</h2>
+          <p>{{ accessMessage }}</p>
+          <p>Đang chuyển hướng đến bài kiểm tra...</p>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+
+        <div *ngIf="requirePassword" class="password-form">
+          <span class="material-icons-outlined form-icon">password</span>
+          <h2>{{ examTitle }}</h2>
+          <p>Bài kiểm tra này được bảo vệ bằng mật khẩu. Vui lòng nhập mật khẩu do giáo viên cung cấp.</p>
+          
+          <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()" class="password-form-container">
+            <mat-form-field appearance="outline">
+              <mat-label>Mật khẩu bài kiểm tra</mat-label>
+              <input matInput type="password" formControlName="password" autocomplete="off" placeholder="Nhập mật khẩu">
+              <span matSuffix class="material-icons-outlined">vpn_key</span>
+              <mat-error *ngIf="passwordForm.get('password')?.hasError('required')">
+                Mật khẩu không được để trống
+              </mat-error>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-stroked-button type="button" (click)="goBack()">
+                <span class="material-icons-outlined">arrow_back</span>
+                Quay lại
+              </button>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="passwordForm.invalid || isSubmitting">
+                <span *ngIf="!isSubmitting" class="button-content">
+                  <span class="material-icons-outlined">play_arrow</span>
+                  Bắt đầu làm bài
+                </span>
+                <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div> 

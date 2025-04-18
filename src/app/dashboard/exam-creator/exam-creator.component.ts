@@ -31,6 +31,10 @@ export class ExamCreatorComponent implements OnInit {
   submitted: boolean = false;
   selectedQuestionSet: QuestionSet | null = null;
   studentLoadError: string | null = null;
+  examLink: string | null = null;
+  examTitle: string | null = null;
+  requiresPassword: boolean = false;
+  examCreated: boolean = false;
   
   constructor(
     private authService: AuthService,
@@ -47,7 +51,9 @@ export class ExamCreatorComponent implements OnInit {
       duration: [45, [Validators.required, Validators.min(1), Validators.max(300)]],
       accessType: ['public', [Validators.required]],
       classId: ['', [Validators.required]],
-      selectedStudentIds: [[]]
+      selectedStudentIds: [[]],
+      requirePassword: [false],
+      password: ['']
     });
   }
 
@@ -128,6 +134,19 @@ export class ExamCreatorComponent implements OnInit {
     // Update selected question set when changed
     this.examForm.get('questionSetId')?.valueChanges.subscribe(questionSetId => {
       this.selectedQuestionSet = this.questionSets.find(qs => qs.id === questionSetId) || null;
+    });
+
+    // Update password validation based on requirePassword value
+    this.examForm.get('requirePassword')?.valueChanges.subscribe(requirePassword => {
+      const passwordControl = this.examForm.get('password');
+      
+      if (requirePassword) {
+        passwordControl?.setValidators([Validators.required]);
+      } else {
+        passwordControl?.clearValidators();
+      }
+      
+      passwordControl?.updateValueAndValidity();
     });
   }
 
@@ -232,75 +251,86 @@ export class ExamCreatorComponent implements OnInit {
   onSubmit(): void {
     this.submitted = true;
     
+    // Validate the form
     if (this.examForm.invalid) {
-      console.log('Form is invalid:', this.examForm.errors);
-      console.log('Title errors:', this.examForm.get('title')?.errors);
-      console.log('QuestionSetId errors:', this.examForm.get('questionSetId')?.errors);
-      console.log('Duration errors:', this.examForm.get('duration')?.errors);
-      console.log('AccessType errors:', this.examForm.get('accessType')?.errors);
-      if (this.examForm.get('accessType')?.value !== 'public') {
-        console.log('ClassId errors:', this.examForm.get('classId')?.errors);
+      // Handle specific validation cases
+      if (this.examForm.get('accessType')?.value === 'selected' && 
+          (!this.examForm.get('selectedStudentIds')?.value || this.examForm.get('selectedStudentIds')?.value.length === 0)) {
+        this.examForm.get('selectedStudentIds')?.setErrors({ 'required': true });
       }
-      if (this.examForm.get('accessType')?.value === 'selected') {
-        console.log('SelectedStudentIds errors:', this.examForm.get('selectedStudentIds')?.errors);
+      
+      // Password validation
+      if (this.examForm.get('requirePassword')?.value && !this.examForm.get('password')?.value) {
+        this.examForm.get('password')?.setErrors({ 'required': true });
       }
+      
+      console.error('Form is invalid:', this.examForm.errors);
       return;
     }
     
-    const formValues = this.examForm.value;
+    this.loading = true;
+    
+    // Get form values
     const examData: CreateExamDto = {
-      title: formValues.title,
-      questionSetId: formValues.questionSetId,
-      description: formValues.description || '',
-      duration: Number(formValues.duration),
-      accessType: formValues.accessType,
-      classId: formValues.classId || undefined,
-      selectedStudentIds: formValues.accessType === 'selected' ? formValues.selectedStudentIds : undefined
+      title: this.examForm.get('title')?.value,
+      questionSetId: this.examForm.get('questionSetId')?.value,
+      description: this.examForm.get('description')?.value || '',
+      duration: this.examForm.get('duration')?.value,
+      accessType: this.examForm.get('accessType')?.value,
+      requirePassword: this.examForm.get('requirePassword')?.value || false,
+      password: this.examForm.get('password')?.value || ''
     };
     
-    // Xử lý trường hợp chọn "tất cả học sinh"
-    // Nếu trong mảng selectedStudentIds có phần tử bắt đầu bằng 'all_students_', chuyển từ chế độ 'selected' sang 'class'
-    if (examData.accessType === 'selected' && examData.selectedStudentIds) {
-      const allStudentsPattern = 'all_students_';
-      if (examData.selectedStudentIds.some(id => typeof id === 'string' && id.startsWith(allStudentsPattern))) {
-        // Chuyển sang chế độ accessType = 'class'
-        examData.accessType = 'class';
-        // Xóa selectedStudentIds không cần thiết
-        delete examData.selectedStudentIds;
+    // Always include classId regardless of accessType
+    // For public access, auto-select first class if available
+    if (examData.accessType === 'public') {
+      if (this.classes.length > 0) {
+        examData.classId = this.classes[0].id;
+      } else {
+        // If no classes available, show error message
+        this.loading = false;
+        alert('Bạn cần có ít nhất một lớp học để tạo đề thi. Vui lòng tạo lớp học trước.');
+        return;
       }
+    } else {
+      // For class or selected access type
+      examData.classId = this.examForm.get('classId')?.value;
     }
     
-    // Always ensure classId is included for API requirements,
-    // especially for public exams which might have cleared validators
-    if (!examData.classId && this.classes.length > 0) {
-      examData.classId = this.classes[0].id;
+    // Add selectedStudentIds only for 'selected' accessType
+    if (examData.accessType === 'selected') {
+      examData.selectedStudentIds = this.examForm.get('selectedStudentIds')?.value;
     }
-    
-    // Remove undefined fields
-    if (examData.classId === undefined) {
-      delete examData.classId;
-    }
-    
-    if (examData.selectedStudentIds === undefined) {
-      delete examData.selectedStudentIds;
-    }
-    
-    // Ensure the array is not empty
-    if (examData.selectedStudentIds && examData.selectedStudentIds.length === 0) {
-      delete examData.selectedStudentIds;
-    }
-    
-    console.log('Sending exam data to API:', examData);
     
     this.loading = true;
     this.examService.createExam(examData).subscribe({
-      next: (createdExam) => {
-        console.log('Exam created successfully:', createdExam);
+      next: (response) => {
+        console.log('Exam created successfully:', response);
         this.loading = false;
-        this.router.navigate(['/dashboard/exams']);
+        
+        // Hiển thị link và thông tin bài kiểm tra ngay tại trang tạo đề thi
+        this.examLink = response.examLink || '';
+        this.examTitle = response.title;
+        this.requiresPassword = response.requirePassword || false;
+        this.examCreated = true;
+        
+        // Reset form nếu muốn tạo đề thi mới
+        this.examForm.reset({
+          title: '',
+          questionSetId: '',
+          description: '',
+          duration: 45,
+          accessType: 'public',
+          classId: this.classes.length > 0 ? this.classes[0].id : '',
+          selectedStudentIds: [],
+          requirePassword: false,
+          password: ''
+        });
+        this.submitted = false;
       },
       error: (error) => {
         console.error('Error creating exam:', error);
+        this.loading = false;
         
         // Extract and log server error details
         if (error.error) {
@@ -317,8 +347,6 @@ export class ExamCreatorComponent implements OnInit {
         console.log('Request URL:', `${this.examService.getApiUrl()}`);
         console.log('Request method:', 'POST');
         console.log('Request payload:', examData);
-        
-        this.loading = false;
       }
     });
   }
@@ -388,5 +416,37 @@ export class ExamCreatorComponent implements OnInit {
     
     // Thông báo cho người dùng
     alert(`Bạn đã chọn tất cả học sinh của lớp ${selectedClass.name}.`);
+  }
+
+  // Lấy link đầy đủ của đề thi
+  getFullExamLink(): string {
+    if (!this.examLink) return '';
+    
+    // Tạo link đầy đủ dựa trên domain hiện tại
+    const baseUrl = window.location.origin;
+    return `${baseUrl}${this.examLink}`;
+  }
+  
+  // Sao chép link vào clipboard
+  copyExamLink(inputElement: HTMLInputElement): void {
+    inputElement.select();
+    document.execCommand('copy');
+    
+    // Hiển thị thông báo "đã sao chép" tạm thời
+    const originalText = inputElement.nextElementSibling?.textContent;
+    if (inputElement.nextElementSibling) {
+      inputElement.nextElementSibling.textContent = ' Đã sao chép!';
+      
+      setTimeout(() => {
+        if (inputElement.nextElementSibling && originalText) {
+          inputElement.nextElementSibling.textContent = originalText;
+        }
+      }, 1500);
+    }
+  }
+  
+  // Điều hướng đến trang quản lý đề thi
+  navigateToExamManagement(): void {
+    this.router.navigate(['/dashboard/exams']);
   }
 } 

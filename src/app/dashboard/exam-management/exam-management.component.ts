@@ -19,6 +19,9 @@ export class ExamManagementComponent implements OnInit {
   filterStatus: string = '';
   subjects: string[] = ['Toán học', 'Vật lý', 'Hóa học', 'Sinh học', 'Ngữ văn', 'Tiếng Anh', 'Lịch sử', 'Địa lý'];
   loading: boolean = false;
+  successMessage: string | null = null;
+  createdExamLink: string | null = null;
+  requiresPassword: boolean = false;
   
   constructor(
     private authService: AuthService, 
@@ -32,6 +35,52 @@ export class ExamManagementComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
+    
+    // Kiểm tra xem có tin nhắn thành công từ việc tạo đề thi không
+    // Ưu tiên kiểm tra từ localStorage trước
+    if (localStorage.getItem('examCreationSuccess') === 'true') {
+      this.successMessage = localStorage.getItem('successMessage') || 'Đề thi đã được tạo thành công!';
+      this.createdExamLink = localStorage.getItem('examLink') || null;
+      this.requiresPassword = localStorage.getItem('requirePassword') === 'true';
+      
+      // Xóa dữ liệu sau khi đã sử dụng
+      localStorage.removeItem('examCreationSuccess');
+      localStorage.removeItem('examLink');
+      localStorage.removeItem('requirePassword');
+      localStorage.removeItem('successMessage');
+      
+      // Auto-dismiss the message after 10 seconds
+      setTimeout(() => {
+        this.successMessage = null;
+      }, 10000);
+    }
+    // Nếu không có từ localStorage, thử kiểm tra từ router state
+    else {
+      // Check if we have a success message from exam creation
+      const navigation = this.router.getCurrentNavigation();
+      if (navigation?.extras.state) {
+        const state = navigation.extras.state as {
+          message: string;
+          examLink: string;
+          requirePassword: boolean;
+        };
+        
+        if (state.message) {
+          this.successMessage = state.message;
+          
+          // Auto-dismiss the message after 10 seconds
+          setTimeout(() => {
+            this.successMessage = null;
+          }, 10000);
+        }
+        
+        if (state.examLink) {
+          this.createdExamLink = state.examLink;
+          this.requiresPassword = state.requirePassword || false;
+        }
+      }
+    }
+    
     this.loadExams();
   }
 
@@ -199,5 +248,74 @@ export class ExamManagementComponent implements OnInit {
         }
       }
     });
+  }
+
+  getFullExamLink(): string {
+    if (!this.createdExamLink) return '';
+    
+    // Create a full URL based on the current host
+    const baseUrl = window.location.origin;
+    return `${baseUrl}${this.createdExamLink}`;
+  }
+  
+  copyExamLink(inputElement: HTMLInputElement): void {
+    inputElement.select();
+    document.execCommand('copy');
+    
+    // Show temporary "copied" message
+    const originalText = inputElement.nextElementSibling?.textContent;
+    if (inputElement.nextElementSibling) {
+      inputElement.nextElementSibling.textContent = ' Đã sao chép!';
+      
+      setTimeout(() => {
+        if (inputElement.nextElementSibling && originalText) {
+          inputElement.nextElementSibling.textContent = originalText;
+        }
+      }, 1500);
+    }
+  }
+
+  // Lấy phần hiển thị ngắn gọn của link bài thi
+  getExamLinkPrefix(examId: string): string {
+    return `/exam/${examId}`;
+  }
+  
+  // Tạo và sao chép URL đầy đủ cho bài thi
+  copyExamUrl(examId: string): void {
+    const baseUrl = window.location.origin;
+    const examUrl = `${baseUrl}/exam/${examId}`;
+    
+    // Tạo textarea tạm thời để sao chép
+    const tempTextarea = document.createElement('textarea');
+    tempTextarea.value = examUrl;
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
+    
+    // Hiển thị thông báo đã sao chép
+    this.showCopyTooltip();
+  }
+  
+  // Hiển thị thông báo đã sao chép
+  private showCopyTooltip(): void {
+    const tooltip = document.createElement('div');
+    tooltip.textContent = 'Đã sao chép!';
+    tooltip.className = 'copy-tooltip';
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = '50%';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translate(-50%, -50%)';
+    tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    tooltip.style.color = 'white';
+    tooltip.style.padding = '8px 16px';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.zIndex = '9999';
+    
+    document.body.appendChild(tooltip);
+    
+    setTimeout(() => {
+      document.body.removeChild(tooltip);
+    }, 1500);
   }
 }

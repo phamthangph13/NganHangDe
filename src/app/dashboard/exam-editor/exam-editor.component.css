@@ -232,4 +232,186 @@ select:focus {
 .save-btn:disabled {
   background-color: #bdbdbd;
   cursor: not-allowed;
+}
+
+/* Styles cho phần hiển thị link bài thi */
+.exam-link-info {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.exam-link-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.link-text {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #3498db;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.copy-link-btn {
+  background-color: #e9ecef;
+  border: none;
+  color: #495057;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.copy-link-btn:hover {
+  background-color: #dee2e6;
+}
+
+.copy-link-btn i {
+  font-size: 0.8rem;
+}
+
+.password-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  background-color: #fff5f5;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+/* Styles cho phần bảo mật */
+.security-options {
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.password-field {
+  margin-top: 15px;
+  padding-left: 25px;
+}
+
+/* Add styles for the filter actions */
+.class-filter-actions {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.class-selection {
+  flex: 1;
+  min-width: 250px;
+}
+
+.class-selection label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.class-selection select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.filter-btn {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+  height: 38px;
+}
+
+.filter-btn i {
+  margin-right: 5px;
+}
+
+.filter-btn:hover {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+}
+
+.selection-instructions {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #4285f4;
+  font-size: 14px;
+  color: #555;
+  border-radius: 0 4px 4px 0;
+}
+
+.student-actions {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.select-all-btn, .unselect-all-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.select-all-btn {
+  background-color: #4285f4;
+  color: white;
+}
+
+.select-all-btn:hover {
+  background-color: #3367d6;
+}
+
+.unselect-all-btn {
+  background-color: #f1f3f4;
+  color: #5f6368;
+}
+
+.unselect-all-btn:hover {
+  background-color: #e8eaed;
+}
+
+.select-all-btn i, .unselect-all-btn i {
+  margin-right: 6px;
 } 

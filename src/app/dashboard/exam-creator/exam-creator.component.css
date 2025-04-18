@@ -247,4 +247,134 @@ textarea {
 
 .alt-btn:hover {
   background-color: #1976d2;
+}
+
+/* CSS cho thông báo thành công và link đề thi */
+.success-message {
+  background-color: #e6f7ed;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  margin: 20px 0;
+  padding: 20px;
+}
+
+.message-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  color: #155724;
+}
+
+.message-content i {
+  font-size: 1.5rem;
+  margin-right: 12px;
+  color: #28a745;
+}
+
+.message-content strong {
+  font-weight: 600;
+}
+
+.exam-link-container {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.link-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.link-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.password-indicator {
+  background-color: #fff8e6;
+  color: #e67e22;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+}
+
+.password-indicator i {
+  margin-right: 6px;
+}
+
+.link-value {
+  display: flex;
+  align-items: center;
+}
+
+.link-value input {
+  flex-grow: 1;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px 0 0 4px;
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.copy-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-left: none;
+  padding: 10px 15px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #495057;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover {
+  background-color: #e9ecef;
+}
+
+.success-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.create-new-btn, .manage-exams-btn {
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.create-new-btn {
+  background-color: #e6f7ed;
+  color: #28a745;
+  border: 1px solid #c3e6cb;
+}
+
+.create-new-btn:hover {
+  background-color: #d4edda;
+}
+
+.manage-exams-btn {
+  background-color: #e6f1f7;
+  color: #3498db;
+  border: 1px solid #c3d6e6;
+}
+
+.manage-exams-btn:hover {
+  background-color: #d4e5f1;
 } 

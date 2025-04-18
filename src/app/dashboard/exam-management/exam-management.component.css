@@ -266,3 +266,135 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Add these styles for the success message and exam link display */
+
+.success-message {
+  background-color: #e6f7ed;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin: 15px 0;
+  padding: 15px;
+}
+
+.message-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #155724;
+}
+
+.message-content i {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  color: #28a745;
+}
+
+.exam-link-container {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  margin-top: 15px;
+}
+
+.link-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.link-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.password-indicator {
+  background-color: #ffe9e9;
+  color: #dc3545;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.password-indicator i {
+  margin-right: 5px;
+}
+
+.link-value {
+  display: flex;
+  align-items: center;
+}
+
+.link-value input {
+  flex-grow: 1;
+  padding: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px 0 0 4px;
+  font-size: 0.9rem;
+}
+
+.copy-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-left: none;
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background-color: #e9ecef;
+}
+
+/* Styles cho phần hiển thị link bài thi */
+.exam-link-cell {
+  max-width: 180px;
+}
+
+.exam-link-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.link-prefix {
+  font-size: 0.8rem;
+  color: #3498db;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  max-width: 120px;
+  display: inline-block;
+}
+
+.link-prefix:hover {
+  text-decoration: underline;
+}
+
+.copy-link-btn {
+  background-color: transparent;
+  border: none;
+  color: #7f8c8d;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.copy-link-btn:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.password-tag {
+  display: inline-flex;
+  color: #e74c3c;
+  font-size: 0.8rem;
+}

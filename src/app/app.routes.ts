@@ -17,6 +17,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'exam',
+    loadChildren: () => import('./exam/exam.module').then(m => m.ExamModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'hybridaction/:paramName',
     redirectTo: 'auth/login'
   },

@@ -21,6 +21,8 @@ export interface Exam {
   questionCount: number;
   attemptCount?: number;
   averageScore?: number;
+  requirePassword?: boolean;
+  examLink?: string;
 }
 
 export interface ExamDetail extends Exam {
@@ -39,6 +41,8 @@ export interface CreateExamDto {
   accessType: 'public' | 'class' | 'selected';
   classId?: string;
   selectedStudentIds?: string[];
+  requirePassword?: boolean;
+  password?: string;
 }
 
 export interface UpdateExamDto {
@@ -48,6 +52,8 @@ export interface UpdateExamDto {
   accessType?: 'public' | 'class' | 'selected';
   classId?: string;
   selectedStudentIds?: string[];
+  requirePassword?: boolean;
+  password?: string;
 }
 
 export interface PublishExamDto {
@@ -80,6 +86,17 @@ export interface StudentResultDetail extends ExamResult {
       text: string;
     }[];
   }[];
+}
+
+export interface ValidationResultDto {
+  canAccess: boolean;
+  message: string;
+  exam?: {
+    id: string;
+    title: string;
+    duration: number;
+    requirePassword: boolean;
+  };
 }
 
 @Injectable({
@@ -132,5 +149,13 @@ export class ExamService {
   
   getStudentResultDetail(resultId: string): Observable<StudentResultDetail> {
     return this.http.get<StudentResultDetail>(`${this.apiUrl}/results/${resultId}`);
+  }
+  
+  validateExamAccess(examId: string): Observable<ValidationResultDto> {
+    return this.http.get<ValidationResultDto>(`${this.apiUrl}/validate-access/${examId}`);
+  }
+  
+  validateExamPassword(examId: string, password: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/${examId}/validate-password`, { password });
   }
 } 

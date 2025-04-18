@@ -122,6 +122,8 @@ namespace BackEnd.Controllers
                 }).ToList();
             }
 
+            var examLink = $"/exam/{exam.Id}";
+
             var examDetailDto = new ExamDetailDTO
             {
                 Id = exam.Id,
@@ -138,7 +140,9 @@ namespace BackEnd.Controllers
                 PublishDate = exam.PublishDate,
                 CreatedAt = exam.CreatedAt,
                 UpdatedAt = exam.UpdatedAt,
-                QuestionCount = questionSet?.Questions.Count ?? 0
+                QuestionCount = questionSet?.Questions.Count ?? 0,
+                RequirePassword = exam.RequirePassword,
+                ExamLink = examLink
             };
 
             return Ok(examDetailDto);
@@ -191,6 +195,12 @@ namespace BackEnd.Controllers
                 }
             }
 
+            // Validate password if required
+            if (createExamDto.RequirePassword && string.IsNullOrWhiteSpace(createExamDto.Password))
+            {
+                return BadRequest("Mật khẩu không được để trống nếu bạn chọn bảo vệ bằng mật khẩu");
+            }
+
             var newExam = new Exam
             {
                 Title = createExamDto.Title,
@@ -200,33 +210,45 @@ namespace BackEnd.Controllers
                 AccessType = createExamDto.AccessType,
                 ClassId = createExamDto.ClassId,
                 SelectedStudentIds = createExamDto.SelectedStudentIds,
-                Status = "draft",
                 TeacherId = teacherId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                RequirePassword = createExamDto.RequirePassword,
+                Password = createExamDto.Password
             };
 
-            var createdExam = await _examService.CreateAsync(newExam);
+            await _examService.CreateAsync(newExam);
 
-            var responseDto = new ExamResponseDTO
+            // Generate exam link
+            var examLink = $"/exam/{newExam.Id}";
+
+            var questionSetInfo = await _examService.GetQuestionSetAsync(newExam.QuestionSetId);
+            string className = null;
+            if (!string.IsNullOrEmpty(newExam.ClassId))
             {
-                Id = createdExam.Id,
-                Title = createdExam.Title,
-                QuestionSetId = createdExam.QuestionSetId,
-                QuestionSetTitle = questionSet.Title,
-                Description = createdExam.Description,
-                Duration = createdExam.Duration,
-                AccessType = createdExam.AccessType,
-                ClassId = createdExam.ClassId,
-                SelectedStudentIds = createdExam.SelectedStudentIds,
-                Status = createdExam.Status,
-                CreatedAt = createdExam.CreatedAt,
-                UpdatedAt = createdExam.UpdatedAt,
-                QuestionCount = questionSet.Questions.Count,
-                AttemptCount = 0
-            };
+                var cls = await _examService.GetClassAsync(newExam.ClassId);
+                className = cls?.Name;
+            }
 
-            return CreatedAtAction(nameof(GetExam), new { id = createdExam.Id }, responseDto);
+            return Ok(new ExamResponseDTO
+            {
+                Id = newExam.Id,
+                Title = newExam.Title,
+                QuestionSetId = newExam.QuestionSetId,
+                QuestionSetTitle = questionSetInfo?.Title,
+                Description = newExam.Description,
+                Duration = newExam.Duration,
+                AccessType = newExam.AccessType,
+                ClassId = newExam.ClassId,
+                ClassName = className,
+                SelectedStudentIds = newExam.SelectedStudentIds,
+                Status = newExam.Status,
+                CreatedAt = newExam.CreatedAt,
+                UpdatedAt = newExam.UpdatedAt,
+                QuestionCount = questionSetInfo?.Questions.Count ?? 0,
+                AttemptCount = 0,
+                AverageScore = null,
+                RequirePassword = newExam.RequirePassword,
+                ExamLink = examLink
+            });
         }
 
         // PUT: api/Exams/5
@@ -252,6 +274,12 @@ namespace BackEnd.Controllers
             if (exam.Status != "draft")
             {
                 return BadRequest("Không thể cập nhật đề thi đã được xuất bản hoặc đóng");
+            }
+
+            // Validate password if required is set to true
+            if (updateExamDto.RequirePassword == true && string.IsNullOrWhiteSpace(updateExamDto.Password))
+            {
+                return BadRequest("Mật khẩu không được để trống nếu bạn chọn bảo vệ bằng mật khẩu");
             }
 
             // Update properties if provided
@@ -395,11 +423,31 @@ namespace BackEnd.Controllers
                 }
             }
 
+            // Update password settings if provided
+            if (updateExamDto.RequirePassword.HasValue)
+            {
+                exam.RequirePassword = updateExamDto.RequirePassword.Value;
+                
+                // Only update password if provided
+                if (!string.IsNullOrWhiteSpace(updateExamDto.Password))
+                {
+                    exam.Password = updateExamDto.Password;
+                }
+                // If password protection is disabled, clear the password
+                else if (!updateExamDto.RequirePassword.Value)
+                {
+                    exam.Password = null;
+                }
+            }
+
             var result = await _examService.UpdateAsync(id, exam);
             if (!result)
             {
                 return BadRequest("Cập nhật đề thi thất bại");
             }
+
+            // Generate exam link
+            var examLink = $"/exam/{exam.Id}";
 
             return NoContent();
         }
@@ -706,6 +754,122 @@ namespace BackEnd.Controllers
             }
             
             return Ok(resultDetails);
+        }
+
+        // GET: api/Exams/validate-access/{id}
+        [HttpGet("validate-access/{id}")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult<ValidationResultDTO>> ValidateStudentExamAccess(string id)
+        {
+            string studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userRole = User.FindFirstValue(ClaimTypes.Role);
+            
+            // Check if the user has Student role
+            if (userRole != "Student")
+            {
+                return Ok(new ValidationResultDTO
+                {
+                    CanAccess = false,
+                    Message = "Only students can access exams"
+                });
+            }
+            
+            // Get the exam
+            var exam = await _examService.GetByIdAsync(id);
+            if (exam == null)
+            {
+                return NotFound(new ValidationResultDTO
+                {
+                    CanAccess = false,
+                    Message = "Exam not found"
+                });
+            }
+            
+            // Check if exam is published
+            if (exam.Status != "published")
+            {
+                return Ok(new ValidationResultDTO
+                {
+                    CanAccess = false,
+                    Message = "This exam is not currently available"
+                });
+            }
+            
+            // Check access based on AccessType
+            bool canAccess = false;
+            string message = "";
+            
+            if (exam.AccessType == "public")
+            {
+                // Public exams - any student can access
+                canAccess = true;
+                message = "Public exam access granted";
+            }
+            else if (exam.AccessType == "class")
+            {
+                // Class-based access - check if student is in the class
+                var classEnrollment = await _classService.GetStudentEnrollmentsAsync(studentId);
+                canAccess = classEnrollment.Any(cs => cs.ClassId == exam.ClassId);
+                message = canAccess 
+                    ? "Class-based exam access granted" 
+                    : "You are not enrolled in the class required for this exam";
+            }
+            else if (exam.AccessType == "selected")
+            {
+                // Selected students - check if student is in the list
+                canAccess = exam.SelectedStudentIds.Contains(studentId);
+                message = canAccess 
+                    ? "Selected student exam access granted" 
+                    : "You are not authorized to take this exam";
+            }
+            
+            // Check if student has already attempted this exam
+            var existingAttempt = await _examService.GetStudentExamAttemptAsync(id, studentId);
+            if (existingAttempt != null)
+            {
+                canAccess = false;
+                message = "You have already attempted this exam";
+            }
+            
+            return Ok(new ValidationResultDTO
+            {
+                CanAccess = canAccess,
+                Message = message,
+                Exam = canAccess ? new ExamBriefDTO
+                {
+                    Id = exam.Id,
+                    Title = exam.Title,
+                    Duration = exam.Duration,
+                    RequirePassword = exam.RequirePassword
+                } : null
+            });
+        }
+
+        // POST: api/Exams/{id}/validate-password
+        [HttpPost("{id}/validate-password")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult<bool>> ValidateExamPassword(string id, [FromBody] ExamPasswordDTO passwordDto)
+        {
+            if (string.IsNullOrEmpty(passwordDto.Password))
+            {
+                return BadRequest(false);
+            }
+            
+            var exam = await _examService.GetByIdAsync(id);
+            if (exam == null)
+            {
+                return NotFound(false);
+            }
+            
+            // Check if exam requires password
+            if (!exam.RequirePassword)
+            {
+                return Ok(true);
+            }
+            
+            // Validate the password
+            bool isValid = exam.Password == passwordDto.Password;
+            return Ok(isValid);
         }
     }
 } 

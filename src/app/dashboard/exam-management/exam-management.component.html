@@ -6,6 +6,27 @@
     </button>
   </div>
   
+  <div class="success-message" *ngIf="successMessage">
+    <div class="message-content">
+      <i class="fas fa-check-circle"></i>
+      <span>{{ successMessage }}</span>
+    </div>
+    <div class="exam-link-container" *ngIf="createdExamLink">
+      <div class="link-header">
+        <h3>Đường dẫn làm bài:</h3>
+        <span class="password-indicator" *ngIf="requiresPassword">
+          <i class="fas fa-lock"></i> Yêu cầu mật khẩu
+        </span>
+      </div>
+      <div class="link-value">
+        <input type="text" readonly [value]="getFullExamLink()" #examLinkInput>
+        <button (click)="copyExamLink(examLinkInput)" class="copy-btn">
+          <i class="fas fa-copy"></i> Sao chép
+        </button>
+      </div>
+    </div>
+  </div>
+  
   <div class="filters">
     <div class="filter-item">
       <label for="subject-filter">Bộ câu hỏi:</label>
@@ -39,6 +60,7 @@
           <th>Số câu hỏi</th>
           <th>Thời gian</th>
           <th>Quyền truy cập</th>
+          <th>Đường dẫn bài thi</th>
           <th>Ngày xuất bản</th>
           <th>Trạng thái</th>
           <th>Lượt làm</th>
@@ -56,6 +78,17 @@
             <span *ngIf="exam.accessType === 'public'">Công khai</span>
             <span *ngIf="exam.accessType === 'class'">Lớp: {{ exam.className }}</span>
             <span *ngIf="exam.accessType === 'selected'">{{ exam.selectedStudentIds?.length || 0 }} học sinh</span>
+          </td>
+          <td class="exam-link-cell">
+            <div class="exam-link-display">
+              <span class="link-prefix" title="Nhấp để sao chép">{{ getExamLinkPrefix(exam.id) }}</span>
+              <button class="copy-link-btn" (click)="copyExamUrl(exam.id)" title="Sao chép đường dẫn">
+                <i class="fas fa-copy"></i>
+              </button>
+              <span class="password-tag" *ngIf="exam.requirePassword">
+                <i class="fas fa-lock"></i>
+              </span>
+            </div>
           </td>
           <td>{{ exam.publishDate ? (exam.publishDate | date:'dd/MM/yyyy') : 'Chưa xuất bản' }}</td>
           <td>

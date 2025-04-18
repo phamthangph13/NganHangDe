@@ -45,6 +45,12 @@ namespace BackEnd.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string TeacherId { get; set; }
 
+        [BsonElement("password")]
+        public string Password { get; set; } // Password for the exam (optional)
+
+        [BsonElement("requirePassword")]
+        public bool RequirePassword { get; set; } = false; // Whether the exam requires a password
+
         [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

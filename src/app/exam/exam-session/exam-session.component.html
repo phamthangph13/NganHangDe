@@ -1,0 +1,102 @@
+<div class="exam-session-container">
+  <header class="exam-header">
+    <div class="header-left">
+      <span class="material-icons-outlined">assignment</span>
+      <h1>Bài kiểm tra</h1>
+    </div>
+    <div class="header-right">
+      <div class="timer">
+        <span class="material-icons-outlined">timer</span>
+        <span>60:00</span>
+      </div>
+    </div>
+  </header>
+
+  <mat-card class="exam-session-card">
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Đang tải bài kiểm tra...</p>
+    </div>
+
+    <div *ngIf="!isLoading" class="exam-content">
+      <div class="exam-info">
+        <h2>Bài kiểm tra trực tuyến</h2>
+        <div class="exam-details">
+          <div class="detail-item">
+            <span class="material-icons-outlined">info_outline</span>
+            <span>Mã bài kiểm tra: {{ examId }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="material-icons-outlined">help_outline</span>
+            <span>Tổng số câu hỏi: 20</span>
+          </div>
+          <div class="detail-item">
+            <span class="material-icons-outlined">schedule</span>
+            <span>Thời gian: 60 phút</span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="question-container">
+        <div class="question-header">
+          <h3>Câu hỏi 1</h3>
+          <span class="question-type">Câu hỏi trắc nghiệm</span>
+        </div>
+        
+        <p class="question-content">Thủ đô của Việt Nam là gì?</p>
+        
+        <div class="options-container">
+          <mat-radio-group class="options-list">
+            <mat-radio-button value="a">Hà Nội</mat-radio-button>
+            <mat-radio-button value="b">Hồ Chí Minh</mat-radio-button>
+            <mat-radio-button value="c">Đà Nẵng</mat-radio-button>
+            <mat-radio-button value="d">Hải Phòng</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="navigation-buttons">
+        <button mat-raised-button disabled>
+          <span class="material-icons-outlined">arrow_back</span>
+          Câu trước
+        </button>
+        <button mat-raised-button color="primary">
+          Câu tiếp theo
+          <span class="material-icons-outlined">arrow_forward</span>
+        </button>
+      </div>
+
+      <mat-divider></mat-divider>
+      
+      <div class="question-navigator">
+        <h3>Danh sách câu hỏi</h3>
+        <div class="question-buttons">
+          <button mat-mini-fab color="primary" class="active">1</button>
+          <button mat-mini-fab>2</button>
+          <button mat-mini-fab>3</button>
+          <button mat-mini-fab>4</button>
+          <button mat-mini-fab>5</button>
+          <button mat-mini-fab>...</button>
+          <button mat-mini-fab>20</button>
+        </div>
+      </div>
+
+      <div class="submit-section">
+        <button mat-raised-button color="warn">
+          <span class="material-icons-outlined">cancel_outlined</span>
+          Hủy bài làm
+        </button>
+        <button mat-raised-button color="accent">
+          <span class="material-icons-outlined">save_outlined</span>
+          Lưu tạm
+        </button>
+        <button mat-raised-button color="primary">
+          <span class="material-icons-outlined">check_circle_outline</span>
+          Nộp bài
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div> 

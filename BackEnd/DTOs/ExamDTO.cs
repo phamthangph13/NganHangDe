@@ -25,6 +25,10 @@ namespace BackEnd.DTOs
         public string ClassId { get; set; } // Required if accessType is "class" or "selected"
 
         public List<string> SelectedStudentIds { get; set; } = new List<string>(); // Required if accessType is "selected"
+        
+        public bool RequirePassword { get; set; } = false; // Whether the exam requires a password
+        
+        public string Password { get; set; } // Password for the exam (optional)
     }
 
     public class UpdateExamDTO
@@ -42,6 +46,10 @@ namespace BackEnd.DTOs
         public string ClassId { get; set; }
 
         public List<string> SelectedStudentIds { get; set; }
+        
+        public bool? RequirePassword { get; set; }
+        
+        public string Password { get; set; }
     }
 
     public class ExamResponseDTO
@@ -63,6 +71,8 @@ namespace BackEnd.DTOs
         public int QuestionCount { get; set; }
         public int AttemptCount { get; set; }
         public double? AverageScore { get; set; }
+        public bool RequirePassword { get; set; }
+        public string ExamLink { get; set; }
     }
 
     public class PublishExamDTO
@@ -87,6 +97,8 @@ namespace BackEnd.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int QuestionCount { get; set; }
+        public bool RequirePassword { get; set; }
+        public string ExamLink { get; set; }
     }
 
     public class StudentBriefDTO
@@ -94,5 +106,26 @@ namespace BackEnd.DTOs
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+    }
+
+    public class ValidationResultDTO
+    {
+        public bool CanAccess { get; set; }
+        public string Message { get; set; }
+        public ExamBriefDTO Exam { get; set; }
+    }
+
+    public class ExamBriefDTO
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public int Duration { get; set; }
+        public bool RequirePassword { get; set; }
+    }
+
+    public class ExamPasswordDTO
+    {
+        [Required]
+        public string Password { get; set; }
     }
 } 
