@@ -1,51 +1,133 @@
 <div class="weaknesses-container">
-  <div class="page-header">
-    <h1>Phát hiện điểm yếu</h1>
-    <p>Phân tích chi tiết về các điểm yếu trong các bài thi của bạn</p>
-  </div>
-
   <div class="loading-container" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Đang tải dữ liệu...</p>
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Đang phân tích dữ liệu bài thi...</p>
   </div>
 
   <div class="error-container" *ngIf="error && !loading">
     <p class="error-message">{{ error }}</p>
-    <button class="retry-btn" (click)="loadExamHistory()">Thử lại</button>
+    <button mat-raised-button color="primary" (click)="loadWeaknessAnalysis()">Thử lại</button>
   </div>
 
-  <div class="exams-list" *ngIf="!loading && !error">
-    <div class="empty-state" *ngIf="examHistory.length === 0">
-      <p>Bạn chưa có bài thi nào. Hãy hoàn thành một bài thi để xem phân tích.</p>
-    </div>
-
-    <div class="exam-card" *ngFor="let exam of examHistory">
-      <div class="exam-header">
-        <h2>{{ exam.examName }}</h2>
-        <div class="exam-meta">
-          <span class="exam-date">Ngày: {{ exam.completedDate | date:'dd/MM/yyyy' }}</span>
-          <span class="exam-score">Điểm: {{ exam.score }}/{{ exam.totalScore }}</span>
-        </div>
-      </div>
-
-      <div class="weakness-analysis">
-        <h3>Phân tích điểm yếu</h3>
+  <!-- Exams Analysis Only -->
+  <div class="exams-analysis" *ngIf="!loading && !error && analysis && analysis.exams && analysis.exams.length > 0">
+    <h2>Phân tích theo bài thi</h2>
+    
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let exam of analysis.exams">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ exam.examTitle }}
+          </mat-panel-title>
+          <mat-panel-description>
+            Điểm: {{ exam.score | number:'1.1-1' }} | 
+            {{ exam.correctAnswers }}/{{ exam.totalQuestions }} câu đúng
+          </mat-panel-description>
+        </mat-expansion-panel-header>
         
-        <div class="weakness-categories" *ngIf="exam.weaknessCategories?.length > 0">
-          <div class="category" *ngFor="let category of exam.weaknessCategories">
-            <h4>{{ category.name }}</h4>
-            <div class="progress-bar">
-              <div class="progress" [style.width.%]="category.percentCorrect"></div>
+        <div class="exam-details">
+          <div class="exam-summary">
+            <div class="exam-score-circle">
+              <span class="score-value">{{ exam.score | number:'1.1-1' }}</span>
+              <span class="score-label">điểm</span>
             </div>
-            <p class="percent">{{ category.percentCorrect }}% đúng</p>
-            <p class="recommendations">{{ category.recommendations }}</p>
+            
+            <div class="exam-stats">
+              <div class="stat-item">
+                <span class="stat-label">Ngày làm bài:</span>
+                <span class="stat-value">{{ exam.completedDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Câu đúng:</span>
+                <span class="stat-value">{{ exam.correctAnswers }}/{{ exam.totalQuestions }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Tỉ lệ đúng:</span>
+                <span class="stat-value">{{ calculateScorePercentage(exam) | number:'1.0-0' }}%</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Weakness Categories -->
+          <div class="exam-weakness-categories" *ngIf="exam.weaknessCategories && exam.weaknessCategories.length > 0">
+            <h3>Các điểm yếu</h3>
+            
+            <div class="category-list">
+              <div class="category-item" *ngFor="let category of exam.weaknessCategories">
+                <div class="category-header">
+                  <span class="category-name">{{ category.name }}</span>
+                  <span class="category-percent">{{ category.percentCorrect }}% đúng</span>
+                </div>
+                
+                <div class="progress-bar">
+                  <div class="progress" [style.width.%]="category.percentCorrect"></div>
+                </div>
+                
+                <p class="category-description">{{ category.description }}</p>
+                <p class="category-recommendations">
+                  <strong>Đề xuất:</strong> {{ category.recommendations }}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Wrong Answers -->
+          <div class="wrong-answers" *ngIf="exam.wrongAnswers && exam.wrongAnswers.length > 0">
+            <h3>Câu trả lời sai</h3>
+            
+            <div class="answer-list">
+              <mat-card class="answer-item" *ngFor="let answer of exam.wrongAnswers; let i = index">
+                <mat-card-header>
+                  <mat-card-title>Câu hỏi {{ i + 1 }}</mat-card-title>
+                </mat-card-header>
+                
+                <mat-card-content>
+                  <p class="question-text">{{ answer.questionText }}</p>
+                  
+                  <div class="answer-details">
+                    <div class="answer-detail correct">
+                      <span class="detail-label">Đáp án đúng:</span>
+                      <span class="detail-value">{{ answer.correctAnswerText }}</span>
+                    </div>
+                    
+                    <div class="answer-detail incorrect">
+                      <span class="detail-label">Bạn đã trả lời:</span>
+                      <span class="detail-value">{{ answer.studentAnswerText }}</span>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+          
+          <!-- Essay Answers -->
+          <div class="essay-answers" *ngIf="exam.essayAnswers && exam.essayAnswers.length > 0">
+            <h3>Câu trả lời tự luận</h3>
+            
+            <div class="answer-list">
+              <mat-card class="answer-item" *ngFor="let essay of exam.essayAnswers; let i = index">
+                <mat-card-header>
+                  <mat-card-title>Câu hỏi tự luận {{ i + 1 }}</mat-card-title>
+                </mat-card-header>
+                
+                <mat-card-content>
+                  <p class="question-text">{{ essay.questionText }}</p>
+                  
+                  <div class="essay-content">
+                    <p class="essay-text">{{ essay.studentAnswer }}</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
           </div>
         </div>
-
-        <div class="no-weaknesses" *ngIf="!exam.weaknessCategories || exam.weaknessCategories.length === 0">
-          <p>Chưa có đủ dữ liệu để phân tích điểm yếu cho bài thi này.</p>
-        </div>
-      </div>
-    </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  
+  <div class="empty-state" *ngIf="!loading && !error && (!analysis || analysis.exams.length === 0)">
+    <mat-icon class="empty-icon">school</mat-icon>
+    <h2>Chưa có dữ liệu để phân tích</h2>
+    <p>Hãy hoàn thành nhiều bài thi hơn để nhận phân tích chi tiết về điểm yếu của bạn.</p>
   </div>
 </div> 

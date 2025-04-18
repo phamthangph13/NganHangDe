@@ -724,50 +724,53 @@ namespace BackEnd.Controllers
                 Answers = new List<StudentAnswerDTO>()
             };
             
-            // Add answer details
-            foreach (var answer in attempt.Answers)
+            // Only add answer details if the exam is closed or the user is a teacher
+            if (exam.Status == "closed" || userRole == "Teacher")
             {
-                var question = questionSet.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
-                if (question == null)
-                    continue;
+                foreach (var answer in attempt.Answers)
+                {
+                    var question = questionSet.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+                    if (question == null)
+                        continue;
+                        
+                    // Get correct option ID based on the first correct answer (for single choice)
+                    string correctOptionId = "0";
+                    if (question.CorrectAnswers.Count > 0)
+                    {
+                        int correctOptionIndex = question.CorrectAnswers[0];
+                        if (correctOptionIndex >= 0 && correctOptionIndex < question.Options.Count)
+                        {
+                            correctOptionId = question.Options[correctOptionIndex].Id.ToString();
+                        }
+                    }
                     
-                // Get correct option ID based on the first correct answer (for single choice)
-                string correctOptionId = "0";
-                if (question.CorrectAnswers.Count > 0)
-                {
-                    int correctOptionIndex = question.CorrectAnswers[0];
-                    if (correctOptionIndex >= 0 && correctOptionIndex < question.Options.Count)
+                    // Get selected option ID for this question
+                    string selectedOptionId = null;
+                    if (answer.SelectedOptions != null && answer.SelectedOptions.Count > 0)
                     {
-                        correctOptionId = question.Options[correctOptionIndex].Id.ToString();
+                        int selectedOptionIndex = answer.SelectedOptions[0];
+                        if (selectedOptionIndex >= 0 && selectedOptionIndex < question.Options.Count)
+                        {
+                            selectedOptionId = question.Options[selectedOptionIndex].Id.ToString();
+                        }
                     }
-                }
-                
-                // Get selected option ID for this question
-                string selectedOptionId = null;
-                if (answer.SelectedOptions != null && answer.SelectedOptions.Count > 0)
-                {
-                    int selectedOptionIndex = answer.SelectedOptions[0];
-                    if (selectedOptionIndex >= 0 && selectedOptionIndex < question.Options.Count)
+                    
+                    var answerDto = new StudentAnswerDTO
                     {
-                        selectedOptionId = question.Options[selectedOptionIndex].Id.ToString();
-                    }
+                        QuestionId = answer.QuestionId,
+                        QuestionText = question.Content,
+                        CorrectOptionId = correctOptionId,
+                        SelectedOptionId = selectedOptionId,
+                        IsCorrect = answer.IsCorrect.HasValue && answer.IsCorrect.Value,
+                        Options = question.Options.Select(o => new ExamOptionDTO
+                        {
+                            Id = o.Id.ToString(),
+                            Text = o.Content
+                        }).ToList()
+                    };
+                    
+                    resultDetails.Answers.Add(answerDto);
                 }
-                
-                var answerDto = new StudentAnswerDTO
-                {
-                    QuestionId = answer.QuestionId,
-                    QuestionText = question.Content,
-                    CorrectOptionId = correctOptionId,
-                    SelectedOptionId = selectedOptionId,
-                    IsCorrect = answer.IsCorrect.HasValue && answer.IsCorrect.Value,
-                    Options = question.Options.Select(o => new ExamOptionDTO
-                    {
-                        Id = o.Id.ToString(),
-                        Text = o.Content
-                    }).ToList()
-                };
-                
-                resultDetails.Answers.Add(answerDto);
             }
             
             return Ok(resultDetails);

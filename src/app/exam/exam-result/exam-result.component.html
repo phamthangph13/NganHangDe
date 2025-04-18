@@ -67,5 +67,61 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <!-- Answers Section - Only displayed when answers array exists -->
+    <div class="answers-section" *ngIf="result.answers && result.answers.length > 0">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Chi tiết câu trả lời</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="answer-item" *ngFor="let answer of result.answers; let i = index">
+            <div class="question-header" [ngClass]="{'correct': answer.isCorrect, 'incorrect': !answer.isCorrect}">
+              <span class="question-number">Câu {{ i + 1 }}</span>
+              <span class="question-status">
+                <mat-icon>{{ answer.isCorrect ? 'check_circle' : 'cancel' }}</mat-icon>
+                {{ answer.isCorrect ? 'Đúng' : 'Sai' }}
+              </span>
+            </div>
+            
+            <div class="question-text">{{ answer.questionText }}</div>
+            
+            <div class="options-list">
+              <div 
+                class="option-item" 
+                *ngFor="let option of answer.options"
+                [ngClass]="{
+                  'correct-option': option.id === answer.correctOptionId,
+                  'incorrect-option': option.id === answer.selectedOptionId && option.id !== answer.correctOptionId,
+                  'selected-option': option.id === answer.selectedOptionId
+                }"
+              >
+                <div class="option-marker">
+                  <mat-icon *ngIf="option.id === answer.correctOptionId">check_circle</mat-icon>
+                  <mat-icon *ngIf="option.id === answer.selectedOptionId && option.id !== answer.correctOptionId">cancel</mat-icon>
+                </div>
+                <div class="option-text">{{ option.text }}</div>
+              </div>
+            </div>
+            
+            <mat-divider *ngIf="i < result.answers.length - 1"></mat-divider>
+          </div>
+          
+          <div class="no-answers-message" *ngIf="result.answers.length === 0">
+            <mat-icon>info</mat-icon>
+            <p>Chi tiết câu trả lời sẽ hiển thị khi đề thi kết thúc.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <div class="no-answers-message" *ngIf="!result.answers || result.answers.length === 0">
+      <mat-card>
+        <mat-card-content>
+          <mat-icon>info</mat-icon>
+          <p>Chi tiết câu trả lời sẽ hiển thị khi đề thi kết thúc.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

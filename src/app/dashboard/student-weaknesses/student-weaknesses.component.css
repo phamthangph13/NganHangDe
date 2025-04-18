@@ -1,20 +1,24 @@
 .weaknesses-container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .page-header {
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .page-header h1 {
-  font-size: 24px;
-  margin-bottom: 8px;
+  font-size: 28px;
   color: #333;
+  margin-bottom: 8px;
 }
 
 .page-header p {
-  color: #666;
   font-size: 16px;
+  color: #666;
+  margin: 0;
 }
 
 .loading-container {
@@ -22,145 +26,336 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 50px 0;
+  padding: 60px 0;
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  border-left-color: #0066cc;
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.loading-container p {
+  margin-top: 20px;
+  color: #666;
 }
 
 .error-container {
   text-align: center;
-  padding: 30px;
-  background-color: #ffecec;
-  border-radius: 8px;
-  margin: 20px 0;
+  padding: 40px 0;
 }
 
 .error-message {
   color: #d32f2f;
-  margin-bottom: 15px;
-}
-
-.retry-btn {
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.retry-btn:hover {
-  background-color: #0055aa;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  border: 1px dashed #ccc;
-  border-radius: 8px;
-}
-
-.exam-card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  overflow: hidden;
-}
-
-.exam-header {
-  padding: 20px;
-  border-bottom: 1px solid #eee;
-}
-
-.exam-header h2 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.exam-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  color: #666;
-  font-size: 14px;
-}
-
-.weakness-analysis {
-  padding: 20px;
-}
-
-.weakness-analysis h3 {
   font-size: 16px;
-  margin-top: 0;
+}
+
+.analysis-container {
+  margin: 0 auto;
+}
+
+.overall-analysis {
+  margin-bottom: 30px;
+}
+
+.analysis-text {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 20px 0;
+  white-space: pre-line;
+}
+
+.top-weaknesses {
+  margin: 20px 0;
+}
+
+.top-weaknesses h3 {
   margin-bottom: 15px;
   color: #333;
+  font-size: 18px;
 }
 
-.weakness-categories {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 15px;
+.weakness-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.category {
+.weakness-item {
   background-color: #f9f9f9;
   padding: 15px;
-  border-radius: 6px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.category h4 {
-  margin-top: 0;
+.weakness-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  font-size: 15px;
+}
+
+.weakness-name {
+  font-weight: bold;
   color: #333;
+}
+
+.weakness-percent {
+  color: #666;
 }
 
 .progress-bar {
   height: 8px;
   background-color: #e0e0e0;
   border-radius: 4px;
+  margin-bottom: 10px;
   overflow: hidden;
-  margin-bottom: 8px;
 }
 
 .progress {
   height: 100%;
   background-color: #4caf50;
+  border-radius: 4px;
 }
 
-.percent {
-  margin: 5px 0;
-  font-weight: 500;
+.weakness-description {
   font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
 }
 
-.recommendations {
-  font-size: 13px;
-  color: #666;
-  margin: 10px 0 0;
+.weakness-recommendations {
+  font-size: 14px;
+  color: #333;
 }
 
-.no-weaknesses {
-  color: #666;
-  text-align: center;
+.improvement-suggestions {
+  margin: 20px 0;
   padding: 15px;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+}
+
+.improvement-suggestions h3 {
+  color: #2e7d32;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.improvement-suggestions p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.exams-analysis {
+  margin-top: 40px;
+}
+
+.exams-analysis h2 {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.exam-details {
+  margin-top: 15px;
+}
+
+.exam-summary {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.exam-score-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.score-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.score-label {
+  font-size: 12px;
+}
+
+.exam-stats {
+  flex-grow: 1;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: #666;
+}
+
+.stat-value {
+  font-weight: 500;
+}
+
+.exam-weakness-categories,
+.wrong-answers,
+.essay-answers {
+  margin-top: 25px;
+}
+
+.exam-weakness-categories h3,
+.wrong-answers h3,
+.essay-answers h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-item {
   background-color: #f5f5f5;
+  padding: 12px;
   border-radius: 6px;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.category-name {
+  font-weight: bold;
+}
+
+.category-percent {
+  color: #666;
+}
+
+.category-description,
+.category-recommendations {
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.answer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.answer-item {
+  margin-bottom: 5px;
+}
+
+.question-text {
+  font-size: 16px;
+  margin-bottom: 15px;
+  white-space: pre-line;
+}
+
+.answer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answer-detail {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.answer-detail.correct {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.answer-detail.incorrect {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  font-weight: 500;
+}
+
+.essay-content {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.essay-text {
+  white-space: pre-line;
+  margin: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #757575;
+}
+
+.empty-icon {
+  font-size: 60px;
+  height: 60px;
+  width: 60px;
+  margin-bottom: 20px;
+  color: #9e9e9e;
+}
+
+.empty-state h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #616161;
+}
+
+.empty-state p {
+  font-size: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .exam-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .exam-score-circle {
+    margin-bottom: 15px;
+  }
+  
+  .stat-item {
+    flex-direction: column;
+  }
+  
+  .weakness-header,
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .weakness-percent,
+  .category-percent {
+    margin-top: 5px;
+  }
 } 

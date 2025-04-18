@@ -204,6 +204,236 @@ Only return the JSON array, no other text.";
                 }
             };
         }
+
+        public async Task<string> AnalyzeStudentWeaknessesAsync(List<WrongAnswerDTO> wrongAnswers, List<EssayAnswerDTO> essayAnswers)
+        {
+            try
+            {
+                if ((wrongAnswers == null || wrongAnswers.Count == 0) && (essayAnswers == null || essayAnswers.Count == 0))
+                {
+                    return "Not enough data to analyze weaknesses. Complete more exams to receive personalized analysis.";
+                }
+
+                // Create a structured prompt for Gemini
+                var structuredPrompt = CreateWeaknessAnalysisPrompt(wrongAnswers, essayAnswers);
+                
+                // Prepare the request content
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new[]
+                            {
+                                new { text = structuredPrompt }
+                            }
+                        }
+                    },
+                    generationConfig = new
+                    {
+                        temperature = 0.2,
+                        maxOutputTokens = 2048
+                    }
+                };
+
+                // Set up the API URL
+                string apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{_settings.ModelName}:generateContent?key={_settings.ApiKey}";
+                
+                // Send request to Gemini API
+                var response = await _httpClient.PostAsJsonAsync(apiUrl, requestBody);
+                
+                // Ensure the request was successful
+                response.EnsureSuccessStatusCode();
+                
+                // Parse the response
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var geminiResponse = JsonSerializer.Deserialize<GeminiResponse>(responseContent, _jsonOptions);
+                
+                // Extract the text content from the response
+                var analysisText = geminiResponse?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
+                
+                if (string.IsNullOrEmpty(analysisText))
+                {
+                    return "Unable to generate weakness analysis. Please try again later.";
+                }
+                
+                return analysisText;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error analyzing student weaknesses with Gemini: {ex.Message}");
+                return "An error occurred while analyzing your performance. Please try again later.";
+            }
+        }
+
+        private string CreateWeaknessAnalysisPrompt(List<WrongAnswerDTO> wrongAnswers, List<EssayAnswerDTO> essayAnswers)
+        {
+            var prompt = new StringBuilder();
+            
+            prompt.AppendLine("As an educational AI tutor, analyze the following student's exam performance:");
+            prompt.AppendLine("\nWrong Answers:");
+            
+            if (wrongAnswers != null && wrongAnswers.Count > 0)
+            {
+                foreach (var answer in wrongAnswers)
+                {
+                    prompt.AppendLine($"Question: {answer.QuestionText}");
+                    prompt.AppendLine($"Correct Answer: {answer.CorrectAnswerText}");
+                    prompt.AppendLine($"Student's Answer: {answer.StudentAnswerText}");
+                    prompt.AppendLine();
+                }
+            }
+            else
+            {
+                prompt.AppendLine("No wrong answers recorded.");
+            }
+            
+            prompt.AppendLine("\nEssay Answers:");
+            
+            if (essayAnswers != null && essayAnswers.Count > 0)
+            {
+                foreach (var essay in essayAnswers)
+                {
+                    prompt.AppendLine($"Question: {essay.QuestionText}");
+                    prompt.AppendLine($"Student's Answer: {essay.StudentAnswer}");
+                    prompt.AppendLine();
+                }
+            }
+            else
+            {
+                prompt.AppendLine("No essay answers recorded.");
+            }
+            
+            prompt.AppendLine("\nPlease provide:");
+            prompt.AppendLine("1. Analysis of the student's weaknesses based on their wrong answers and essay responses");
+            prompt.AppendLine("2. Identification of knowledge gaps or misunderstandings");
+            prompt.AppendLine("3. Specific suggestions for improvement in each identified weak area");
+            prompt.AppendLine("4. Recommended study resources or learning strategies");
+            prompt.AppendLine("\nKeep your response focused, specific, and actionable. Provide detailed recommendations that will help the student improve.");
+            
+            return prompt.ToString();
+        }
+
+        public async Task<List<WeaknessCategoryDTO>> AnalyzeWeaknessCategoriesAsync(List<WrongAnswerDTO> wrongAnswers)
+        {
+            try
+            {
+                if (wrongAnswers == null || wrongAnswers.Count == 0)
+                {
+                    return new List<WeaknessCategoryDTO>();
+                }
+
+                // Create a structured prompt for Gemini
+                var structuredPrompt = CreateWeaknessCategoriesPrompt(wrongAnswers);
+                
+                // Prepare the request content
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new[]
+                            {
+                                new { text = structuredPrompt }
+                            }
+                        }
+                    },
+                    generationConfig = new
+                    {
+                        temperature = 0.2,
+                        maxOutputTokens = 2048
+                    }
+                };
+
+                // Set up the API URL
+                string apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{_settings.ModelName}:generateContent?key={_settings.ApiKey}";
+                
+                // Send request to Gemini API
+                var response = await _httpClient.PostAsJsonAsync(apiUrl, requestBody);
+                
+                // Ensure the request was successful
+                response.EnsureSuccessStatusCode();
+                
+                // Parse the response
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var geminiResponse = JsonSerializer.Deserialize<GeminiResponse>(responseContent, _jsonOptions);
+                
+                // Extract the text content from the response
+                var categoriesText = geminiResponse?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
+                
+                if (string.IsNullOrEmpty(categoriesText))
+                {
+                    return new List<WeaknessCategoryDTO>();
+                }
+                
+                // Try to parse the JSON response
+                try
+                {
+                    if (categoriesText.Contains("[") && categoriesText.Contains("]"))
+                    {
+                        var startIdx = categoriesText.IndexOf("[");
+                        var endIdx = categoriesText.LastIndexOf("]") + 1;
+                        var jsonPart = categoriesText.Substring(startIdx, endIdx - startIdx);
+                        
+                        var categories = JsonSerializer.Deserialize<List<WeaknessCategoryDTO>>(jsonPart, _jsonOptions);
+                        return categories ?? new List<WeaknessCategoryDTO>();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error parsing weakness categories: {ex.Message}");
+                }
+                
+                // Fallback: Create a basic category
+                return new List<WeaknessCategoryDTO>
+                {
+                    new WeaknessCategoryDTO
+                    {
+                        Name = "General Knowledge Gaps",
+                        PercentCorrect = 0,
+                        Description = "Various knowledge gaps detected in your answers.",
+                        Recommendations = "Review the material and focus on understanding core concepts."
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error analyzing weakness categories with Gemini: {ex.Message}");
+                return new List<WeaknessCategoryDTO>();
+            }
+        }
+
+        private string CreateWeaknessCategoriesPrompt(List<WrongAnswerDTO> wrongAnswers)
+        {
+            var prompt = new StringBuilder();
+            
+            prompt.AppendLine("As an educational AI tutor, analyze the following student's wrong answers and identify specific weakness categories:");
+            
+            foreach (var answer in wrongAnswers)
+            {
+                prompt.AppendLine($"Question: {answer.QuestionText}");
+                prompt.AppendLine($"Correct Answer: {answer.CorrectAnswerText}");
+                prompt.AppendLine($"Student's Answer: {answer.StudentAnswerText}");
+                prompt.AppendLine();
+            }
+            
+            prompt.AppendLine("Based on these wrong answers, identify 3-5 specific categories of weaknesses.");
+            prompt.AppendLine("Return your analysis as a JSON array with the following format:");
+            prompt.AppendLine(@"[
+  {
+    ""name"": ""Category Name"",
+    ""percentCorrect"": 25,
+    ""description"": ""Brief description of the weakness"",
+    ""recommendations"": ""Specific recommendations for improvement""
+  }
+]");
+            
+            prompt.AppendLine("Only return the JSON array, no other text. Ensure the percentCorrect is an integer between 0 and 100.");
+            
+            return prompt.ToString();
+        }
     }
 
     // Helper classes for parsing the Gemini API response

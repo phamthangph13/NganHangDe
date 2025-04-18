@@ -153,6 +153,132 @@
   margin-top: 30px;
 }
 
+/* Answers Section Styles */
+.answers-section {
+  margin-top: 2rem;
+}
+
+.answer-item {
+  padding: 1rem 0;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.question-header.correct {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.question-header.incorrect {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.question-number {
+  font-weight: bold;
+}
+
+.question-status {
+  display: flex;
+  align-items: center;
+}
+
+.question-status mat-icon {
+  margin-right: 4px;
+}
+
+.correct .question-status {
+  color: #4CAF50;
+}
+
+.incorrect .question-status {
+  color: #F44336;
+}
+
+.question-text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  white-space: pre-line;
+}
+
+.options-list {
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.option-item {
+  display: flex;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.option-marker {
+  margin-right: 0.5rem;
+  width: 24px;
+}
+
+.option-text {
+  flex: 1;
+}
+
+.correct-option {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+}
+
+.incorrect-option {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid #F44336;
+}
+
+.selected-option {
+  font-weight: bold;
+}
+
+.correct-option .option-marker {
+  color: #4CAF50;
+}
+
+.incorrect-option .option-marker {
+  color: #F44336;
+}
+
+.no-answers-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: #757575;
+}
+
+.no-answers-message mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .question-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .question-status {
+    margin-top: 0.5rem;
+  }
+}
+
 @media (max-width: 600px) {
   .score-section {
     flex-direction: column;
