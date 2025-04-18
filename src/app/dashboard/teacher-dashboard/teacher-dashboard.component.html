@@ -1,117 +1,97 @@
 <div class="dashboard-greeting">
   <h1>Xin chào, {{ currentUser?.name }}</h1>
-  <p>Chào mừng trở lại với Ngân Hàng Đề Thi</p>
+  <p>Chào mừng đến với Ngân Hàng Đề Thi Trực Tuyến</p>
 </div>
 
-<div class="dashboard-stats">
-  <div class="stat-card">
-    <div class="stat-icon">📚</div>
-    <div class="stat-content">
-      <h3>{{ totalExams }}</h3>
-      <p>Đề thi</p>
-    </div>
+<div class="banner">
+  <div class="banner-content">
+    <h2>Nền tảng quản lý đề thi thông minh dành cho giáo viên</h2>
+    <p>Tiết kiệm thời gian soạn đề, chấm bài và quản lý kết quả học tập</p>
+    <button class="btn btn-primary" (click)="navigateToCreateExam()">Khám phá ngay</button>
   </div>
-  <div class="stat-card">
-    <div class="stat-icon">👨‍🎓</div>
-    <div class="stat-content">
-      <h3>{{ totalStudents }}</h3>
-      <p>Học sinh</p>
-    </div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-icon">🏆</div>
-    <div class="stat-content">
-      <h3>{{ avgScore | number:'1.1-1' }}</h3>
-      <p>Điểm trung bình</p>
-    </div>
+  <div class="banner-image">
+    <img src="assets/images/teacher-dashboard.png" alt="Dashboard preview" onerror="this.src='https://via.placeholder.com/400x300?text=Ngân+Hàng+Đề+Thi'">
   </div>
 </div>
 
-<div class="dashboard-sections">
-  <div class="dashboard-section">
-    <div class="section-header">
-      <h2>Đề thi gần đây</h2>
-      <a class="view-all">Xem tất cả</a>
-    </div>
-    <div class="exam-list" *ngIf="recentExams.length > 0; else noExams">
-      <div class="exam-card" *ngFor="let exam of recentExams">
-        <div class="exam-status" [ngClass]="exam.status">
-          <span *ngIf="exam.status === 'published'">Đã xuất bản</span>
-          <span *ngIf="exam.status === 'draft'">Bản nháp</span>
-          <span *ngIf="exam.status === 'closed'">Đã kết thúc</span>
-        </div>
-        <div class="exam-header">
-          <h3>{{ exam.title }}</h3>
-          <span class="exam-subject">{{ exam.subject }}</span>
-        </div>
-        <div class="exam-details">
-          <div class="exam-detail">
-            <span class="detail-label">Số câu hỏi:</span>
-            <span class="detail-value">{{ exam.questions }}</span>
-          </div>
-          <div class="exam-detail">
-            <span class="detail-label">Thời gian:</span>
-            <span class="detail-value">{{ exam.duration }} phút</span>
-          </div>
-          <div class="exam-detail">
-            <span class="detail-label">Ngày xuất bản:</span>
-            <span class="detail-value">{{ exam.publishDate | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="exam-detail" *ngIf="exam.attempts !== undefined">
-            <span class="detail-label">Lượt làm bài:</span>
-            <span class="detail-value">{{ exam.attempts }}</span>
-          </div>
-          <div class="exam-detail" *ngIf="exam.avgScore !== undefined">
-            <span class="detail-label">Điểm trung bình:</span>
-            <span class="detail-value">{{ exam.avgScore }}</span>
-          </div>
-        </div>
-        <div class="exam-actions">
-          <button class="btn btn-primary" *ngIf="exam.status === 'draft'">Chỉnh sửa</button>
-          <button class="btn btn-primary" *ngIf="exam.status === 'published'">Xem kết quả</button>
-          <button class="btn btn-secondary" *ngIf="exam.status === 'closed'">Xem chi tiết</button>
-        </div>
-      </div>
-    </div>
-    <ng-template #noExams>
-      <div class="empty-state">
-        <div class="empty-icon">📝</div>
-        <p>Chưa có đề thi nào</p>
-      </div>
-    </ng-template>
-  </div>
+<div class="features-section">
+  <h2 class="section-title">Tính năng nổi bật</h2>
   
-  <div class="dashboard-section">
-    <div class="section-header">
-      <h2>Học sinh xuất sắc</h2>
-      <a class="view-all">Xem tất cả</a>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>Tạo đề thi dễ dàng</h3>
+      <p>Tạo đề thi trắc nghiệm, tự luận hoặc kết hợp chỉ trong vài phút với kho câu hỏi phong phú.</p>
     </div>
-    <div class="student-list" *ngIf="topStudents.length > 0; else noStudents">
-      <div class="student-card" *ngFor="let student of topStudents">
-        <div class="student-info">
-          <div class="student-avatar">{{ student.name.charAt(0) }}</div>
-          <div class="student-details">
-            <h3>{{ student.name }}</h3>
-            <p class="student-grade">Lớp {{ student.grade }}</p>
-          </div>
-        </div>
-        <div class="student-stats">
-          <div class="student-stat">
-            <span class="stat-label">Đề đã làm</span>
-            <span class="stat-value">{{ student.examsCompleted }}</span>
-          </div>
-          <div class="student-stat">
-            <span class="stat-label">Điểm TB</span>
-            <span class="stat-value">{{ student.avgScore }}</span>
-          </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>Tự động sinh đề</h3>
+      <p>Tự động tạo nhiều mã đề khác nhau từ một bộ câu hỏi, đảm bảo công bằng và chống gian lận.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Phân tích kết quả</h3>
+      <p>Xem thống kê chi tiết về kết quả làm bài của học sinh, phát hiện điểm mạnh và điểm yếu.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">👨‍👩‍👧‍👦</div>
+      <h3>Quản lý lớp học</h3>
+      <p>Tạo và quản lý nhiều lớp học, theo dõi tiến độ và kết quả học tập của từng học sinh.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Bảo mật tuyệt đối</h3>
+      <p>Đề thi và dữ liệu được bảo mật, chỉ người có quyền mới có thể truy cập và chỉnh sửa.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Truy cập mọi nơi</h3>
+      <p>Sử dụng trên mọi thiết bị có kết nối internet, từ máy tính đến điện thoại thông minh.</p>
+    </div>
+  </div>
+</div>
+
+<div class="testimonials-section">
+  <h2 class="section-title">Giáo viên nói gì về chúng tôi</h2>
+  
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p>"Ngân hàng đề thi giúp tôi tiết kiệm rất nhiều thời gian trong việc soạn đề và chấm bài. Học sinh của tôi cũng thích thú hơn khi làm bài trực tuyến."</p>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-avatar">C</div>
+        <div class="author-info">
+          <h4>Cô Nguyễn Thị Hương</h4>
+          <p>Giáo viên Toán, THPT Chu Văn An</p>
         </div>
       </div>
     </div>
-    <ng-template #noStudents>
-      <div class="empty-state">
-        <div class="empty-icon">👨‍🎓</div>
-        <p>Chưa có dữ liệu học sinh</p>
+    
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p>"Hệ thống phân tích kết quả giúp tôi dễ dàng nắm bắt được điểm yếu của học sinh và điều chỉnh phương pháp giảng dạy phù hợp."</p>
       </div>
-    </ng-template>
+      <div class="testimonial-author">
+        <div class="author-avatar">T</div>
+        <div class="author-info">
+          <h4>Thầy Trần Văn Minh</h4>
+          <p>Giáo viên Vật lý, THPT Nguyễn Huệ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-content">
+    <h2>Bắt đầu sử dụng ngay hôm nay</h2>
+    <p>Khám phá sức mạnh của nền tảng Ngân Hàng Đề Thi Trực Tuyến và nâng cao hiệu quả giảng dạy</p>
+    <button class="btn btn-primary btn-large" (click)="navigateToCreateExam()">Tạo đề thi đầu tiên</button>
   </div>
 </div>
