@@ -50,6 +50,15 @@ export class ExamResultsComponent implements OnInit {
     }
     
     this.loadExam(examId);
+    
+    // Kiểm tra token xác thực
+    const token = this.authService.getToken();
+    if (!token) {
+      this.error = 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+      return;
+    }
+    
+    // Gọi API để lấy kết quả đề thi
     this.loadExamResults(examId);
   }
   
@@ -73,90 +82,24 @@ export class ExamResultsComponent implements OnInit {
     this.examService.getExamResults(examId).subscribe({
       next: (data: ExamResult[]) => {
         this.examResults = data;
-        this.calculateStatistics();
+        if (this.examResults && this.examResults.length > 0) {
+          this.calculateStatistics();
+        }
         this.loading = false;
       },
       error: (error: any) => {
         console.error('Error loading exam results:', error);
-        this.error = 'Không thể tải kết quả của đề thi';
+        if (error.status === 401) {
+          this.error = 'Bạn không có quyền xem kết quả đề thi này. Vui lòng đăng nhập lại.';
+        } else if (error.status === 404) {
+          this.error = 'Không tìm thấy kết quả cho đề thi này.';
+        } else {
+          this.error = 'Không thể tải kết quả của đề thi. Vui lòng thử lại sau.';
+        }
         this.loading = false;
-        // Load mock data for development
-        this.loadMockResults(examId);
+        this.examResults = [];
       }
     });
-  }
-  
-  private loadMockResults(examId: string): void {
-    // Mock data for development
-    this.examResults = [
-      {
-        id: '1',
-        studentId: '1',
-        studentName: 'Nguyễn Văn A',
-        examId: examId,
-        score: 8.5,
-        totalQuestions: 10,
-        correctAnswers: 8,
-        startTime: new Date('2025-04-01T09:00:00'),
-        endTime: new Date('2025-04-01T09:45:00'),
-        duration: 45,
-        completed: true
-      },
-      {
-        id: '2',
-        studentId: '2',
-        studentName: 'Trần Thị B',
-        examId: examId,
-        score: 7.0,
-        totalQuestions: 10,
-        correctAnswers: 7,
-        startTime: new Date('2025-04-01T09:00:00'),
-        endTime: new Date('2025-04-01T09:40:00'),
-        duration: 40,
-        completed: true
-      },
-      {
-        id: '3',
-        studentId: '3',
-        studentName: 'Lê Văn C',
-        examId: examId,
-        score: 9.0,
-        totalQuestions: 10,
-        correctAnswers: 9,
-        startTime: new Date('2025-04-01T09:00:00'),
-        endTime: new Date('2025-04-01T09:35:00'),
-        duration: 35,
-        completed: true
-      },
-      {
-        id: '4',
-        studentId: '4',
-        studentName: 'Phạm Thị D',
-        examId: examId,
-        score: 5.0,
-        totalQuestions: 10,
-        correctAnswers: 5,
-        startTime: new Date('2025-04-01T09:00:00'),
-        endTime: new Date('2025-04-01T09:44:00'),
-        duration: 44,
-        completed: true
-      },
-      {
-        id: '5',
-        studentId: '5',
-        studentName: 'Hoàng Văn E',
-        examId: examId,
-        score: 4.0,
-        totalQuestions: 10,
-        correctAnswers: 4,
-        startTime: new Date('2025-04-01T09:00:00'),
-        endTime: null,
-        duration: 0,
-        completed: false
-      }
-    ];
-    
-    this.calculateStatistics();
   }
   
   private calculateStatistics(): void {

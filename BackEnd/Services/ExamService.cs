@@ -221,8 +221,22 @@ namespace BackEnd.Services
         public async Task<User> GetStudentByIdAsync(string studentId)
         {
             return await _users
-                .Find(u => u.Id == studentId && u.Role == "student")
+                .Find(u => u.Id == studentId)
                 .FirstOrDefaultAsync();
+        }
+        
+        public async Task<ExamAttempt> CreateExamAttemptAsync(ExamAttempt attempt)
+        {
+            await _examAttempts.InsertOneAsync(attempt);
+            return attempt;
+        }
+        
+        public async Task<bool> UpdateExamAttemptAsync(ExamAttempt attempt)
+        {
+            var updateResult = await _examAttempts
+                .ReplaceOneAsync(a => a.Id == attempt.Id, attempt);
+                
+            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
     }
 } 

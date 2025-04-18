@@ -53,6 +53,17 @@
   font-size: 20px !important;
 }
 
+.timer.timer-warning {
+  background-color: rgba(255, 0, 0, 0.2);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
 .exam-session-card {
   width: 100%;
   max-width: 900px;
@@ -234,4 +245,79 @@ button.active {
   color: #333;
   text-align: left;
   margin-bottom: 8px;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.error-container .error-icon {
+  font-size: 48px !important;
+  color: #f44336;
+  margin-bottom: 16px;
+}
+
+.error-container p {
+  color: #666;
+  margin-bottom: 20px;
+  max-width: 500px;
+}
+
+.exam-description {
+  margin-top: 16px;
+  color: #666;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.question-status {
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 14px;
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.checkbox-option label {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.essay-container {
+  margin-top: 16px;
+}
+
+.essay-container textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.essay-container textarea:focus {
+  outline: none;
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
 } 

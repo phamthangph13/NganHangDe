@@ -5,9 +5,9 @@
       <h1>Bài kiểm tra</h1>
     </div>
     <div class="header-right">
-      <div class="timer">
+      <div class="timer" [ngClass]="{'timer-warning': remainingTimeInSeconds < 300}">
         <span class="material-icons-outlined">timer</span>
-        <span>60:00</span>
+        <span>{{ formattedTime }}</span>
       </div>
     </div>
   </header>
@@ -18,9 +18,15 @@
       <p>Đang tải bài kiểm tra...</p>
     </div>
 
-    <div *ngIf="!isLoading" class="exam-content">
+    <div *ngIf="error" class="error-container">
+      <span class="material-icons-outlined error-icon">error_outline</span>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" routerLink="/dashboard">Quay lại trang chủ</button>
+    </div>
+
+    <div *ngIf="!isLoading && !error && examSession" class="exam-content">
       <div class="exam-info">
-        <h2>Bài kiểm tra trực tuyến</h2>
+        <h2>{{ examSession.title }}</h2>
         <div class="exam-details">
           <div class="detail-item">
             <span class="material-icons-outlined">info_outline</span>
@@ -28,41 +34,65 @@
           </div>
           <div class="detail-item">
             <span class="material-icons-outlined">help_outline</span>
-            <span>Tổng số câu hỏi: 20</span>
+            <span>Tổng số câu hỏi: {{ examSession.questions.length }}</span>
           </div>
           <div class="detail-item">
             <span class="material-icons-outlined">schedule</span>
-            <span>Thời gian: 60 phút</span>
+            <span>Thời gian: {{ examSession.duration }} phút</span>
           </div>
         </div>
+        <p *ngIf="examSession.description" class="exam-description">{{ examSession.description }}</p>
       </div>
 
       <mat-divider></mat-divider>
 
-      <div class="question-container">
+      <div *ngIf="currentQuestion" class="question-container">
         <div class="question-header">
-          <h3>Câu hỏi 1</h3>
-          <span class="question-type">Câu hỏi trắc nghiệm</span>
+          <h3>Câu hỏi {{ currentQuestionIndex + 1 }}</h3>
+          <span class="question-type">
+            {{ currentQuestion.type === 'single' ? 'Trắc nghiệm đơn' : 
+               currentQuestion.type === 'multiple' ? 'Trắc nghiệm đa lựa chọn' : 'Tự luận' }}
+          </span>
         </div>
         
-        <p class="question-content">Thủ đô của Việt Nam là gì?</p>
+        <p class="question-content">{{ currentQuestion.content }}</p>
         
-        <div class="options-container">
-          <mat-radio-group class="options-list">
-            <mat-radio-button value="a">Hà Nội</mat-radio-button>
-            <mat-radio-button value="b">Hồ Chí Minh</mat-radio-button>
-            <mat-radio-button value="c">Đà Nẵng</mat-radio-button>
-            <mat-radio-button value="d">Hải Phòng</mat-radio-button>
+        <div *ngIf="currentQuestion.type === 'single'" class="options-container">
+          <mat-radio-group class="options-list" [(ngModel)]="studentAnswers[currentQuestion.id].selectedOptions[0]">
+            <mat-radio-button *ngFor="let option of currentQuestion.options" [value]="option.id">
+              {{ option.text }}
+            </mat-radio-button>
           </mat-radio-group>
+        </div>
+
+        <div *ngIf="currentQuestion.type === 'multiple'" class="options-container checkbox-list">
+          <div *ngFor="let option of currentQuestion.options" class="checkbox-option">
+            <input 
+              type="checkbox" 
+              [id]="'option-' + option.id" 
+              [checked]="isOptionSelected(currentQuestion.id, +option.id)"
+              (change)="onSelectOption(currentQuestion.id, +option.id)"
+            >
+            <label [for]="'option-' + option.id">{{ option.text }}</label>
+          </div>
+        </div>
+
+        <div *ngIf="currentQuestion.type === 'essay'" class="essay-container">
+          <textarea 
+            rows="8" 
+            placeholder="Nhập câu trả lời của bạn..."
+            [(ngModel)]="studentAnswers[currentQuestion.id].essayAnswer"
+            (ngModelChange)="onEssayAnswerChange(currentQuestion.id, $event)"
+          ></textarea>
         </div>
       </div>
 
       <div class="navigation-buttons">
-        <button mat-raised-button disabled>
+        <button mat-raised-button [disabled]="currentQuestionIndex === 0" (click)="prevQuestion()">
           <span class="material-icons-outlined">arrow_back</span>
           Câu trước
         </button>
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" [disabled]="!examSession || currentQuestionIndex >= examSession.questions.length - 1" (click)="nextQuestion()">
           Câu tiếp theo
           <span class="material-icons-outlined">arrow_forward</span>
         </button>
@@ -72,29 +102,40 @@
       
       <div class="question-navigator">
         <h3>Danh sách câu hỏi</h3>
+        <div class="question-status">
+          <span>Đã trả lời: {{ getNumberOfAnsweredQuestions() }}/{{ examSession.questions.length }}</span>
+        </div>
         <div class="question-buttons">
-          <button mat-mini-fab color="primary" class="active">1</button>
-          <button mat-mini-fab>2</button>
-          <button mat-mini-fab>3</button>
-          <button mat-mini-fab>4</button>
-          <button mat-mini-fab>5</button>
-          <button mat-mini-fab>...</button>
-          <button mat-mini-fab>20</button>
+          <button 
+            *ngFor="let question of examSession.questions; let i = index" 
+            mat-mini-fab 
+            [color]="isAnswered(question.id) ? 'accent' : 'basic'"
+            [ngClass]="{'active': currentQuestionIndex === i}"
+            (click)="navigateToQuestion(i)"
+          >
+            {{ i + 1 }}
+          </button>
         </div>
       </div>
 
       <div class="submit-section">
-        <button mat-raised-button color="warn">
+        <button mat-raised-button color="warn" (click)="cancelExam()">
           <span class="material-icons-outlined">cancel_outlined</span>
           Hủy bài làm
         </button>
-        <button mat-raised-button color="accent">
-          <span class="material-icons-outlined">save_outlined</span>
-          Lưu tạm
+        <button mat-raised-button color="accent" [disabled]="saveInProgress" (click)="saveAnswers()">
+          <mat-spinner *ngIf="saveInProgress" diameter="20"></mat-spinner>
+          <ng-container *ngIf="!saveInProgress">
+            <span class="material-icons-outlined">save_outlined</span>
+            Lưu tạm
+          </ng-container>
         </button>
-        <button mat-raised-button color="primary">
-          <span class="material-icons-outlined">check_circle_outline</span>
-          Nộp bài
+        <button mat-raised-button color="primary" [disabled]="submitInProgress" (click)="submitExam()">
+          <mat-spinner *ngIf="submitInProgress" diameter="20"></mat-spinner>
+          <ng-container *ngIf="!submitInProgress">
+            <span class="material-icons-outlined">check_circle_outline</span>
+            Nộp bài
+          </ng-container>
         </button>
       </div>
     </div>

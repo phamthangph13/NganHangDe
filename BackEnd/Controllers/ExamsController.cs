@@ -603,24 +603,40 @@ namespace BackEnd.Controllers
                 return NotFound();
             }
             
-            if (exam.TeacherId != teacherId)
-            {
-                return Forbid();
-            }
+            // Bỏ qua việc kiểm tra teacherId, cho phép tất cả giáo viên xem kết quả
+            // if (exam.TeacherId != teacherId)
+            // {
+            //     return Forbid();
+            // }
             
             // Get all attempts for this exam
             var attempts = await _examService.GetExamResultsAsync(id);
+            Console.WriteLine($"Found {attempts.Count} attempts for exam {id}");
             
             // Create DTOs with student information
             var resultDtos = new List<ExamResultDTO>();
             foreach (var attempt in attempts)
             {
+                Console.WriteLine($"Processing attempt {attempt.Id} for student {attempt.StudentId}");
                 var student = await _examService.GetStudentByIdAsync(attempt.StudentId);
                 if (student == null)
-                    continue;
+                {
+                    Console.WriteLine($"Student {attempt.StudentId} not found, checking for any user");
+                    student = await _examService.GetUserAsync(attempt.StudentId);
+                    if (student == null)
+                    {
+                        Console.WriteLine($"User {attempt.StudentId} not found either, skipping");
+                        continue;
+                    }
+                }
                     
                 var studentName = $"{student.FirstName} {student.LastName}";
+                if (string.IsNullOrEmpty(studentName.Trim()))
+                {
+                    studentName = student.Email ?? "Unknown Student";
+                }
                 
+                Console.WriteLine($"Adding result for student {studentName}");
                 resultDtos.Add(new ExamResultDTO
                 {
                     Id = attempt.Id,
@@ -638,6 +654,7 @@ namespace BackEnd.Controllers
                 });
             }
             
+            Console.WriteLine($"Returning {resultDtos.Count} results");
             return Ok(resultDtos);
         }
 
@@ -870,6 +887,289 @@ namespace BackEnd.Controllers
             // Validate the password
             bool isValid = exam.Password == passwordDto.Password;
             return Ok(isValid);
+        }
+
+        // POST: api/Exams/{id}/start-session
+        [HttpPost("{id}/start-session")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult<ExamSessionDTO>> StartExamSession(string id)
+        {
+            string studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            // Verify exam exists
+            var exam = await _examService.GetByIdAsync(id);
+            if (exam == null)
+            {
+                return NotFound("Bài kiểm tra không tồn tại");
+            }
+            
+            // Check if exam is published
+            if (exam.Status != "published")
+            {
+                return BadRequest("Bài kiểm tra chưa được công bố");
+            }
+            
+            // Check if student can access this exam
+            if (!await _examService.CanStudentAccessExamAsync(id, studentId))
+            {
+                return Forbid();
+            }
+            
+            // Check if student already has an attempt
+            var existingAttempt = await _examService.GetStudentExamAttemptAsync(id, studentId);
+            if (existingAttempt != null)
+            {
+                // If there's an existing attempt, check if it's still in progress
+                if (existingAttempt.Status == "in_progress")
+                {
+                    // Return the existing session
+                    var questionSet = await _examService.GetQuestionSetAsync(exam.QuestionSetId);
+                    
+                    // Remove [CORRECT] tags from option content before sending to frontend
+                    foreach (var question in questionSet.Questions)
+                    {
+                        foreach (var option in question.Options)
+                        {
+                            option.Content = option.Content.Replace("[CORRECT]", "").Trim();
+                        }
+                    }
+                    
+                    return Ok(new ExamSessionDTO
+                    {
+                        AttemptId = existingAttempt.Id,
+                        ExamId = id,
+                        Title = exam.Title,
+                        Description = exam.Description,
+                        Duration = exam.Duration,
+                        StartTime = existingAttempt.StartTime,
+                        EndTime = existingAttempt.EndTime,
+                        RemainingTime = exam.Duration - (int)Math.Ceiling((DateTime.UtcNow - existingAttempt.StartTime).TotalMinutes),
+                        Questions = questionSet.Questions.Select(q => new ExamQuestionDTO
+                        {
+                            Id = q.Id,
+                            Content = q.Content,
+                            Type = q.Type,
+                            Options = q.Options.Select(o => new ExamOptionDTO
+                            {
+                                Id = o.Id.ToString(),
+                                Text = o.Content
+                            }).ToList()
+                        }).ToList(),
+                        StudentAnswers = existingAttempt.Answers.Select(a => new ExamAnswerRequestDTO
+                        {
+                            QuestionId = a.QuestionId,
+                            SelectedOptions = a.SelectedOptions,
+                            EssayAnswer = a.EssayAnswer
+                        }).ToList()
+                    });
+                }
+                else
+                {
+                    return BadRequest("Bạn đã hoàn thành bài kiểm tra này rồi");
+                }
+            }
+            
+            // Create a new attempt
+            var attempt = new ExamAttempt
+            {
+                ExamId = id,
+                StudentId = studentId,
+                StartTime = DateTime.UtcNow,
+                Status = "in_progress"
+            };
+            
+            // Get questions from the question set
+            var questions = await _examService.GetQuestionSetAsync(exam.QuestionSetId);
+            if (questions == null || questions.Questions.Count == 0)
+            {
+                return BadRequest("Bài kiểm tra không có câu hỏi");
+            }
+            
+            // Remove [CORRECT] tags from option content before sending to frontend
+            foreach (var question in questions.Questions)
+            {
+                foreach (var option in question.Options)
+                {
+                    option.Content = option.Content.Replace("[CORRECT]", "").Trim();
+                }
+            }
+            
+            // Add empty answers for each question
+            foreach (var question in questions.Questions)
+            {
+                attempt.Answers.Add(new ExamAnswer
+                {
+                    QuestionId = question.Id,
+                    SelectedOptions = new List<int>(),
+                    EssayAnswer = null,
+                    IsCorrect = null
+                });
+            }
+            
+            // Save the attempt
+            await _examService.CreateExamAttemptAsync(attempt);
+            
+            // Return session info
+            return Ok(new ExamSessionDTO
+            {
+                AttemptId = attempt.Id,
+                ExamId = id,
+                Title = exam.Title,
+                Description = exam.Description,
+                Duration = exam.Duration,
+                StartTime = attempt.StartTime,
+                EndTime = null,
+                RemainingTime = exam.Duration,
+                Questions = questions.Questions.Select(q => new ExamQuestionDTO
+                {
+                    Id = q.Id,
+                    Content = q.Content,
+                    Type = q.Type,
+                    Options = q.Options.Select(o => new ExamOptionDTO
+                    {
+                        Id = o.Id.ToString(),
+                        Text = o.Content
+                    }).ToList()
+                }).ToList(),
+                StudentAnswers = new List<ExamAnswerRequestDTO>()
+            });
+        }
+        
+        // PUT: api/Exams/{id}/save-answers
+        [HttpPut("{id}/save-answers")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult> SaveExamAnswers(string id, ExamAnswersRequestDTO answersDto)
+        {
+            string studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            // Get the attempt
+            var attempt = await _examService.GetExamAttemptByIdAsync(answersDto.AttemptId);
+            if (attempt == null)
+            {
+                return NotFound("Phiên thi không tồn tại");
+            }
+            
+            // Verify the attempt belongs to this exam and student
+            if (attempt.ExamId != id || attempt.StudentId != studentId)
+            {
+                return Forbid();
+            }
+            
+            // Check if the attempt is still in progress
+            if (attempt.Status != "in_progress")
+            {
+                return BadRequest("Bài thi đã kết thúc");
+            }
+            
+            // Update answers
+            foreach (var answer in answersDto.Answers)
+            {
+                var existingAnswer = attempt.Answers.FirstOrDefault(a => a.QuestionId == answer.QuestionId);
+                if (existingAnswer != null)
+                {
+                    existingAnswer.SelectedOptions = answer.SelectedOptions;
+                    existingAnswer.EssayAnswer = answer.EssayAnswer;
+                }
+            }
+            
+            // Save the updated attempt
+            await _examService.UpdateExamAttemptAsync(attempt);
+            
+            return Ok();
+        }
+        
+        // POST: api/Exams/{id}/submit
+        [HttpPost("{id}/submit")]
+        [Authorize(Roles = "Student")]
+        public async Task<ActionResult<ExamResultDTO>> SubmitExam(string id, SubmitExamDTO submitDto)
+        {
+            string studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            // Get the attempt
+            var attempt = await _examService.GetExamAttemptByIdAsync(submitDto.AttemptId);
+            if (attempt == null)
+            {
+                return NotFound("Phiên thi không tồn tại");
+            }
+            
+            // Verify the attempt belongs to this exam and student
+            if (attempt.ExamId != id || attempt.StudentId != studentId)
+            {
+                return Forbid();
+            }
+            
+            // Check if the attempt is still in progress
+            if (attempt.Status != "in_progress")
+            {
+                return BadRequest("Bài thi đã kết thúc");
+            }
+            
+            // Get the question set to check correct answers
+            var exam = await _examService.GetByIdAsync(id);
+            var questionSet = await _examService.GetQuestionSetAsync(exam.QuestionSetId);
+            
+            // Calculate score
+            double totalScore = 0;
+            double questionValue = 10.0 / questionSet.Questions.Count; // Total score is out of 10
+            
+            foreach (var answer in attempt.Answers)
+            {
+                var question = questionSet.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+                if (question == null)
+                    continue;
+                
+                // Only auto-grade multiple choice questions
+                if (question.Type == "single" || question.Type == "multiple")
+                {
+                    // Check if the selected options match the correct answers
+                    bool isCorrect = false;
+                    
+                    if (question.Type == "single" && answer.SelectedOptions.Count == 1)
+                    {
+                        isCorrect = question.CorrectAnswers.Contains(answer.SelectedOptions[0]);
+                    }
+                    else if (question.Type == "multiple")
+                    {
+                        // For multiple choice, all correct options must be selected and no incorrect ones
+                        isCorrect = question.CorrectAnswers.Count == answer.SelectedOptions.Count &&
+                                    question.CorrectAnswers.All(answer.SelectedOptions.Contains);
+                    }
+                    
+                    answer.IsCorrect = isCorrect;
+                    if (isCorrect)
+                    {
+                        totalScore += questionValue;
+                    }
+                }
+                else
+                {
+                    // Essay questions need manual grading
+                    answer.IsCorrect = null;
+                }
+            }
+            
+            // Update the attempt
+            attempt.EndTime = DateTime.UtcNow;
+            attempt.Status = "completed";
+            attempt.Score = Math.Round(totalScore, 2);
+            
+            // Save the completed attempt
+            await _examService.UpdateExamAttemptAsync(attempt);
+            
+            // Return the result
+            return Ok(new ExamResultDTO
+            {
+                Id = attempt.Id,
+                StudentId = studentId,
+                ExamId = id,
+                Score = attempt.Score.Value,
+                TotalQuestions = attempt.Answers.Count,
+                CorrectAnswers = attempt.Answers.Count(a => a.IsCorrect.HasValue && a.IsCorrect.Value),
+                StartTime = attempt.StartTime,
+                EndTime = attempt.EndTime.Value,
+                Duration = (int)Math.Ceiling((attempt.EndTime.Value - attempt.StartTime).TotalMinutes),
+                Completed = true
+            });
         }
     }
 } 

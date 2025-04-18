@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { retry, catchError } from 'rxjs/operators';
 
 export interface Exam {
   id: string;
@@ -99,6 +100,40 @@ export interface ValidationResultDto {
   };
 }
 
+export interface ExamQuestion {
+  id: string;
+  content: string;
+  type: string; // "single", "multiple", "essay"
+  options: {
+    id: string;
+    text: string;
+  }[];
+}
+
+export interface ExamAnswer {
+  questionId: string;
+  selectedOptions: number[];
+  essayAnswer?: string;
+}
+
+export interface ExamSession {
+  attemptId: string;
+  examId: string;
+  title: string;
+  description: string;
+  duration: number;
+  startTime: Date;
+  endTime?: Date;
+  remainingTime: number;
+  questions: ExamQuestion[];
+  studentAnswers: ExamAnswer[];
+}
+
+export interface ExamAnswersRequest {
+  attemptId: string;
+  answers: ExamAnswer[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -157,5 +192,20 @@ export class ExamService {
   
   validateExamPassword(examId: string, password: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.apiUrl}/${examId}/validate-password`, { password });
+  }
+
+  // Start an exam session or resume existing session
+  startExamSession(examId: string): Observable<ExamSession> {
+    return this.http.post<ExamSession>(`${this.apiUrl}/${examId}/start-session`, {});
+  }
+  
+  // Save answers during exam session
+  saveExamAnswers(examId: string, answers: ExamAnswersRequest): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${examId}/save-answers`, answers);
+  }
+  
+  // Submit the exam for grading
+  submitExam(examId: string, attemptId: string): Observable<ExamResult> {
+    return this.http.post<ExamResult>(`${this.apiUrl}/${examId}/submit`, { attemptId });
   }
 } 
