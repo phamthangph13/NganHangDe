@@ -67,12 +67,6 @@
           <span class="text" *ngIf="isSidebarOpen">Quản lý môn học</span>
         </a>
       </li>
-      <li class="nav-item" *ngIf="currentUser?.role === 'teacher'">
-        <a [routerLink]="['/dashboard/teacher/students']" routerLinkActive="active">
-          <span class="icon">👨‍🎓</span>
-          <span class="text" *ngIf="isSidebarOpen">Học sinh</span>
-        </a>
-      </li>
     </ul>
     
     <div class="sidebar-footer">
