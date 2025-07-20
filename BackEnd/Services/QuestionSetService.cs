@@ -143,7 +143,8 @@ namespace BackEnd.Services
                 Id = ObjectId.GenerateNewId().ToString(),
                 Content = questionDto.Content,
                 Type = questionDto.Type,
-                CorrectAnswers = questionDto.CorrectAnswers ?? new List<int>()
+                CorrectAnswers = questionDto.CorrectAnswers ?? new List<int>(),
+                BloomLevel = questionDto.BloomLevel ?? string.Empty
             };
             
             // Convert option DTOs to option models
@@ -260,11 +261,12 @@ namespace BackEnd.Services
                         Id = o.Id,
                         Content = o.Content
                     }).ToList() ?? new List<QuestionOptionDTO>(),
-                    CorrectAnswers = q.CorrectAnswers?.ToList() ?? new List<int>()
+                    CorrectAnswers = q.CorrectAnswers?.ToList() ?? new List<int>(),
+                    BloomLevel = q.BloomLevel ?? string.Empty
                 }).ToList() ?? new List<QuestionDTO>()
             };
 
             return response;
         }
     }
-} 
+}

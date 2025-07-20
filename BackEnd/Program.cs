@@ -81,6 +81,8 @@ builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<SubjectService>();
 builder.Services.AddSingleton<QuestionSetService>();
 builder.Services.AddSingleton<GeminiService>();
+builder.Services.AddSingleton<QuestionValidationService>();
+builder.Services.AddSingleton<DualGeminiQuestionService>();
 builder.Services.AddSingleton<ClassService>();
 builder.Services.AddSingleton<ExamService>();
 

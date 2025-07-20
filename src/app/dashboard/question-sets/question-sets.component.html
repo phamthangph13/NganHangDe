@@ -92,6 +92,130 @@
       </div>
     </div>
   </div>
+
+
+
+
+  <!-- Question Validation Form -->
+  <div class="form-container" *ngIf="showQuestionValidation">
+    <h3>Kiểm tra chất lượng câu hỏi</h3>
+    <p class="text-muted">Sử dụng AI để kiểm tra câu hỏi theo tiêu chuẩn cấp độ và văn bản dư thừa.</p>
+    
+    <form (ngSubmit)="submitQuestionValidation()">
+      <div class="form-group">
+        <label for="validationQuestionContent">Nội dung câu hỏi *</label>
+        <textarea 
+          id="validationQuestionContent" 
+          [(ngModel)]="validationQuestionContent" 
+          name="validationQuestionContent"
+          class="form-control" 
+          rows="4"
+          placeholder="Nhập nội dung câu hỏi cần kiểm tra..."
+          required
+        ></textarea>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="validationQuestionType">Loại câu hỏi</label>
+            <select id="validationQuestionType" [(ngModel)]="validationQuestionType" name="validationQuestionType" 
+                    class="form-control" (change)="onValidationTypeChange()">
+              <option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="validationGradeLevel">Cấp độ lớp</label>
+            <select id="validationGradeLevel" [(ngModel)]="validationGradeLevel" name="validationGradeLevel" class="form-control">
+              <option *ngFor="let grade of gradeLevels" [value]="grade">Lớp {{ grade }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="validationSubject">Môn học</label>
+            <input type="text" id="validationSubject" [(ngModel)]="validationSubject" name="validationSubject" 
+                   class="form-control" placeholder="Ví dụ: Toán học">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Options for validation -->
+      <div *ngIf="validationQuestionType !== 'essay'">
+        <div class="options-header">
+          <h5>Các lựa chọn</h5>
+          <button type="button" class="btn btn-sm btn-outline-primary" (click)="addValidationOption()">
+            <i class="bi bi-plus-circle"></i> Thêm lựa chọn
+          </button>
+        </div>
+        
+        <div class="validation-options">
+          <div class="option-group" *ngFor="let option of validationOptions; let i = index">
+            <div class="option-row">
+              <div class="option-marker">{{ getOptionLabel(i) }}</div>
+              <input type="text" [(ngModel)]="validationOptions[i]" [name]="'validationOption' + i" 
+                     class="form-control" placeholder="Nhập nội dung lựa chọn...">
+              <button type="button" class="btn btn-sm btn-outline-danger" 
+                      *ngIf="validationOptions.length > 2" (click)="removeValidationOption(i)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="toggleQuestionValidation()">Hủy</button>
+        <button type="submit" class="btn btn-warning" [disabled]="!validationQuestionContent.trim() || isValidating">
+          <i class="bi" [ngClass]="isValidating ? 'bi-hourglass' : 'bi-check-circle'"></i>
+          {{ isValidating ? 'Đang kiểm tra...' : 'Kiểm tra câu hỏi' }}
+        </button>
+      </div>
+    </form>
+    
+    <!-- Validation Result -->
+    <div class="validation-result" *ngIf="validationResult">
+      <h4>Kết quả kiểm tra</h4>
+      
+      <div class="result-card">
+        <div class="result-header">
+          <span class="badge" [ngClass]="validationResult.isValid ? 'bg-success' : 'bg-warning'">
+            {{ validationResult.isValid ? 'Câu hỏi đạt chất lượng' : 'Phát hiện vấn đề' }}
+          </span>
+          <span class="badge bg-primary ms-2" *ngIf="validationResult.bloomLevel">
+            Cấp độ: {{ validationResult.bloomLevel }}
+          </span>
+        </div>
+        
+        <!-- Bloom Level Justification -->
+        <div class="bloom-level-detail" *ngIf="validationResult.bloomLevelJustification">
+          <p class="text-muted"><strong>Giải thích cấp độ:</strong> {{ validationResult.bloomLevelJustification }}</p>
+        </div>
+        
+        <div class="validation-issues" *ngIf="!validationResult.isValid && validationResult.issues.length > 0">
+          <h6><i class="bi bi-exclamation-triangle"></i> Các vấn đề được phát hiện:</h6>
+          <div class="issue-item" *ngFor="let issue of validationResult.issues">
+            <span class="issue-type badge" [ngClass]="getValidationSeverityClass(issue.severity)">
+              {{ getValidationTypeLabel(issue.type) }}
+            </span>
+            <span class="issue-description">{{ issue.description }}</span>
+          </div>
+          
+          <div class="mt-3">
+            <p class="text-warning"><i class="bi bi-info-circle"></i> Câu hỏi này cần được chỉnh sửa thủ công trước khi sử dụng.</p>
+          </div>
+        </div>
+        
+        <div *ngIf="validationResult.isValid" class="text-success">
+          <p><i class="bi bi-check-circle"></i> Câu hỏi này đạt chất lượng và có thể sử dụng.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
 </div>
 
 <!-- QUESTION SET DETAIL VIEW -->
@@ -120,14 +244,20 @@
       <button class="btn btn-primary add-question-btn" (click)="toggleQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm">
         <i class="bi bi-plus-circle"></i> Thêm câu hỏi
       </button>
-      <button class="btn btn-success add-question-btn" (click)="toggleAIQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm">
+      <button class="btn btn-success add-question-btn" (click)="toggleAIQuestionForm()" *ngIf="!showQuestionForm && !showAIQuestionForm && !showDualGeminiForm && !showQuestionValidation">
         <i class="bi bi-robot"></i> Tạo câu hỏi bằng AI
+      </button>
+      <button class="btn btn-info add-question-btn" (click)="toggleDualGeminiForm()" *ngIf="!showQuestionForm && !showAIQuestionForm && !showDualGeminiForm && !showQuestionValidation">
+        <i class="bi bi-shield-check"></i> AI với kiểm tra chất lượng
+      </button>
+      <button class="btn btn-warning add-question-btn" (click)="toggleQuestionValidation()" *ngIf="!showQuestionForm && !showAIQuestionForm && !showDualGeminiForm && !showQuestionValidation">
+        <i class="bi bi-check-circle"></i> Kiểm tra câu hỏi
       </button>
     </div>
   </div>
   
   <!-- Empty state with call-to-action when no questions exist -->
-  <div *ngIf="activeQuestionSet.questions.length === 0 && !showQuestionForm && !showAIQuestionForm" class="empty-state">
+  <div *ngIf="activeQuestionSet.questions.length === 0 && !showQuestionForm && !showAIQuestionForm && !showDualGeminiForm && !showQuestionValidation" class="empty-state">
     <div class="empty-state-icon">
       <i class="bi bi-clipboard-plus"></i>
     </div>
@@ -140,16 +270,25 @@
       <button class="btn btn-success" (click)="toggleAIQuestionForm()">
         <i class="bi bi-robot"></i> Tạo câu hỏi bằng AI
       </button>
+      <button class="btn btn-info" (click)="toggleDualGeminiForm()">
+        <i class="bi bi-shield-check"></i> AI với kiểm tra chất lượng
+      </button>
+      <button class="btn btn-warning" (click)="toggleQuestionValidation()">
+        <i class="bi bi-check-circle"></i> Kiểm tra câu hỏi
+      </button>
     </div>
   </div>
   
   <!-- Questions List -->
-  <div class="questions-container" *ngIf="activeQuestionSet.questions.length > 0 && !showQuestionForm && !showAIQuestionForm">
+  <div class="questions-container" *ngIf="activeQuestionSet.questions.length > 0 && !showQuestionForm && !showAIQuestionForm && !showDualGeminiForm && !showQuestionValidation">
     <div class="question-card" *ngFor="let question of activeQuestionSet.questions; let i = index">
       <div class="question-header">
         <div class="question-number">Câu {{ i + 1 }}</div>
         <div class="question-type">{{ question.type === 'single' ? 'Trắc nghiệm - Một đáp án' : 
           question.type === 'multiple' ? 'Trắc nghiệm - Nhiều đáp án' : 'Tự luận' }}</div>
+        <div class="question-level" *ngIf="question.bloomLevel">
+          <span class="badge bg-info">{{ question.bloomLevel }}</span>
+        </div>
       </div>
       
       <div class="question-content" [innerHTML]="getSafeHtml(question.content)"></div>
@@ -179,6 +318,17 @@
         <label for="questionType">Loại câu hỏi *</label>
         <select id="questionType" formControlName="type" class="form-control" (change)="onQuestionTypeChange()">
           <option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="bloomLevel">Mức độ Bloom</label>
+        <select id="bloomLevel" formControlName="bloomLevel" class="form-control">
+          <option value="">Chọn mức độ</option>
+          <option value="Nhận biết">Nhận biết</option>
+          <option value="Thông hiểu">Thông hiểu</option>
+          <option value="Vận dụng">Vận dụng</option>
+          <option value="Vận dụng cao">Vận dụng cao</option>
         </select>
       </div>
       
@@ -314,6 +464,9 @@
           <div class="question-number">Câu {{ i + 1 }}</div>
           <div class="question-type">{{ question.type === 'single' ? 'Trắc nghiệm - Một đáp án' : 
             question.type === 'multiple' ? 'Trắc nghiệm - Nhiều đáp án' : 'Tự luận' }}</div>
+          <div class="question-level" *ngIf="question.bloomLevel">
+            <span class="badge bg-info">{{ question.bloomLevel }}</span>
+          </div>
         </div>
         
         <div class="question-content" [innerHTML]="getSafeHtml(question.content)"></div>
@@ -331,6 +484,124 @@
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" (click)="aiGeneratedQuestions = []">Hủy</button>
         <button type="button" class="btn btn-success" (click)="saveAIGeneratedQuestions()">Lưu tất cả câu hỏi</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Dual Gemini AI Question Generator Form -->
+  <div class="form-container" *ngIf="showDualGeminiForm">
+    <h3>Tạo câu hỏi AI với kiểm tra chất lượng</h3>
+    
+    <form (ngSubmit)="submitDualGeminiForm()">
+      <div class="form-group">
+        <label for="dualGeminiPrompt">Nhập chủ đề hoặc nội dung bạn muốn tạo câu hỏi *</label>
+        <textarea 
+          id="dualGeminiPrompt" 
+          [(ngModel)]="dualGeminiPrompt" 
+          name="dualGeminiPrompt"
+          class="form-control" 
+          rows="4"
+          placeholder="Ví dụ: Tạo các câu hỏi về phương trình bậc 2 lớp 10"
+          required
+        ></textarea>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="dualGeminiQuestionType">Loại câu hỏi</label>
+            <select id="dualGeminiQuestionType" [(ngModel)]="dualGeminiQuestionType" name="dualGeminiQuestionType" class="form-control">
+              <option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="dualGeminiQuestionCount">Số lượng câu hỏi (1-10)</label>
+            <input 
+              type="number" 
+              id="dualGeminiQuestionCount" 
+              [(ngModel)]="dualGeminiQuestionCount" 
+              name="dualGeminiQuestionCount"
+              class="form-control" 
+              min="1" 
+              max="10" 
+              step="1"
+            >
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="dualGeminiGradeLevel">Cấp độ lớp</label>
+            <select id="dualGeminiGradeLevel" [(ngModel)]="dualGeminiGradeLevel" name="dualGeminiGradeLevel" class="form-control">
+              <option *ngFor="let grade of gradeLevels" [value]="grade">Lớp {{ grade }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="toggleDualGeminiForm()">Hủy</button>
+        <button type="submit" class="btn btn-info" [disabled]="!dualGeminiPrompt.trim() || isGeneratingDualGemini">
+          <i class="bi" [ngClass]="isGeneratingDualGemini ? 'bi-hourglass' : 'bi-shield-check'"></i>
+          {{ isGeneratingDualGemini ? 'Đang tạo và kiểm tra...' : 'Tạo câu hỏi với kiểm tra' }}
+        </button>
+      </div>
+    </form>
+    
+    <!-- Dual Gemini Results -->
+    <div class="validation-results" *ngIf="showValidationResults && dualGeminiResults.length > 0">
+      <h4>Kết quả tạo và kiểm tra câu hỏi</h4>
+      
+      <div class="question-validation-card" *ngFor="let result of dualGeminiResults; let i = index">
+        <div class="question-header">
+          <div class="question-number">Câu {{ i + 1 }}</div>
+          <div class="validation-status">
+            <span class="badge" [ngClass]="result.hasIssues ? 'bg-warning' : 'bg-success'">
+              {{ result.hasIssues ? 'Cần kiểm tra' : 'Đạt chất lượng' }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="question-content" [innerHTML]="getSafeHtml(result.question.content)"></div>
+        
+        <!-- Bloom Level Display -->
+        <div class="bloom-level-info" *ngIf="result.validationResult.bloomLevel">
+          <span class="badge bg-primary">Cấp độ: {{ result.validationResult.bloomLevel }}</span>
+          <small class="text-muted" *ngIf="result.validationResult.bloomLevelJustification">
+            {{ result.validationResult.bloomLevelJustification }}
+          </small>
+        </div>
+        
+        <!-- Options for multiple choice questions -->
+        <div class="options-container" *ngIf="result.question.type !== 'essay' && result.question.options">
+          <div class="option" *ngFor="let option of result.question.options; let optIndex = index"
+               [class.correct]="result.question.correctAnswers?.includes(optIndex)">
+            <div class="option-marker">{{ getOptionLabel(optIndex) }}</div>
+            <div class="option-content" [innerHTML]="getSafeHtml(option.content)"></div>
+          </div>
+        </div>
+        
+        <!-- Validation Issues -->
+        <div class="validation-issues" *ngIf="result.hasIssues && result.issues.length > 0">
+          <h6><i class="bi bi-exclamation-triangle"></i> Vấn đề được phát hiện:</h6>
+          <div class="issue-item" *ngFor="let issue of result.issues">
+            <span class="issue-type badge" [ngClass]="getValidationSeverityClass(issue.severity)">
+              {{ getValidationTypeLabel(issue.type) }}
+            </span>
+            <span class="issue-description">{{ issue.description }}</span>
+          </div>
+        </div>
+        
+        <div class="question-actions">
+          <button class="btn btn-sm btn-success" (click)="addValidatedQuestionToSet(result)" 
+                  [disabled]="result.hasIssues">
+            <i class="bi bi-plus-circle"></i> Thêm vào bộ câu hỏi
+          </button>
+          <button class="btn btn-sm btn-warning" *ngIf="result.hasIssues">
+            <i class="bi bi-pencil"></i> Cần chỉnh sửa thủ công
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -20,6 +20,7 @@ export interface Question {
   type: string; // 'single', 'multiple', or 'essay'
   options?: Option[];
   correctAnswers?: number[];
+  bloomLevel?: string; // Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao
 }
 
 export interface Option {
@@ -46,6 +47,7 @@ export interface CreateQuestionDto {
   type: string;
   options?: CreateOptionDto[];
   correctAnswers?: number[];
+  bloomLevel?: string;
 }
 
 export interface CreateOptionDto {
@@ -61,4 +63,58 @@ export interface GenerateAIQuestionsRequest {
 
 export interface GenerateAIQuestionsResponse {
   questions: CreateQuestionDto[];
-} 
+}
+
+// Dual Gemini Interfaces
+export interface DualGeminiQuestionRequest {
+  prompt: string;
+  questionSetId: string;
+  type: string;
+  count: number;
+  gradeLevel: number;
+  subject: string;
+}
+
+export interface DualGeminiQuestionResponse {
+  questions: ValidatedQuestionResult[];
+  totalGenerated: number;
+  validQuestions: number;
+  questionsWithIssues: number;
+}
+
+export interface ValidatedQuestionResult {
+  question: CreateQuestionDto;
+  validationResult: QuestionValidationResponse;
+  requiresManualReview: boolean;
+  hasIssues?: boolean;
+  issues?: ValidationIssue[];
+}
+
+export interface QuestionValidationRequest {
+  questionContent: string;
+  questionType: string;
+  options: string[];
+  gradeLevel: number;
+  subject: string;
+}
+
+export interface QuestionValidationResponse {
+  isValid: boolean;
+  issues: ValidationIssue[];
+  overallAssessment: string;
+  bloomLevel?: string;
+  bloomLevelJustification?: string;
+}
+
+export interface ValidationIssue {
+  type: string; // 'level_mismatch', 'redundant_text'
+  description: string;
+  severity: string; // 'low', 'medium', 'high'
+  suggestion: string;
+}
+
+export interface BatchValidateQuestionsRequest {
+  questions: CreateQuestionDto[];
+  gradeLevel: number;
+  subjectId: string;
+}

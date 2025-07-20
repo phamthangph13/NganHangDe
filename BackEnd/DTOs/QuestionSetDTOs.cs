@@ -55,6 +55,7 @@ namespace BackEnd.DTOs
         public string Type { get; set; } // "single", "multiple", or "essay"
         public List<QuestionOptionDTO> Options { get; set; } = new List<QuestionOptionDTO>();
         public List<int> CorrectAnswers { get; set; } = new List<int>();
+        public string BloomLevel { get; set; } = string.Empty;
     }
 
     public class QuestionOptionDTO
@@ -73,6 +74,7 @@ namespace BackEnd.DTOs
 
         public List<CreateOptionDTO> Options { get; set; } = new List<CreateOptionDTO>();
         public List<int> CorrectAnswers { get; set; } = new List<int>();
+        public string BloomLevel { get; set; } = string.Empty;
     }
 
     public class CreateOptionDTO
@@ -87,5 +89,6 @@ namespace BackEnd.DTOs
         public string Type { get; set; } // "single", "multiple", or "essay"
         public List<CreateOptionDTO> Options { get; set; }
         public List<int> CorrectAnswers { get; set; }
+        public string BloomLevel { get; set; } = string.Empty;
     }
-} 
+}

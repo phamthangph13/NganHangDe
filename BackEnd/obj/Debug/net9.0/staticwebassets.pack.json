@@ -1,15 +1,15 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html",
+      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\NGANHANG\\NganHangDe\\BackEnd\\wwwroot\\email-verification-failed.html",
       "PackagePath": "staticwebassets\\email-verification-failed.html"
     },
     {
-      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html",
+      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\NGANHANG\\NganHangDe\\BackEnd\\wwwroot\\email-verification-success.html",
       "PackagePath": "staticwebassets\\email-verification-success.html"
     },
     {
-      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html",
+      "Id": "C:\\Users\\winni\\OneDrive\\Desktop\\NGANHANG\\NganHangDe\\BackEnd\\wwwroot\\reset-password.html",
       "PackagePath": "staticwebassets\\reset-password.html"
     },
     {

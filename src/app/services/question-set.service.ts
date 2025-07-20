@@ -8,7 +8,13 @@ import {
   UpdateQuestionSetDto,
   CreateQuestionDto,
   GenerateAIQuestionsRequest,
-  GenerateAIQuestionsResponse
+  GenerateAIQuestionsResponse,
+  DualGeminiQuestionRequest,
+  DualGeminiQuestionResponse,
+  QuestionValidationRequest,
+  QuestionValidationResponse,
+  BatchValidateQuestionsRequest,
+  ValidatedQuestionResult
 } from './models/question-set.model';
 import { environment } from '../../environments/environment';
 
@@ -59,4 +65,17 @@ export class QuestionSetService {
   generateAIQuestions(request: GenerateAIQuestionsRequest): Observable<GenerateAIQuestionsResponse> {
     return this.http.post<GenerateAIQuestionsResponse>(`${this.apiUrl}/generate-ai-questions`, request);
   }
-} 
+
+  // Dual Gemini Methods
+  generateDualGeminiQuestions(request: DualGeminiQuestionRequest): Observable<DualGeminiQuestionResponse> {
+    return this.http.post<DualGeminiQuestionResponse>(`${this.apiUrl}/generate-dual-gemini-questions`, request);
+  }
+
+  validateQuestion(request: QuestionValidationRequest): Observable<QuestionValidationResponse> {
+    return this.http.post<QuestionValidationResponse>(`${this.apiUrl}/validate-question`, request);
+  }
+
+  batchValidateQuestions(request: BatchValidateQuestionsRequest): Observable<ValidatedQuestionResult[]> {
+    return this.http.post<ValidatedQuestionResult[]>(`${this.apiUrl}/batch-validate-questions`, request);
+  }
+}

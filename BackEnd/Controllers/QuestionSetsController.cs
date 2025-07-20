@@ -18,15 +18,18 @@ namespace BackEnd.Controllers
         private readonly QuestionSetService _questionSetService;
         private readonly SubjectService _subjectService;
         private readonly GeminiService _geminiService;
+        private readonly DualGeminiQuestionService _dualGeminiService;
 
         public QuestionSetsController(
             QuestionSetService questionSetService, 
             SubjectService subjectService,
-            GeminiService geminiService)
+            GeminiService geminiService,
+            DualGeminiQuestionService dualGeminiService)
         {
             _questionSetService = questionSetService;
             _subjectService = subjectService;
             _geminiService = geminiService;
+            _dualGeminiService = dualGeminiService;
         }
 
         [HttpGet]
@@ -261,6 +264,9 @@ namespace BackEnd.Controllers
             if (questionDto.CorrectAnswers != null)
                 question.CorrectAnswers = questionDto.CorrectAnswers;
                 
+            if (!string.IsNullOrEmpty(questionDto.BloomLevel))
+                question.BloomLevel = questionDto.BloomLevel;
+                
             if (questionDto.Options != null)
             {
                 question.Options = questionDto.Options.Select((o, i) => new Option 
@@ -344,5 +350,110 @@ namespace BackEnd.Controllers
                 return StatusCode(500, new { message = "Failed to generate AI questions", error = ex.Message });
             }
         }
+
+        [HttpPost("generate-dual-gemini-questions")]
+        public async Task<ActionResult<DualGeminiQuestionResponse>> GenerateDualGeminiQuestions(DualGeminiQuestionRequest request)
+        {
+            try
+            {
+                // Validate question set exists
+                if (string.IsNullOrEmpty(request.QuestionSetId) || !ObjectId.TryParse(request.QuestionSetId, out _))
+                    return BadRequest(new { message = "Invalid question set ID format" });
+
+                var questionSet = await _questionSetService.GetByIdAsync(request.QuestionSetId);
+                if (questionSet == null)
+                    return NotFound(new { message = "Question set not found" });
+
+                // Validate question type
+                if (string.IsNullOrEmpty(request.Type) || 
+                    (request.Type != "single" && request.Type != "multiple" && request.Type != "essay"))
+                {
+                    return BadRequest(new { message = "Question type must be 'single', 'multiple', or 'essay'" });
+                }
+
+                // Validate grade level
+                if (request.GradeLevel < 1 || request.GradeLevel > 12)
+                {
+                    return BadRequest(new { message = "Grade level must be between 1 and 12" });
+                }
+
+                // Generate and validate questions using dual Gemini system
+                var result = await _dualGeminiService.GenerateAndValidateQuestionsAsync(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating dual Gemini questions: {ex.Message}");
+                return StatusCode(500, new { message = "Failed to generate and validate questions", error = ex.Message });
+            }
+        }
+
+        [HttpPost("validate-question")]
+        public async Task<ActionResult<QuestionValidationResponse>> ValidateQuestion(QuestionValidationRequest request)
+        {
+            try
+            {
+                // Validate grade level
+                if (request.GradeLevel < 1 || request.GradeLevel > 12)
+                {
+                    return BadRequest(new { message = "Grade level must be between 1 and 12" });
+                }
+
+                // Validate question type
+                if (string.IsNullOrEmpty(request.QuestionType) || 
+                    (request.QuestionType != "single" && request.QuestionType != "multiple" && request.QuestionType != "essay"))
+                {
+                    return BadRequest(new { message = "Question type must be 'single', 'multiple', or 'essay'" });
+                }
+
+                var result = await _dualGeminiService.ValidateSingleQuestionAsync(
+                    request.QuestionContent,
+                    request.QuestionType,
+                    request.Options,
+                    request.GradeLevel,
+                    request.Subject
+                );
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error validating question: {ex.Message}");
+                return StatusCode(500, new { message = "Failed to validate question", error = ex.Message });
+            }
+        }
+
+        [HttpPost("batch-validate-questions")]
+        public async Task<ActionResult<List<ValidatedQuestionResult>>> BatchValidateQuestions(BatchValidateQuestionsRequest request)
+        {
+            try
+            {
+                // Validate grade level
+                if (request.GradeLevel < 1 || request.GradeLevel > 12)
+                {
+                    return BadRequest(new { message = "Grade level must be between 1 and 12" });
+                }
+
+                // Validate questions
+                if (request.Questions == null || !request.Questions.Any())
+                {
+                    return BadRequest(new { message = "At least one question is required" });
+                }
+
+                var result = await _dualGeminiService.BatchValidateQuestionsAsync(
+                    request.Questions,
+                    request.GradeLevel,
+                    request.SubjectId
+                );
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error batch validating questions: {ex.Message}");
+                return StatusCode(500, new { message = "Failed to batch validate questions", error = ex.Message });
+            }
+        }
     }
-} 
+}

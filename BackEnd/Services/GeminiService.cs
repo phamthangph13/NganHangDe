@@ -103,17 +103,23 @@ namespace BackEnd.Services
 Generate {count} {questionTypeDescription} based on the following topic: {userPrompt}
 
 For multiple-choice questions, please follow these rules:
-1. Each question should have 4 possible answers labeled A, B, C, D.
-2. Clearly indicate which answer(s) is/are correct by marking them with [CORRECT].
-3. Format the response as a JSON array with questions having: 'content', 'type', 'options', and 'correctAnswers' fields.
+1. Each question should have 4 possible answers.
+2. Use the 'correctAnswers' array to indicate which option indices are correct (0-based indexing).
+3. Format the response as a JSON array with questions having: 'content', 'type', 'options', 'correctAnswers', and 'bloomLevel' fields.
+4. For bloomLevel, assign one of these Vietnamese Bloom taxonomy levels based on the cognitive complexity:
+   - ""Nhận biết"" (Remember): Basic recall of facts
+   - ""Thông hiểu"" (Understand): Comprehension and explanation
+   - ""Vận dụng"" (Apply): Application of knowledge
+   - ""Vận dụng cao"" (Analyze/Evaluate/Create): Higher-order thinking
 
-For essay questions, simply provide the question content.
+For essay questions, simply provide the question content and bloomLevel.
 
 Return the result in a JSON format like this example:
 [
   {{
     ""content"": ""What is 2+2?"",
     ""type"": ""{questionType}"",
+    ""bloomLevel"": ""Nhận biết"",
     ""options"": [
       {{ ""content"": ""3"" }},
       {{ ""content"": ""4"" }},
@@ -212,6 +218,12 @@ Only return the JSON array, no other text.";
                     var endIdx = response.LastIndexOf("]") + 1;
                     cleanedResponse = response.Substring(startIdx, endIdx - startIdx);
                 }
+                
+                // Remove [CORRECT] annotations that cause JSON parsing errors
+                cleanedResponse = cleanedResponse.Replace(" [CORRECT]", "");
+                cleanedResponse = cleanedResponse.Replace("[CORRECT]", "");
+                cleanedResponse = cleanedResponse.Replace(" (CORRECT)", "");
+                cleanedResponse = cleanedResponse.Replace("(CORRECT)", "");
                 
                 // Try to normalize mathematical symbols and expressions for better parsing
                 cleanedResponse = NormalizeMathNotation(cleanedResponse);
@@ -665,4 +677,4 @@ Only return the JSON array, no other text.";
         [JsonPropertyName("text")]
         public string Text { get; set; }
     }
-} 
+}

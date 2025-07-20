@@ -49,6 +49,26 @@ export class QuestionSetsComponent implements OnInit {
   aiQuestionType = 'single';
   aiGeneratedQuestions: Question[] = [];
   
+  // Dual Gemini AI System
+  showDualGeminiForm = false;
+  isGeneratingDualGemini = false;
+  dualGeminiPrompt = '';
+  dualGeminiQuestionCount = 3;
+  dualGeminiQuestionType = 'single';
+  dualGeminiGradeLevel = 1;
+  dualGeminiResults: any[] = [];
+  showValidationResults = false;
+  
+  // Question Validation
+  showQuestionValidation = false;
+  validationQuestionContent = '';
+  validationQuestionType = 'single';
+  validationOptions: string[] = ['', ''];
+  validationGradeLevel = 1;
+  validationSubject = '';
+  validationResult: any = null;
+  isValidating = false;
+  
   // Filter options
   subjects: Subject[] = [];
   subjectMap: Map<string, string> = new Map(); // Map of SubjectId -> SubjectName for quick lookup
@@ -78,7 +98,8 @@ export class QuestionSetsComponent implements OnInit {
       content: ['', [Validators.required]],
       type: ['single', [Validators.required]],
       options: this.fb.array([]),
-      correctAnswers: this.fb.array([])
+      correctAnswers: this.fb.array([]),
+      bloomLevel: ['']
     });
   }
 
@@ -305,7 +326,8 @@ export class QuestionSetsComponent implements OnInit {
       const formValue = this.questionForm.value;
       let questionDto: any = {
         content: formValue.content,
-        type: formValue.type
+        type: formValue.type,
+        bloomLevel: formValue.bloomLevel || ''
       };
       
       // For multiple choice questions
@@ -438,7 +460,8 @@ export class QuestionSetsComponent implements OnInit {
     this.currentQuestionId = null;
     this.questionForm.reset({
       content: '',
-      type: 'single'
+      type: 'single',
+      bloomLevel: ''
     });
     
     this.options.clear();
@@ -457,7 +480,8 @@ export class QuestionSetsComponent implements OnInit {
     // Reset and populate the form
     this.questionForm.reset({
       content: question.content,
-      type: question.type
+      type: question.type,
+      bloomLevel: question.bloomLevel || ''
     });
     
     // Clear existing options and add the question's options
@@ -559,7 +583,8 @@ export class QuestionSetsComponent implements OnInit {
             id: idx,
             content: opt.content
           })),
-          correctAnswers: q.correctAnswers
+          correctAnswers: q.correctAnswers,
+          bloomLevel: q.bloomLevel || ''
         }));
         this.isGeneratingAIQuestions = false;
       },
@@ -585,7 +610,15 @@ export class QuestionSetsComponent implements OnInit {
         return;
       }
       
-      this.questionSetService.addQuestion(this.activeQuestionSet!.id, question).subscribe({
+      const questionDto = {
+        content: question.content,
+        type: question.type,
+        options: question.options,
+        correctAnswers: question.correctAnswers,
+        bloomLevel: question.bloomLevel || ''
+      };
+      
+      this.questionSetService.addQuestion(this.activeQuestionSet!.id, questionDto).subscribe({
         next: () => {
           // Continue with the next question
           addQuestions();
@@ -601,4 +634,163 @@ export class QuestionSetsComponent implements OnInit {
     // Start adding questions
     addQuestions();
   }
-} 
+
+  // DUAL GEMINI METHODS
+  toggleDualGeminiForm(): void {
+    this.showDualGeminiForm = !this.showDualGeminiForm;
+    if (!this.showDualGeminiForm) {
+      this.resetDualGeminiForm();
+    }
+  }
+
+  resetDualGeminiForm(): void {
+    this.dualGeminiPrompt = '';
+    this.dualGeminiQuestionCount = 3;
+    this.dualGeminiQuestionType = 'single';
+    this.dualGeminiGradeLevel = this.activeQuestionSet?.gradeLevel || 1;
+    this.dualGeminiResults = [];
+    this.showValidationResults = false;
+  }
+
+  submitDualGeminiForm() {
+    if (!this.activeQuestionSet || !this.dualGeminiPrompt.trim()) {
+      return;
+    }
+    
+    this.isGeneratingDualGemini = true;
+    this.showValidationResults = false;
+    
+    const subject = this.subjectMap.get(this.activeQuestionSet.subjectId) || 'Không xác định';
+    
+    const request = {
+      prompt: this.dualGeminiPrompt.trim(),
+      questionSetId: this.activeQuestionSet.id,
+      type: this.dualGeminiQuestionType,
+      count: this.dualGeminiQuestionCount,
+      gradeLevel: this.dualGeminiGradeLevel,
+      subject: subject
+    };
+    
+    this.questionSetService.generateDualGeminiQuestions(request).subscribe({
+      next: (response) => {
+        // Process the results to extract validation information
+        this.dualGeminiResults = response.questions.map(result => ({
+          ...result,
+          hasIssues: !result.validationResult.isValid || result.validationResult.issues.length > 0,
+          issues: result.validationResult.issues
+        }));
+        this.showValidationResults = true;
+        this.isGeneratingDualGemini = false;
+      },
+      error: (error) => {
+         console.error('Error generating dual gemini questions:', error);
+         this.isGeneratingDualGemini = false;
+         alert('Có lỗi khi tạo và kiểm tra câu hỏi. Vui lòng thử lại sau.');
+       }
+    });
+  }
+
+  getValidationSeverityClass(severity: string): string {
+    switch (severity) {
+      case 'high': return 'text-danger';
+      case 'medium': return 'text-warning';
+      case 'low': return 'text-info';
+      default: return 'text-secondary';
+    }
+  }
+
+  getValidationTypeLabel(type: string): string {
+    switch (type) {
+      case 'level_mismatch': return 'Không phù hợp cấp độ';
+      case 'redundant_text': return 'Văn bản dư thừa';
+      case 'validation_error': return 'Lỗi kiểm tra';
+      default: return type;
+    }
+  }
+
+  addValidatedQuestionToSet(result: any): void {
+    if (!this.activeQuestionSet) return;
+    
+    const question = {
+      content: result.question.content,
+      type: result.question.type,
+      options: result.question.options,
+      correctAnswers: result.question.correctAnswers,
+      bloomLevel: result.validationResult.bloomLevel || result.question.bloomLevel || ''
+    };
+    
+    this.questionSetService.addQuestion(this.activeQuestionSet.id, question).subscribe({
+      next: () => {
+        this.loadQuestionSetDetail(this.activeQuestionSet!.id);
+        // Remove the added question from results
+        this.dualGeminiResults = this.dualGeminiResults.filter(r => r !== result);
+      },
+      error: (error) => {
+        console.error('Error adding validated question:', error);
+        alert('Có lỗi khi thêm câu hỏi. Vui lòng thử lại.');
+      }
+    });
+  }
+
+  // QUESTION VALIDATION METHODS
+  toggleQuestionValidation(): void {
+    this.showQuestionValidation = !this.showQuestionValidation;
+    if (!this.showQuestionValidation) {
+      this.resetQuestionValidation();
+    }
+  }
+
+  resetQuestionValidation(): void {
+    this.validationQuestionContent = '';
+    this.validationQuestionType = 'single';
+    this.validationOptions = ['', ''];
+    this.validationGradeLevel = this.activeQuestionSet?.gradeLevel || 1;
+    this.validationSubject = this.subjectMap.get(this.activeQuestionSet?.subjectId || '') || '';
+    this.validationResult = null;
+  }
+
+  addValidationOption(): void {
+    this.validationOptions.push('');
+  }
+
+  removeValidationOption(index: number): void {
+    if (this.validationOptions.length > 2) {
+      this.validationOptions.splice(index, 1);
+    }
+  }
+
+  onValidationTypeChange(): void {
+    if (this.validationQuestionType === 'essay') {
+      this.validationOptions = [];
+    } else if (this.validationOptions.length < 2) {
+      this.validationOptions = ['', ''];
+    }
+  }
+
+  submitQuestionValidation(): void {
+    if (!this.validationQuestionContent.trim()) return;
+    
+    this.isValidating = true;
+    
+    const request = {
+      questionContent: this.validationQuestionContent.trim(),
+      questionType: this.validationQuestionType,
+      options: this.validationQuestionType === 'essay' ? [] : this.validationOptions.filter(opt => opt.trim()),
+      gradeLevel: this.validationGradeLevel,
+      subject: this.validationSubject
+    };
+    
+    this.questionSetService.validateQuestion(request).subscribe({
+      next: (response) => {
+        this.validationResult = response;
+        this.isValidating = false;
+        console.log('Validation Result:', response);
+      },
+      error: (error) => {
+        console.error('Error validating question:', error);
+        this.isValidating = false;
+        alert('Có lỗi khi kiểm tra câu hỏi. Vui lòng thử lại sau.');
+      }
+    });
+  }
+}

@@ -50,6 +50,9 @@ namespace BackEnd.Models
 
         [BsonElement("correctAnswers")]
         public List<int> CorrectAnswers { get; set; } = new List<int>();
+
+        [BsonElement("bloomLevel")]
+        public string BloomLevel { get; set; } = string.Empty; // "Nhận biết", "Thông hiểu", "Vận dụng", "Vận dụng cao"
     }
 
     public class Option
@@ -60,4 +63,4 @@ namespace BackEnd.Models
         [BsonElement("content")]
         public string Content { get; set; }
     }
-} 
+}
